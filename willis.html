@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Antonio "BarberGawd" Willis — The Coil, Chicago</title>
+<meta name="description" content="Antonio 'BarberGawd' Willis. Master barber. South Loop Chicago. Precision cuts, hair units, and the finest grooming experience in the city."/>
+<meta name="theme-color" content="#0A0A0A"/>
+<!-- OG Tags for link previews -->
+<meta property="og:title" content='Antonio "BarberGawd" Willis — The Coil'/>
+<meta property="og:description" content="South Loop Chicago's premier grooming experience. Book your appointment."/>
+<meta property="og:type" content="website"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,600;0,6..72,700;0,6..72,800;1,6..72,400;1,6..72,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+<script>
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        brand: {
+          black: "#0A0A0A", gold: "#D4AF37", "gold-light": "#E8C96A",
+          crimson: "#8B1A1A", "crimson-light": "#A91D1D",
+          muted: "#999999", surface: "#141414", "surface-light": "#1E1E1E"
+        },
+      },
+      fontFamily: {
+        display: ["Newsreader", "Georgia", "serif"],
+        body: ["Inter", "system-ui", "sans-serif"]
+      },
+    },
+  },
+};
+</script>
+<style>
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Inter', system-ui, sans-serif; background: #0A0A0A; color: #F5F5F5; overflow-x: hidden; }
+  .font-display { font-family: 'Newsreader', Georgia, serif; }
+
+  /* Gold utilities */
+  .gold-line { height: 1px; background: linear-gradient(90deg, transparent, #D4AF37, transparent); }
+  .gold-line-left { height: 1px; background: linear-gradient(90deg, #D4AF37, transparent); }
+  .btn-gold { background: #D4AF37; color: #0A0A0A; font-weight: 700; letter-spacing: 0.08em; transition: all 0.3s ease; }
+  .btn-gold:hover { background: #E8C96A; transform: translateY(-2px); box-shadow: 0 8px 30px rgba(212,175,55,0.35); }
+  .btn-outline { border: 1px solid rgba(212,175,55,0.5); color: #D4AF37; transition: all 0.3s ease; }
+  .btn-outline:hover { background: rgba(212,175,55,0.08); border-color: #D4AF37; }
+
+  /* Hero cinematic */
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, #0A0A0A 0%, #111 40%, #1a0a0a 100%);
+  }
+  .hero-grain {
+    position: absolute; inset: 0; opacity: 0.04;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+  }
+  .hero-image-wrap {
+    position: relative;
+    clip-path: polygon(0 0, 100% 0, 100% 92%, 88% 100%, 0 100%);
+  }
+  .hero-image-wrap::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(to right, #0A0A0A 0%, transparent 30%);
+    z-index: 1;
+  }
+  .hero-image-wrap::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0; height: 40%;
+    background: linear-gradient(to top, #0A0A0A, transparent);
+    z-index: 1;
+  }
+  .hero-image-wrap img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top center; }
+
+  /* Watermark */
+  .watermark {
+    position: absolute; font-family: 'Newsreader', serif;
+    font-size: clamp(120px, 25vw, 400px); font-weight: 800;
+    color: rgba(212,175,55,0.025); pointer-events: none; user-select: none;
+    line-height: 1; letter-spacing: -0.05em;
+  }
+
+  /* Scroll reveal */
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+
+  /* Service cards */
+  .service-card {
+    border: 1px solid rgba(212,175,55,0.12);
+    background: rgba(255,255,255,0.02);
+    transition: all 0.4s ease;
+    position: relative; overflow: hidden;
+  }
+  .service-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, #D4AF37, transparent);
+    opacity: 0; transition: opacity 0.4s ease;
+  }
+  .service-card:hover { border-color: rgba(212,175,55,0.4); background: rgba(212,175,55,0.04); transform: translateY(-4px); }
+  .service-card:hover::before { opacity: 1; }
+
+  /* Stat blocks */
+  .stat-block { border-left: 1px solid rgba(212,175,55,0.2); padding-left: 1.5rem; }
+
+  /* Phase 2 teaser */
+  .phase2-card {
+    background: linear-gradient(135deg, rgba(139,26,26,0.15) 0%, rgba(212,175,55,0.05) 100%);
+    border: 1px solid rgba(139,26,26,0.3);
+    position: relative; overflow: hidden;
+  }
+  .phase2-card::before {
+    content: 'COMING SOON';
+    position: absolute; top: 16px; right: -24px;
+    background: #8B1A1A; color: white; font-size: 9px; font-weight: 700;
+    letter-spacing: 0.15em; padding: 4px 32px;
+    transform: rotate(45deg); transform-origin: center;
+  }
+  .pulse-dot {
+    width: 8px; height: 8px; border-radius: 50%; background: #D4AF37;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.8); }
+  }
+
+  /* ===== CHATBOT ===== */
+  #chat-bubble {
+    position: fixed; bottom: 28px; right: 28px; z-index: 1000;
+    width: 60px; height: 60px; border-radius: 50%;
+    background: #D4AF37; cursor: pointer;
+    box-shadow: 0 4px 24px rgba(212,175,55,0.4);
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.3s ease;
+    border: none; outline: none;
+  }
+  #chat-bubble:hover { transform: scale(1.08); box-shadow: 0 8px 32px rgba(212,175,55,0.5); }
+  #chat-bubble svg { width: 26px; height: 26px; color: #0A0A0A; }
+  #chat-bubble .notif-dot {
+    position: absolute; top: 4px; right: 4px;
+    width: 12px; height: 12px; border-radius: 50%;
+    background: #8B1A1A; border: 2px solid #0A0A0A;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  #chat-window {
+    position: fixed; bottom: 100px; right: 28px; z-index: 999;
+    width: min(380px, calc(100vw - 32px));
+    background: #141414; border: 1px solid rgba(212,175,55,0.2);
+    border-radius: 16px; overflow: hidden;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+    display: none; flex-direction: column;
+    max-height: min(560px, calc(100vh - 140px));
+    animation: slideUp 0.3s ease;
+  }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(16px) scale(0.97); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  #chat-window.open { display: flex; }
+
+  .chat-header {
+    background: linear-gradient(135deg, #1a1a1a, #141414);
+    border-bottom: 1px solid rgba(212,175,55,0.15);
+    padding: 16px 20px; display: flex; align-items: center; gap: 12px;
+  }
+  .chat-avatar {
+    width: 40px; height: 40px; border-radius: 50%;
+    border: 2px solid #D4AF37; overflow: hidden; flex-shrink: 0;
+  }
+  .chat-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .chat-status { display: flex; align-items: center; gap: 6px; }
+  .chat-status-dot { width: 7px; height: 7px; border-radius: 50%; background: #22c55e; }
+
+  #chat-messages {
+    flex: 1; overflow-y: auto; padding: 16px;
+    display: flex; flex-direction: column; gap: 12px;
+    scrollbar-width: thin; scrollbar-color: rgba(212,175,55,0.2) transparent;
+  }
+  #chat-messages::-webkit-scrollbar { width: 4px; }
+  #chat-messages::-webkit-scrollbar-thumb { background: rgba(212,175,55,0.2); border-radius: 2px; }
+
+  .chat-msg { display: flex; gap: 8px; max-width: 85%; }
+  .chat-msg.user { align-self: flex-end; flex-direction: row-reverse; }
+  .chat-msg.bot { align-self: flex-start; }
+  .chat-msg-bubble {
+    padding: 10px 14px; border-radius: 14px;
+    font-size: 13.5px; line-height: 1.5; white-space: pre-wrap;
+  }
+  .chat-msg.bot .chat-msg-bubble {
+    background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.9);
+    border-bottom-left-radius: 4px;
+  }
+  .chat-msg.user .chat-msg-bubble {
+    background: #D4AF37; color: #0A0A0A; font-weight: 500;
+    border-bottom-right-radius: 4px;
+  }
+  .typing-indicator { display: flex; gap: 4px; align-items: center; padding: 10px 14px; }
+  .typing-dot {
+    width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.4);
+    animation: typingBounce 1.2s ease-in-out infinite;
+  }
+  .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes typingBounce {
+    0%, 60%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-6px); }
+  }
+
+  .chat-quick-replies { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 16px 12px; }
+  .quick-reply {
+    background: rgba(212,175,55,0.08); border: 1px solid rgba(212,175,55,0.25);
+    color: #D4AF37; font-size: 12px; padding: 6px 12px; border-radius: 20px;
+    cursor: pointer; transition: all 0.2s ease; white-space: nowrap;
+  }
+  .quick-reply:hover { background: rgba(212,175,55,0.15); border-color: #D4AF37; }
+
+  .chat-input-row {
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding: 12px 16px; display: flex; gap: 8px; align-items: center;
+  }
+  #chat-input {
+    flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 24px; padding: 10px 16px; color: white; font-size: 13.5px;
+    outline: none; transition: border-color 0.2s ease; font-family: 'Inter', sans-serif;
+  }
+  #chat-input:focus { border-color: rgba(212,175,55,0.4); }
+  #chat-input::placeholder { color: rgba(255,255,255,0.3); }
+  #chat-send {
+    width: 38px; height: 38px; border-radius: 50%; background: #D4AF37;
+    border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s ease; flex-shrink: 0;
+  }
+  #chat-send:hover { background: #E8C96A; transform: scale(1.05); }
+  #chat-send svg { width: 16px; height: 16px; color: #0A0A0A; }
+  #chat-send:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  /* Mobile adjustments */
+  @media (max-width: 640px) {
+    #chat-window { bottom: 88px; right: 16px; left: 16px; width: auto; }
+    #chat-bubble { bottom: 20px; right: 20px; }
+  }
+</style>
+</head>
+<body class="antialiased">
+
+<!-- ============================================================
+     HERO — Full cinematic, Antonio front and center
+     ============================================================ -->
+<section class="relative min-h-screen flex items-center overflow-hidden">
+  <div class="hero-bg"></div>
+  <div class="hero-grain"></div>
+  <div class="watermark" style="right: -5%; top: 50%; transform: translateY(-50%);">W</div>
+
+  <div class="relative z-10 w-full max-w-[1400px] mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-2 gap-0 min-h-screen items-center">
+
+    <!-- Left: Identity -->
+    <div class="py-24 lg:py-0 space-y-8 lg:pr-16">
+      <!-- Eyebrow -->
+      <div class="flex items-center gap-4 reveal">
+        <div class="pulse-dot"></div>
+        <span class="text-brand-gold text-xs font-semibold uppercase tracking-[0.35em]">South Loop · Chicago · Est. 2014</span>
+      </div>
+
+      <!-- Name -->
+      <div class="space-y-2 reveal reveal-delay-1">
+        <h1 class="font-display font-bold text-white leading-[0.9] tracking-tight"
+            style="font-size: clamp(52px, 9vw, 120px);">
+          Antonio<br/>
+          <span class="italic text-brand-gold">"BarberGawd"</span><br/>
+          Willis
+        </h1>
+      </div>
+
+      <div class="gold-line-left max-w-[160px] reveal reveal-delay-2"></div>
+
+      <!-- Tagline -->
+      <p class="text-white/50 text-lg font-light tracking-[0.15em] uppercase reveal reveal-delay-2">
+        Precision · Presence · Prestige
+      </p>
+
+      <!-- Bio line -->
+      <p class="text-white/60 max-w-md leading-relaxed text-base reveal reveal-delay-3">
+        Chicago's premier master barber. Precision cuts, non-surgical hair units, and a grooming experience built around you — not a template.
+      </p>
+
+      <!-- CTAs -->
+      <div class="flex flex-wrap gap-4 pt-2 reveal reveal-delay-3">
+        <a href="booking.html" class="btn-gold px-8 py-4 text-sm uppercase tracking-[0.12em] inline-block">
+          Book Your Appointment
+        </a>
+        <a href="gallery.html" class="btn-outline px-8 py-4 text-sm uppercase tracking-[0.12em] inline-block">
+          View the Portfolio
+        </a>
+      </div>
+
+      <!-- Stats -->
+      <div class="flex flex-wrap gap-8 pt-4 reveal reveal-delay-4">
+        <div class="stat-block">
+          <div class="font-display text-2xl font-bold text-white">10+</div>
+          <div class="text-white/40 text-xs uppercase tracking-wider mt-1">Years Mastery</div>
+        </div>
+        <div class="stat-block">
+          <div class="font-display text-2xl font-bold text-white">5★</div>
+          <div class="text-white/40 text-xs uppercase tracking-wider mt-1">Rated</div>
+        </div>
+        <div class="stat-block">
+          <div class="font-display text-2xl font-bold text-white">1</div>
+          <div class="text-white/40 text-xs uppercase tracking-wider mt-1">Chair. All You.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Portrait -->
+    <div class="hero-image-wrap h-[70vh] lg:h-screen reveal reveal-delay-1">
+      <img
+        src="https://lh3.googleusercontent.com/aida-public/AB6AXuDf60liNwwJ2wU4mqRQJ2aHSTOo7pQeASj3EiQQ65-NUfpBVCQbqenR8E5T0KqW5_zqc01hKxMba6frPzKyOvPIgvzMgxuCnAKFOQFuDd00P2WCbWRO2M4FImSyRbtlXqtQDmHrEfI9tljPriPvrES1f6u79HGxtJKOTHmAk3S-9MRo2rA8DjE7IC0_bTCcEp2v6GwH3uP0zH0-l0zroWPbWEKJyOoWuih0_xukNqHJH3oxo9GPdS0hi4vNjjFV3VcivmcU_jDZFNCJ"
+        alt="Antonio 'BarberGawd' Willis — Master Barber, The Coil Chicago"
+      />
+      <!-- Gold accent lines -->
+      <div style="position:absolute;bottom:0;left:0;right:0;height:3px;background:#D4AF37;z-index:2;"></div>
+      <div style="position:absolute;top:0;right:0;width:3px;height:40%;background:linear-gradient(to bottom,#D4AF37,transparent);z-index:2;"></div>
+    </div>
+  </div>
+
+  <!-- Scroll indicator -->
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 opacity-40">
+    <span class="text-white text-xs uppercase tracking-[0.3em]">Scroll</span>
+    <div style="width:1px;height:40px;background:linear-gradient(to bottom,#D4AF37,transparent);"></div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SERVICES — Clean, premium, no Acuity iframe garbage
+     ============================================================ -->
+<section class="py-24 relative">
+  <div class="max-w-[1400px] mx-auto px-6 md:px-12">
+    <div class="flex items-end justify-between mb-16 reveal">
+      <div>
+        <p class="text-brand-gold text-xs uppercase tracking-[0.35em] mb-3">The Menu</p>
+        <h2 class="font-display text-4xl md:text-5xl font-bold text-white">What I Do</h2>
+      </div>
+      <a href="booking.html" class="btn-gold px-6 py-3 text-xs uppercase tracking-widest hidden md:inline-block">
+        Book Now →
+      </a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <!-- Service 1 -->
+      <div class="service-card p-8 reveal">
+        <div class="text-brand-gold text-3xl mb-4">✂️</div>
+        <h3 class="font-display text-xl font-semibold text-white mb-2">Haircut & Shape Up</h3>
+        <p class="text-white/40 text-sm leading-relaxed mb-6">Precision fade, taper, or cut tailored to your bone structure and style.</p>
+        <div class="flex items-end justify-between">
+          <span class="font-display text-2xl font-bold text-brand-gold">$45</span>
+          <a href="booking.html" class="text-brand-gold text-xs uppercase tracking-wider hover:underline">Book →</a>
+        </div>
+      </div>
+
+      <!-- Service 2 -->
+      <div class="service-card p-8 reveal reveal-delay-1">
+        <div class="text-brand-gold text-3xl mb-4">🧔</div>
+        <h3 class="font-display text-xl font-semibold text-white mb-2">Beard Shape & Line Up</h3>
+        <p class="text-white/40 text-sm leading-relaxed mb-6">Detailed razor lining and sculpting. Your beard, perfected.</p>
+        <div class="flex items-end justify-between">
+          <span class="font-display text-2xl font-bold text-brand-gold">$35</span>
+          <a href="booking.html" class="text-brand-gold text-xs uppercase tracking-wider hover:underline">Book →</a>
+        </div>
+      </div>
+
+      <!-- Service 3 — High ticket -->
+      <div class="service-card p-8 reveal reveal-delay-2" style="border-color:rgba(212,175,55,0.3);">
+        <div class="text-brand-gold text-3xl mb-4">💎</div>
+        <h3 class="font-display text-xl font-semibold text-white mb-2">Hair Unit Install</h3>
+        <p class="text-white/40 text-sm leading-relaxed mb-6">Non-surgical hair replacement. Natural look, undetectable finish. Chicago's best.</p>
+        <div class="flex items-end justify-between">
+          <span class="font-display text-2xl font-bold text-brand-gold">$150</span>
+          <a href="booking.html" class="text-brand-gold text-xs uppercase tracking-wider hover:underline">Book →</a>
+        </div>
+      </div>
+
+      <!-- Service 4 -->
+      <div class="service-card p-8 reveal reveal-delay-3">
+        <div class="text-brand-gold text-3xl mb-4">👑</div>
+        <h3 class="font-display text-xl font-semibold text-white mb-2">VIP Package</h3>
+        <p class="text-white/40 text-sm leading-relaxed mb-6">Full cut, beard shape, and hot towel treatment. The complete experience.</p>
+        <div class="flex items-end justify-between">
+          <span class="font-display text-2xl font-bold text-brand-gold">$90</span>
+          <a href="booking.html" class="text-brand-gold text-xs uppercase tracking-wider hover:underline">Book →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile book CTA -->
+    <div class="mt-8 text-center md:hidden reveal">
+      <a href="booking.html" class="btn-gold px-8 py-4 text-sm uppercase tracking-widest inline-block">Book Now</a>
+    </div>
+  </div>
+</section>
+
+<div class="gold-line max-w-[1400px] mx-auto px-6 md:px-12"></div>
+
+<!-- ============================================================
+     ABOUT STRIP — Him, brief, powerful
+     ============================================================ -->
+<section class="py-24 relative overflow-hidden">
+  <div class="watermark" style="left: -5%; top: 50%; transform: translateY(-50%); opacity: 0.02;">G</div>
+  <div class="max-w-[1400px] mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+
+    <!-- Image -->
+    <div class="relative reveal">
+      <div class="aspect-[4/5] overflow-hidden" style="clip-path: polygon(0 0, 100% 0, 100% 100%, 12% 100%);">
+        <img
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuC6WXZK3A7_sw8gmA6jXz7ygTm7_x86JIG6tyCyA_yHNGHk3ZcDdDel-BvY58r_iPSKIDV5Q7NnS8mTFDy_XdRClAKiAyDUoaKuxSso-GxqaluLuWmOFbl3nGZN3Naj65sEZgcobz7frGsmeAtE8Qa2Hx8gob0TB7tjRL_OeVaBZRUAwNaml9hhDwaX2uKFGv8KJhpfnRB2BxR0Bnx8MPsW5fPD7jQPl81EY0ubo0LSNm6GWYDHc2Zz-GF24e5H9GWevzxvDDV-Xfan"
+          alt="Antonio Willis at work"
+          class="w-full h-full object-cover"
+        />
+      </div>
+      <!-- Gold corner accent -->
+      <div style="position:absolute;top:-12px;left:-12px;width:48px;height:48px;border-top:3px solid #D4AF37;border-left:3px solid #D4AF37;"></div>
+    </div>
+
+    <!-- Text -->
+    <div class="space-y-6 reveal reveal-delay-2">
+      <p class="text-brand-gold text-xs uppercase tracking-[0.35em]">The Man Behind The Chair</p>
+      <h2 class="font-display text-4xl md:text-5xl font-bold text-white leading-tight">
+        Not just a barber.<br/>
+        <span class="italic text-brand-gold">An architect.</span>
+      </h2>
+      <div class="gold-line-left max-w-[100px]"></div>
+      <p class="text-white/60 leading-relaxed max-w-lg">
+        Antonio Willis has spent over a decade mastering the craft of precision grooming. Based in South Loop Chicago, he built The Coil as a private, one-chair experience — because the best work happens when there's no rush, no noise, and no compromise.
+      </p>
+      <p class="text-white/60 leading-relaxed max-w-lg">
+        His specialty in non-surgical hair units has made him one of the most sought-after specialists in the city. Every client leaves looking — and feeling — like the best version of themselves.
+      </p>
+      <div class="flex flex-wrap gap-4 pt-2">
+        <a href="about.html" class="btn-outline px-6 py-3 text-sm uppercase tracking-[0.12em] inline-block">Full Story</a>
+        <a href="https://www.instagram.com/barbergawd/" target="_blank" class="text-white/40 hover:text-brand-gold text-sm flex items-center gap-2 transition-colors py-3">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          @barbergawd
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="gold-line max-w-[1400px] mx-auto px-6 md:px-12"></div>
+
+<!-- ============================================================
+     LOCATION + HOURS — Clean, no friction
+     ============================================================ -->
+<section class="py-20 bg-brand-surface">
+  <div class="max-w-[1400px] mx-auto px-6 md:px-12">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-12 reveal">
+
+      <div class="space-y-4">
+        <p class="text-brand-gold text-xs uppercase tracking-[0.35em]">Location</p>
+        <h3 class="font-display text-2xl font-bold text-white">The Coil Studio</h3>
+        <p class="text-white/50 leading-relaxed">
+          558 W Roosevelt Rd<br/>Suite 2<br/>Chicago, IL 60607<br/>
+          <span class="text-white/30 text-sm">Sola Salon Studios · South Loop</span>
+        </p>
+        <a href="https://maps.google.com/?q=558+W+Roosevelt+Rd+Chicago+IL" target="_blank"
+           class="text-brand-gold text-sm uppercase tracking-wider hover:underline inline-block">
+          Get Directions →
+        </a>
+      </div>
+
+      <div class="space-y-4">
+        <p class="text-brand-gold text-xs uppercase tracking-[0.35em]">Hours</p>
+        <h3 class="font-display text-2xl font-bold text-white">When to Come</h3>
+        <div class="space-y-2 text-white/50">
+          <div class="flex justify-between"><span>Tuesday – Thursday</span><span class="text-white/70">10am – 8pm</span></div>
+          <div class="flex justify-between"><span>Friday</span><span class="text-white/70">10am – 8pm</span></div>
+          <div class="flex justify-between"><span>Saturday</span><span class="text-white/70">10am – 8pm</span></div>
+          <div class="flex justify-between"><span>Sunday – Monday</span><span class="text-white/30">Closed</span></div>
+        </div>
+        <p class="text-white/30 text-xs">Late night cuts available after 7pm (+$20)</p>
+      </div>
+
+      <div class="space-y-4">
+        <p class="text-brand-gold text-xs uppercase tracking-[0.35em]">Connect</p>
+        <h3 class="font-display text-2xl font-bold text-white">Stay in the Loop</h3>
+        <p class="text-white/50 text-sm leading-relaxed">
+          Follow @barbergawd for availability drops, fresh cuts, and last-minute slots.
+        </p>
+        <div class="space-y-3">
+          <a href="https://www.instagram.com/barbergawd/" target="_blank"
+             class="flex items-center gap-3 text-white/50 hover:text-brand-gold transition-colors text-sm">
+            <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            @barbergawd on Instagram
+          </a>
+          <a href="booking.html"
+             class="flex items-center gap-3 text-white/50 hover:text-brand-gold transition-colors text-sm">
+            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            Book an Appointment
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PHASE 2 TEASER — The AI version of him, locked/coming soon
+     ============================================================ -->
+<section class="py-24 relative overflow-hidden">
+  <div class="watermark" style="right: -5%; top: 50%; transform: translateY(-50%); font-size: clamp(80px,18vw,280px);">AI</div>
+  <div class="max-w-[1400px] mx-auto px-6 md:px-12">
+    <div class="max-w-2xl reveal">
+      <p class="text-brand-crimson text-xs uppercase tracking-[0.35em] mb-4">Coming Soon · Phase 2</p>
+      <h2 class="font-display text-4xl md:text-5xl font-bold text-white leading-tight mb-6">
+        The AI Version<br/>
+        <span class="italic text-brand-gold">of BarberGawd</span>
+      </h2>
+      <div class="gold-line-left max-w-[100px] mb-8"></div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 reveal reveal-delay-1">
+      <!-- Card 1 -->
+      <div class="phase2-card p-8 rounded-lg">
+        <div class="text-3xl mb-4">📱</div>
+        <h3 class="font-display text-lg font-semibold text-white mb-2">DM Orchestrator</h3>
+        <p class="text-white/40 text-sm leading-relaxed">
+          An AI that responds to your Instagram DMs 24/7 — books appointments, answers pricing, handles rescheduling. In your voice. While you're in the chair.
+        </p>
+        <div class="mt-4 flex items-center gap-2">
+          <div style="width:6px;height:6px;border-radius:50%;background:#8B1A1A;"></div>
+          <span class="text-white/30 text-xs uppercase tracking-wider">In Development</span>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="phase2-card p-8 rounded-lg">
+        <div class="text-3xl mb-4">🎙️</div>
+        <h3 class="font-display text-lg font-semibold text-white mb-2">Voice & Text AI</h3>
+        <p class="text-white/40 text-sm leading-relaxed">
+          Real-time audio responses. Clients text or call — the AI handles it. Sounds like you, thinks like you, never misses a lead.
+        </p>
+        <div class="mt-4 flex items-center gap-2">
+          <div style="width:6px;height:6px;border-radius:50%;background:#8B1A1A;"></div>
+          <span class="text-white/30 text-xs uppercase tracking-wider">In Development</span>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="phase2-card p-8 rounded-lg">
+        <div class="text-3xl mb-4">🤖</div>
+        <h3 class="font-display text-lg font-semibold text-white mb-2">BarberGawd Bot</h3>
+        <p class="text-white/40 text-sm leading-relaxed">
+          A fully customized AI persona trained on your services, your clients, your style. The chatbot below is just the beginning.
+        </p>
+        <div class="mt-4 flex items-center gap-2">
+          <div class="pulse-dot" style="width:6px;height:6px;"></div>
+          <span class="text-brand-gold text-xs uppercase tracking-wider">Active Now ↓</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bridge to chatbot -->
+    <div class="mt-8 reveal reveal-delay-2">
+      <p class="text-white/30 text-sm">
+        👇 The AI assistant below is already live. Try it — ask about booking, pricing, or hours.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FINAL CTA
+     ============================================================ -->
+<section class="py-32 relative text-center overflow-hidden" style="background: linear-gradient(135deg, #0A0A0A, #111, #0A0A0A);">
+  <div class="watermark" style="top:50%;left:50%;transform:translate(-50%,-50%);font-size:clamp(100px,20vw,320px);">W</div>
+  <div class="relative z-10 max-w-[640px] mx-auto px-6 space-y-8 reveal">
+    <p class="text-brand-gold text-xs uppercase tracking-[0.35em]">Ready?</p>
+    <h2 class="font-display text-5xl md:text-6xl font-bold text-white leading-tight">
+      Your Chair<br/>Is Waiting.
+    </h2>
+    <div class="gold-line max-w-[120px] mx-auto"></div>
+    <p class="text-white/40 max-w-sm mx-auto">
+      One barber. One chair. No rush. Book your appointment and experience the difference.
+    </p>
+    <div class="flex flex-wrap justify-center gap-4">
+      <a href="booking.html" class="btn-gold px-10 py-5 text-sm uppercase tracking-[0.15em] inline-block">
+        Book Your Appointment
+      </a>
+    </div>
+    <p class="text-white/20 text-xs">558 W Roosevelt Rd, Suite 2 · South Loop, Chicago</p>
+  </div>
+</section>
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer class="border-t border-white/5 bg-brand-black py-12">
+  <div class="max-w-[1400px] mx-auto px-6 md:px-12 flex flex-wrap items-center justify-between gap-6">
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 border border-brand-gold flex items-center justify-center">
+        <span class="font-display font-bold text-brand-gold text-lg leading-none">W</span>
+      </div>
+      <span class="font-display text-lg font-semibold text-white">THE COIL</span>
+    </div>
+    <div class="flex flex-wrap gap-6 text-xs text-white/30 uppercase tracking-wider">
+      <a href="index.html" class="hover:text-brand-gold transition-colors">Home</a>
+      <a href="booking.html" class="hover:text-brand-gold transition-colors">Services</a>
+      <a href="gallery.html" class="hover:text-brand-gold transition-colors">Gallery</a>
+      <a href="about.html" class="hover:text-brand-gold transition-colors">About</a>
+      <a href="https://thecoilgrooming.com/collections/all" target="_blank" class="hover:text-brand-gold transition-colors">Shop</a>
+    </div>
+    <p class="text-white/20 text-xs">© 2025 Antonio Willis. All rights reserved.</p>
+  </div>
+</footer>
+
+<!-- ============================================================
+     AI CHATBOT WIDGET
+     ============================================================ -->
+
+<!-- Bubble button -->
+<button id="chat-bubble" onclick="toggleChat()" aria-label="Chat with The Coil AI">
+  <svg id="chat-icon-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+  </svg>
+  <svg id="chat-icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="display:none;">
+    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+  </svg>
+  <div class="notif-dot"></div>
+</button>
+
+<!-- Chat window -->
+<div id="chat-window">
+  <!-- Header -->
+  <div class="chat-header">
+    <div class="chat-avatar">
+      <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDf60liNwwJ2wU4mqRQJ2aHSTOo7pQeASj3EiQQ65-NUfpBVCQbqenR8E5T0KqW5_zqc01hKxMba6frPzKyOvPIgvzMgxuCnAKFOQFuDd00P2WCbWRO2M4FImSyRbtlXqtQDmHrEfI9tljPriPvrES1f6u79HGxtJKOTHmAk3S-9MRo2rA8DjE7IC0_bTCcEp2v6GwH3uP0zH0-l0zroWPbWEKJyOoWuih0_xukNqHJH3oxo9GPdS0hi4vNjjFV3VcivmcU_jDZFNCJ"
+           alt="BarberGawd AI"/>
+    </div>
+    <div class="flex-1">
+      <div class="text-white font-semibold text-sm">The Coil AI</div>
+      <div class="chat-status">
+        <div class="chat-status-dot"></div>
+        <span class="text-white/40 text-xs">BarberGawd's assistant · Online</span>
+      </div>
+    </div>
+    <button onclick="toggleChat()" class="text-white/30 hover:text-white transition-colors p-1">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Messages -->
+  <div id="chat-messages">
+    <!-- Welcome message injected by JS -->
+  </div>
+
+  <!-- Quick replies -->
+  <div class="chat-quick-replies" id="quick-replies">
+    <button class="quick-reply" onclick="sendQuick('Book an appointment')">📅 Book</button>
+    <button class="quick-reply" onclick="sendQuick('What are your prices?')">💰 Pricing</button>
+    <button class="quick-reply" onclick="sendQuick('What are your hours?')">🕐 Hours</button>
+    <button class="quick-reply" onclick="sendQuick('Where are you located?')">📍 Location</button>
+  </div>
+
+  <!-- Input -->
+  <div class="chat-input-row">
+    <input id="chat-input" type="text" placeholder="Ask anything..." autocomplete="off"
+           onkeydown="if(event.key==='Enter')sendMessage()"/>
+    <button id="chat-send" onclick="sendMessage()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<script>
+// ===== SCROLL REVEAL =====
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// ===== CHATBOT =====
+let chatOpen = false;
+let chatHistory = [];
+let isTyping = false;
+let chatInitialized = false;
+
+function toggleChat() {
+  chatOpen = !chatOpen;
+  const win = document.getElementById('chat-window');
+  const iconOpen = document.getElementById('chat-icon-open');
+  const iconClose = document.getElementById('chat-icon-close');
+  const notif = document.querySelector('#chat-bubble .notif-dot');
+
+  if (chatOpen) {
+    win.classList.add('open');
+    iconOpen.style.display = 'none';
+    iconClose.style.display = 'block';
+    if (notif) notif.style.display = 'none';
+    if (!chatInitialized) initChat();
+    setTimeout(() => document.getElementById('chat-input').focus(), 300);
+  } else {
+    win.classList.remove('open');
+    iconOpen.style.display = 'block';
+    iconClose.style.display = 'none';
+  }
+}
+
+function initChat() {
+  chatInitialized = true;
+  addBotMessage("Hey! 👋 I'm the AI assistant for The Coil.\n\nAsk me about booking, pricing, hours, or anything else. I'm here 24/7.");
+}
+
+function addBotMessage(text) {
+  const msgs = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = 'chat-msg bot';
+  // Convert **bold** markdown
+  const formatted = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  div.innerHTML = `<div class="chat-msg-bubble">${formatted}</div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function addUserMessage(text) {
+  const msgs = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = 'chat-msg user';
+  div.innerHTML = `<div class="chat-msg-bubble">${text}</div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function showTyping() {
+  const msgs = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = 'chat-msg bot';
+  div.id = 'typing-indicator';
+  div.innerHTML = `<div class="chat-msg-bubble typing-indicator">
+    <div class="typing-dot"></div>
+    <div class="typing-dot"></div>
+    <div class="typing-dot"></div>
+  </div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function removeTyping() {
+  const el = document.getElementById('typing-indicator');
+  if (el) el.remove();
+}
+
+function hideQuickReplies() {
+  const qr = document.getElementById('quick-replies');
+  if (qr) qr.style.display = 'none';
+}
+
+async function sendMessage() {
+  const input = document.getElementById('chat-input');
+  const sendBtn = document.getElementById('chat-send');
+  const text = input.value.trim();
+  if (!text || isTyping) return;
+
+  input.value = '';
+  hideQuickReplies();
+  addUserMessage(text);
+  chatHistory.push({ role: 'user', content: text });
+
+  isTyping = true;
+  sendBtn.disabled = true;
+  showTyping();
+
+  try {
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: text, history: chatHistory.slice(-8) }),
+    });
+
+    const data = await res.json();
+    removeTyping();
+
+    const reply = data.reply || "Let me connect you with Antonio directly — DM @barbergawd on IG. 🤝";
+    addBotMessage(reply);
+    chatHistory.push({ role: 'assistant', content: reply });
+
+  } catch (err) {
+    removeTyping();
+    addBotMessage("Having a quick connection issue. For immediate help, DM @barbergawd on Instagram or tap Book Now above. 💈");
+  }
+
+  isTyping = false;
+  sendBtn.disabled = false;
+  input.focus();
+}
+
+function sendQuick(text) {
+  document.getElementById('chat-input').value = text;
+  sendMessage();
+}
+</script>
+
+</body>
+</html>
