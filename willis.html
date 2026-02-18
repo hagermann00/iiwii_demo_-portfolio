@@ -1,814 +1,1219 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Antonio "BarberGawd" Willis — The Coil, Chicago</title>
-<meta name="description" content="Antonio 'BarberGawd' Willis. Master barber. South Loop Chicago. Precision cuts, hair units, and the finest grooming experience in the city."/>
-<meta name="theme-color" content="#0A0A0A"/>
-<!-- OG Tags for link previews -->
-<meta property="og:title" content='Antonio "BarberGawd" Willis — The Coil'/>
-<meta property="og:description" content="South Loop Chicago's premier grooming experience. Book your appointment."/>
-<meta property="og:type" content="website"/>
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,600;0,6..72,700;0,6..72,800;1,6..72,400;1,6..72,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
-<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
-<script>
-tailwind.config = {
-  darkMode: "class",
-  theme: {
-    extend: {
-      colors: {
-        brand: {
-          black: "#0A0A0A", gold: "#D4AF37", "gold-light": "#E8C96A",
-          crimson: "#8B1A1A", "crimson-light": "#A91D1D",
-          muted: "#999999", surface: "#141414", "surface-light": "#1E1E1E"
-        },
-      },
-      fontFamily: {
-        display: ["Newsreader", "Georgia", "serif"],
-        body: ["Inter", "system-ui", "sans-serif"]
-      },
-    },
-  },
-};
-</script>
-<style>
-  * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-  body { font-family: 'Inter', system-ui, sans-serif; background: #0A0A0A; color: #F5F5F5; overflow-x: hidden; }
-  .font-display { font-family: 'Newsreader', Georgia, serif; }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BarberGawd | The Coil — Chicago's Premier Barbershop</title>
+  <meta name="description" content="Antonio 'BarberGawd' Willis. Master Barber & Hair Units Specialist. Downtown Chicago. Book your appointment." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  /* Gold utilities */
-  .gold-line { height: 1px; background: linear-gradient(90deg, transparent, #D4AF37, transparent); }
-  .gold-line-left { height: 1px; background: linear-gradient(90deg, #D4AF37, transparent); }
-  .btn-gold { background: #D4AF37; color: #0A0A0A; font-weight: 700; letter-spacing: 0.08em; transition: all 0.3s ease; }
-  .btn-gold:hover { background: #E8C96A; transform: translateY(-2px); box-shadow: 0 8px 30px rgba(212,175,55,0.35); }
-  .btn-outline { border: 1px solid rgba(212,175,55,0.5); color: #D4AF37; transition: all 0.3s ease; }
-  .btn-outline:hover { background: rgba(212,175,55,0.08); border-color: #D4AF37; }
+    :root {
+      --gold: #C9A84C;
+      --gold-light: #E8C97A;
+      --gold-dim: #8B6914;
+      --black: #080808;
+      --black-2: #111111;
+      --black-3: #1a1a1a;
+      --white: #F5F0E8;
+      --white-dim: rgba(245,240,232,0.6);
+      --crimson: #8B1A1A;
+    }
 
-  /* Hero cinematic */
-  .hero-bg {
-    position: absolute; inset: 0;
-    background: linear-gradient(135deg, #0A0A0A 0%, #111 40%, #1a0a0a 100%);
-  }
-  .hero-grain {
-    position: absolute; inset: 0; opacity: 0.04;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-    background-size: 200px 200px;
-  }
-  .hero-image-wrap {
-    position: relative;
-    clip-path: polygon(0 0, 100% 0, 100% 92%, 88% 100%, 0 100%);
-  }
-  .hero-image-wrap::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: linear-gradient(to right, #0A0A0A 0%, transparent 30%);
-    z-index: 1;
-  }
-  .hero-image-wrap::after {
-    content: '';
-    position: absolute; bottom: 0; left: 0; right: 0; height: 40%;
-    background: linear-gradient(to top, #0A0A0A, transparent);
-    z-index: 1;
-  }
-  .hero-image-wrap img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top center; }
+    html { scroll-behavior: smooth; }
 
-  /* Watermark */
-  .watermark {
-    position: absolute; font-family: 'Newsreader', serif;
-    font-size: clamp(120px, 25vw, 400px); font-weight: 800;
-    color: rgba(212,175,55,0.025); pointer-events: none; user-select: none;
-    line-height: 1; letter-spacing: -0.05em;
-  }
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
 
-  /* Scroll reveal */
-  .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease; }
-  .reveal.visible { opacity: 1; transform: translateY(0); }
-  .reveal-delay-1 { transition-delay: 0.1s; }
-  .reveal-delay-2 { transition-delay: 0.2s; }
-  .reveal-delay-3 { transition-delay: 0.3s; }
-  .reveal-delay-4 { transition-delay: 0.4s; }
+    /* ── 3D INTRO ── */
+    #intro-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: var(--black);
+      transition: opacity 1.2s ease;
+    }
+    #intro-canvas.fade-out { opacity: 0; pointer-events: none; }
 
-  /* Service cards */
-  .service-card {
-    border: 1px solid rgba(212,175,55,0.12);
-    background: rgba(255,255,255,0.02);
-    transition: all 0.4s ease;
-    position: relative; overflow: hidden;
-  }
-  .service-card::before {
-    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-    background: linear-gradient(90deg, transparent, #D4AF37, transparent);
-    opacity: 0; transition: opacity 0.4s ease;
-  }
-  .service-card:hover { border-color: rgba(212,175,55,0.4); background: rgba(212,175,55,0.04); transform: translateY(-4px); }
-  .service-card:hover::before { opacity: 1; }
+    #skip-intro {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      z-index: 1001;
+      background: transparent;
+      border: 1px solid rgba(201,168,76,0.4);
+      color: rgba(201,168,76,0.7);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    #skip-intro:hover { border-color: var(--gold); color: var(--gold); }
 
-  /* Stat blocks */
-  .stat-block { border-left: 1px solid rgba(212,175,55,0.2); padding-left: 1.5rem; }
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 3rem;
+      background: linear-gradient(to bottom, rgba(8,8,8,0.95), transparent);
+    }
+    .nav-logo {
+      font-family: 'Newsreader', serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.2em;
+      color: var(--gold);
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a {
+      color: var(--white-dim);
+      text-decoration: none;
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: color 0.3s;
+    }
+    .nav-links a:hover { color: var(--gold); }
+    .nav-book {
+      background: var(--gold);
+      color: var(--black) !important;
+      padding: 0.5rem 1.25rem;
+      font-weight: 600 !important;
+    }
+    .nav-book:hover { background: var(--gold-light) !important; color: var(--black) !important; }
 
-  /* Phase 2 teaser */
-  .phase2-card {
-    background: linear-gradient(135deg, rgba(139,26,26,0.15) 0%, rgba(212,175,55,0.05) 100%);
-    border: 1px solid rgba(139,26,26,0.3);
-    position: relative; overflow: hidden;
-  }
-  .phase2-card::before {
-    content: 'COMING SOON';
-    position: absolute; top: 16px; right: -24px;
-    background: #8B1A1A; color: white; font-size: 9px; font-weight: 700;
-    letter-spacing: 0.15em; padding: 4px 32px;
-    transform: rotate(45deg); transform-origin: center;
-  }
-  .pulse-dot {
-    width: 8px; height: 8px; border-radius: 50%; background: #D4AF37;
-    animation: pulse 2s ease-in-out infinite;
-  }
-  @keyframes pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.4; transform: scale(0.8); }
-  }
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      padding: 8rem 3rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 70% 50%, rgba(201,168,76,0.06) 0%, transparent 60%),
+                  radial-gradient(ellipse at 20% 80%, rgba(139,26,26,0.08) 0%, transparent 50%);
+    }
+    .hero-content { position: relative; z-index: 2; }
+    .hero-eyebrow {
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      width: 2rem;
+      height: 1px;
+      background: var(--gold);
+    }
+    .hero-name {
+      font-family: 'Newsreader', serif;
+      font-size: clamp(3.5rem, 7vw, 6rem);
+      font-weight: 300;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+    }
+    .hero-name em {
+      font-style: italic;
+      color: var(--gold);
+    }
+    .hero-title {
+      font-size: 0.8rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--white-dim);
+      margin-bottom: 2.5rem;
+      line-height: 2;
+    }
+    .hero-social-proof {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+      padding: 1rem 1.5rem;
+      border: 1px solid rgba(201,168,76,0.2);
+      background: rgba(201,168,76,0.04);
+      width: fit-content;
+    }
+    .proof-stat { text-align: center; }
+    .proof-num {
+      font-family: 'Newsreader', serif;
+      font-size: 1.5rem;
+      color: var(--gold);
+      display: block;
+    }
+    .proof-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--white-dim);
+    }
+    .proof-divider { width: 1px; height: 2.5rem; background: rgba(201,168,76,0.2); }
+    .hero-ctas { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--gold);
+      color: var(--black);
+      padding: 1rem 2.5rem;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); }
+    .btn-secondary {
+      border: 1px solid rgba(201,168,76,0.5);
+      color: var(--gold);
+      padding: 1rem 2.5rem;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: all 0.3s;
+      background: transparent;
+      cursor: pointer;
+    }
+    .btn-secondary:hover { border-color: var(--gold); background: rgba(201,168,76,0.05); }
 
-  /* ===== CHATBOT ===== */
-  #chat-bubble {
-    position: fixed; bottom: 28px; right: 28px; z-index: 1000;
-    width: 60px; height: 60px; border-radius: 50%;
-    background: #D4AF37; cursor: pointer;
-    box-shadow: 0 4px 24px rgba(212,175,55,0.4);
-    display: flex; align-items: center; justify-content: center;
-    transition: all 0.3s ease;
-    border: none; outline: none;
-  }
-  #chat-bubble:hover { transform: scale(1.08); box-shadow: 0 8px 32px rgba(212,175,55,0.5); }
-  #chat-bubble svg { width: 26px; height: 26px; color: #0A0A0A; }
-  #chat-bubble .notif-dot {
-    position: absolute; top: 4px; right: 4px;
-    width: 12px; height: 12px; border-radius: 50%;
-    background: #8B1A1A; border: 2px solid #0A0A0A;
-    animation: pulse 2s ease-in-out infinite;
-  }
+    /* Hero image side */
+    .hero-image-side {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 80vh;
+    }
+    .hero-ig-embed {
+      width: 100%;
+      max-width: 420px;
+      height: 600px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-ig-frame {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: contrast(1.05) brightness(0.95);
+    }
+    .hero-ig-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, transparent 50%, var(--black) 100%),
+                  linear-gradient(to right, var(--black) 0%, transparent 15%);
+    }
+    .hero-ig-badge {
+      position: absolute;
+      bottom: 2rem;
+      left: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .ig-handle {
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      color: var(--white-dim);
+    }
+    .ig-handle span { color: var(--gold); }
+    .gold-ring {
+      position: absolute;
+      top: -2rem;
+      right: -2rem;
+      width: 200px;
+      height: 200px;
+      border: 1px solid rgba(201,168,76,0.15);
+      border-radius: 50%;
+      animation: rotate 20s linear infinite;
+    }
+    .gold-ring-2 {
+      position: absolute;
+      bottom: -3rem;
+      left: -3rem;
+      width: 300px;
+      height: 300px;
+      border: 1px solid rgba(201,168,76,0.08);
+      border-radius: 50%;
+      animation: rotate 30s linear infinite reverse;
+    }
+    @keyframes rotate { to { transform: rotate(360deg); } }
 
-  #chat-window {
-    position: fixed; bottom: 100px; right: 28px; z-index: 999;
-    width: min(380px, calc(100vw - 32px));
-    background: #141414; border: 1px solid rgba(212,175,55,0.2);
-    border-radius: 16px; overflow: hidden;
-    box-shadow: 0 24px 80px rgba(0,0,0,0.6);
-    display: none; flex-direction: column;
-    max-height: min(560px, calc(100vh - 140px));
-    animation: slideUp 0.3s ease;
-  }
-  @keyframes slideUp {
-    from { opacity: 0; transform: translateY(16px) scale(0.97); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
-  }
-  #chat-window.open { display: flex; }
+    /* ── SECTION SHARED ── */
+    section { padding: 6rem 3rem; }
+    .section-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1rem;
+    }
+    .section-title {
+      font-family: 'Newsreader', serif;
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      font-weight: 300;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+    }
+    .section-title em { font-style: italic; color: var(--gold); }
+    .divider {
+      width: 3rem;
+      height: 1px;
+      background: var(--gold);
+      margin-bottom: 3rem;
+    }
 
-  .chat-header {
-    background: linear-gradient(135deg, #1a1a1a, #141414);
-    border-bottom: 1px solid rgba(212,175,55,0.15);
-    padding: 16px 20px; display: flex; align-items: center; gap: 12px;
-  }
-  .chat-avatar {
-    width: 40px; height: 40px; border-radius: 50%;
-    border: 2px solid #D4AF37; overflow: hidden; flex-shrink: 0;
-  }
-  .chat-avatar img { width: 100%; height: 100%; object-fit: cover; }
-  .chat-status { display: flex; align-items: center; gap: 6px; }
-  .chat-status-dot { width: 7px; height: 7px; border-radius: 50%; background: #22c55e; }
+    /* ── GALLERY ── */
+    #gallery { background: var(--black-2); }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: auto;
+      gap: 0.75rem;
+      margin-top: 3rem;
+    }
+    .gallery-item {
+      position: relative;
+      overflow: hidden;
+      background: var(--black-3);
+      cursor: pointer;
+    }
+    .gallery-item:nth-child(1) { grid-row: span 2; }
+    .gallery-item:nth-child(4) { grid-column: span 2; }
+    .gallery-img {
+      width: 100%;
+      height: 100%;
+      min-height: 220px;
+      object-fit: cover;
+      transition: transform 0.6s ease, filter 0.6s ease;
+      filter: brightness(0.85) contrast(1.1);
+    }
+    .gallery-item:hover .gallery-img { transform: scale(1.05); filter: brightness(0.7) contrast(1.1); }
+    .gallery-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(8,8,8,0.9) 0%, transparent 50%);
+      opacity: 0;
+      transition: opacity 0.4s;
+      display: flex;
+      align-items: flex-end;
+      padding: 1.5rem;
+    }
+    .gallery-item:hover .gallery-overlay { opacity: 1; }
+    .gallery-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+    /* Placeholder gradient fills for gallery when no real photos */
+    .gallery-placeholder {
+      width: 100%;
+      min-height: 220px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .gp-1 { background: linear-gradient(135deg, #1a1208 0%, #2d1f0a 50%, #0d0d0d 100%); min-height: 440px; }
+    .gp-2 { background: linear-gradient(135deg, #0d0d0d 0%, #1a1a1a 100%); }
+    .gp-3 { background: linear-gradient(135deg, #120d00 0%, #1f1500 100%); }
+    .gp-4 { background: linear-gradient(135deg, #0a0a0a 0%, #1a1208 100%); min-height: 220px; }
+    .gp-5 { background: linear-gradient(135deg, #0d0d0d 0%, #1a1208 100%); }
+    .gp-icon {
+      font-size: 3rem;
+      opacity: 0.15;
+      color: var(--gold);
+    }
 
-  #chat-messages {
-    flex: 1; overflow-y: auto; padding: 16px;
-    display: flex; flex-direction: column; gap: 12px;
-    scrollbar-width: thin; scrollbar-color: rgba(212,175,55,0.2) transparent;
-  }
-  #chat-messages::-webkit-scrollbar { width: 4px; }
-  #chat-messages::-webkit-scrollbar-thumb { background: rgba(212,175,55,0.2); border-radius: 2px; }
+    /* ── SERVICES ── */
+    #services { background: var(--black); }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1px;
+      background: rgba(201,168,76,0.1);
+      border: 1px solid rgba(201,168,76,0.1);
+      margin-top: 3rem;
+    }
+    .service-card {
+      background: var(--black);
+      padding: 2.5rem 2rem;
+      transition: background 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .service-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--gold);
+      transform: scaleX(0);
+      transition: transform 0.4s;
+    }
+    .service-card:hover { background: var(--black-2); }
+    .service-card:hover::before { transform: scaleX(1); }
+    .service-price {
+      font-family: 'Newsreader', serif;
+      font-size: 2rem;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+    }
+    .service-name {
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--white);
+      margin-bottom: 0.75rem;
+    }
+    .service-desc {
+      font-size: 0.8rem;
+      color: var(--white-dim);
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+    .service-book {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: gap 0.3s;
+    }
+    .service-book:hover { gap: 1rem; }
+    .service-book::after { content: '→'; }
 
-  .chat-msg { display: flex; gap: 8px; max-width: 85%; }
-  .chat-msg.user { align-self: flex-end; flex-direction: row-reverse; }
-  .chat-msg.bot { align-self: flex-start; }
-  .chat-msg-bubble {
-    padding: 10px 14px; border-radius: 14px;
-    font-size: 13.5px; line-height: 1.5; white-space: pre-wrap;
-  }
-  .chat-msg.bot .chat-msg-bubble {
-    background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.9);
-    border-bottom-left-radius: 4px;
-  }
-  .chat-msg.user .chat-msg-bubble {
-    background: #D4AF37; color: #0A0A0A; font-weight: 500;
-    border-bottom-right-radius: 4px;
-  }
-  .typing-indicator { display: flex; gap: 4px; align-items: center; padding: 10px 14px; }
-  .typing-dot {
-    width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.4);
-    animation: typingBounce 1.2s ease-in-out infinite;
-  }
-  .typing-dot:nth-child(2) { animation-delay: 0.2s; }
-  .typing-dot:nth-child(3) { animation-delay: 0.4s; }
-  @keyframes typingBounce {
-    0%, 60%, 100% { transform: translateY(0); }
-    30% { transform: translateY(-6px); }
-  }
+    /* ── CHATBOT WIDGET ── */
+    #chat-widget {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      z-index: 500;
+    }
+    .chat-toggle {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: var(--gold);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      box-shadow: 0 0 0 0 rgba(201,168,76,0.4);
+      animation: pulse-gold 2.5s infinite;
+      transition: transform 0.3s;
+    }
+    .chat-toggle:hover { transform: scale(1.1); }
+    @keyframes pulse-gold {
+      0% { box-shadow: 0 0 0 0 rgba(201,168,76,0.4); }
+      70% { box-shadow: 0 0 0 15px rgba(201,168,76,0); }
+      100% { box-shadow: 0 0 0 0 rgba(201,168,76,0); }
+    }
+    .chat-panel {
+      position: absolute;
+      bottom: 75px;
+      right: 0;
+      width: 360px;
+      background: var(--black-2);
+      border: 1px solid rgba(201,168,76,0.2);
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+    }
+    .chat-panel.open { display: flex; }
+    .chat-header {
+      background: var(--black-3);
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid rgba(201,168,76,0.15);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .chat-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold-dim), var(--gold));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .chat-header-info { flex: 1; }
+    .chat-header-name {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--white);
+    }
+    .chat-header-status {
+      font-size: 0.65rem;
+      color: #4ade80;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .chat-header-status::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #4ade80;
+    }
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      max-height: 320px;
+      min-height: 200px;
+    }
+    .chat-messages::-webkit-scrollbar { width: 3px; }
+    .chat-messages::-webkit-scrollbar-track { background: transparent; }
+    .chat-messages::-webkit-scrollbar-thumb { background: rgba(201,168,76,0.3); }
+    .msg {
+      max-width: 85%;
+      padding: 0.65rem 0.9rem;
+      font-size: 0.8rem;
+      line-height: 1.5;
+      border-radius: 2px;
+    }
+    .msg-bot {
+      background: var(--black-3);
+      border-left: 2px solid var(--gold);
+      color: var(--white);
+      align-self: flex-start;
+    }
+    .msg-user {
+      background: rgba(201,168,76,0.12);
+      border: 1px solid rgba(201,168,76,0.2);
+      color: var(--white);
+      align-self: flex-end;
+    }
+    .msg-typing {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+      padding: 0.65rem 0.9rem;
+    }
+    .typing-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+      animation: typing 1.2s infinite;
+    }
+    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes typing { 0%,60%,100% { opacity: 0.2; } 30% { opacity: 1; } }
+    .chat-input-row {
+      display: flex;
+      border-top: 1px solid rgba(201,168,76,0.15);
+    }
+    .chat-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      padding: 0.85rem 1rem;
+      color: var(--white);
+      font-size: 0.8rem;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+    }
+    .chat-input::placeholder { color: rgba(245,240,232,0.3); }
+    .chat-send {
+      background: var(--gold);
+      border: none;
+      padding: 0 1.25rem;
+      color: var(--black);
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background 0.2s;
+    }
+    .chat-send:hover { background: var(--gold-light); }
 
-  .chat-quick-replies { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 16px 12px; }
-  .quick-reply {
-    background: rgba(212,175,55,0.08); border: 1px solid rgba(212,175,55,0.25);
-    color: #D4AF37; font-size: 12px; padding: 6px 12px; border-radius: 20px;
-    cursor: pointer; transition: all 0.2s ease; white-space: nowrap;
-  }
-  .quick-reply:hover { background: rgba(212,175,55,0.15); border-color: #D4AF37; }
+    /* ── SYSTEM SECTION ── */
+    #system { background: var(--black-2); }
+    .system-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: rgba(201,168,76,0.08);
+      border: 1px solid rgba(201,168,76,0.08);
+      margin-top: 3rem;
+    }
+    .system-card {
+      background: var(--black-2);
+      padding: 2.5rem 2rem;
+      position: relative;
+    }
+    .system-status {
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.75rem;
+      margin-bottom: 1.5rem;
+      display: inline-block;
+    }
+    .status-live { background: rgba(74,222,128,0.1); color: #4ade80; border: 1px solid rgba(74,222,128,0.3); }
+    .status-flagship { background: rgba(201,168,76,0.1); color: var(--gold); border: 1px solid rgba(201,168,76,0.3); }
+    .status-pending { background: rgba(245,240,232,0.05); color: var(--white-dim); border: 1px solid rgba(245,240,232,0.1); }
+    .system-icon { font-size: 2rem; margin-bottom: 1rem; }
+    .system-name {
+      font-family: 'Newsreader', serif;
+      font-size: 1.4rem;
+      margin-bottom: 0.75rem;
+    }
+    .system-desc {
+      font-size: 0.8rem;
+      color: var(--white-dim);
+      line-height: 1.7;
+    }
+    .system-note {
+      margin-top: 1rem;
+      font-size: 0.7rem;
+      color: rgba(245,240,232,0.35);
+      font-style: italic;
+    }
 
-  .chat-input-row {
-    border-top: 1px solid rgba(255,255,255,0.06);
-    padding: 12px 16px; display: flex; gap: 8px; align-items: center;
-  }
-  #chat-input {
-    flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 24px; padding: 10px 16px; color: white; font-size: 13.5px;
-    outline: none; transition: border-color 0.2s ease; font-family: 'Inter', sans-serif;
-  }
-  #chat-input:focus { border-color: rgba(212,175,55,0.4); }
-  #chat-input::placeholder { color: rgba(255,255,255,0.3); }
-  #chat-send {
-    width: 38px; height: 38px; border-radius: 50%; background: #D4AF37;
-    border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
-    transition: all 0.2s ease; flex-shrink: 0;
-  }
-  #chat-send:hover { background: #E8C96A; transform: scale(1.05); }
-  #chat-send svg { width: 16px; height: 16px; color: #0A0A0A; }
-  #chat-send:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+    /* ── PRICING ── */
+    #pricing { background: var(--black); }
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 3rem;
+      max-width: 900px;
+    }
+    .pricing-card {
+      border: 1px solid rgba(201,168,76,0.15);
+      padding: 3rem 2.5rem;
+      position: relative;
+      transition: border-color 0.3s;
+    }
+    .pricing-card:hover { border-color: rgba(201,168,76,0.4); }
+    .pricing-card.featured {
+      border-color: var(--gold);
+      background: rgba(201,168,76,0.03);
+    }
+    .pricing-badge {
+      position: absolute;
+      top: -1px;
+      left: 2rem;
+      background: var(--gold);
+      color: var(--black);
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      font-weight: 600;
+      padding: 0.3rem 0.75rem;
+    }
+    .pricing-module {
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1rem;
+    }
+    .pricing-upfront {
+      font-family: 'Newsreader', serif;
+      font-size: 3rem;
+      color: var(--white);
+      line-height: 1;
+      margin-bottom: 0.25rem;
+    }
+    .pricing-upfront span { font-size: 1.2rem; color: var(--white-dim); }
+    .pricing-upfront-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--white-dim);
+      margin-bottom: 1.5rem;
+    }
+    .pricing-monthly {
+      font-size: 0.85rem;
+      color: var(--gold);
+      margin-bottom: 2rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid rgba(201,168,76,0.15);
+    }
+    .pricing-features { list-style: none; margin-bottom: 2.5rem; }
+    .pricing-features li {
+      font-size: 0.8rem;
+      color: var(--white-dim);
+      padding: 0.5rem 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .pricing-features li::before {
+      content: '✓';
+      color: var(--gold);
+      flex-shrink: 0;
+      margin-top: 0.05rem;
+    }
+    .pricing-features li.pending { color: rgba(245,240,232,0.3); }
+    .pricing-features li.pending::before { content: '○'; color: rgba(245,240,232,0.2); }
 
-  /* Mobile adjustments */
-  @media (max-width: 640px) {
-    #chat-window { bottom: 88px; right: 16px; left: 16px; width: auto; }
-    #chat-bubble { bottom: 20px; right: 20px; }
-  }
-</style>
+    /* ── FOOTER ── */
+    footer {
+      background: var(--black-2);
+      border-top: 1px solid rgba(201,168,76,0.1);
+      padding: 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 2rem;
+    }
+    .footer-brand {
+      font-family: 'Newsreader', serif;
+      font-size: 1.2rem;
+      color: var(--gold);
+      letter-spacing: 0.15em;
+    }
+    .footer-links { display: flex; gap: 2rem; }
+    .footer-links a {
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--white-dim);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .footer-links a:hover { color: var(--gold); }
+    .footer-copy {
+      font-size: 0.65rem;
+      color: rgba(245,240,232,0.2);
+      letter-spacing: 0.05em;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 1.25rem 1.5rem; }
+      .nav-links { display: none; }
+      #hero { grid-template-columns: 1fr; padding: 7rem 1.5rem 3rem; }
+      .hero-image-side { height: 50vh; }
+      section { padding: 4rem 1.5rem; }
+      .gallery-grid { grid-template-columns: 1fr 1fr; }
+      .gallery-item:nth-child(1) { grid-row: span 1; }
+      .gallery-item:nth-child(4) { grid-column: span 1; }
+      .system-grid { grid-template-columns: 1fr; }
+      .pricing-grid { grid-template-columns: 1fr; }
+      footer { flex-direction: column; text-align: center; }
+    }
+  </style>
 </head>
-<body class="antialiased">
+<body>
 
-<!-- ============================================================
-     HERO — Full cinematic, Antonio front and center
-     ============================================================ -->
-<section class="relative min-h-screen flex items-center overflow-hidden">
+<!-- ── 3D INTRO CANVAS ── -->
+<canvas id="intro-canvas"></canvas>
+<button id="skip-intro">Skip Intro</button>
+
+<!-- ── NAV ── -->
+<nav>
+  <a href="#hero" class="nav-logo">The Coil</a>
+  <ul class="nav-links">
+    <li><a href="#gallery">Work</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#system">System</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="https://app.acuityscheduling.com/schedule.php?owner=ACUITY_ID" target="_blank" class="nav-book">Book Now</a></li>
+  </ul>
+</nav>
+
+<!-- ── HERO ── -->
+<section id="hero">
   <div class="hero-bg"></div>
-  <div class="hero-grain"></div>
-  <div class="watermark" style="right: -5%; top: 50%; transform: translateY(-50%);">W</div>
-
-  <div class="relative z-10 w-full max-w-[1400px] mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-2 gap-0 min-h-screen items-center">
-
-    <!-- Left: Identity -->
-    <div class="py-24 lg:py-0 space-y-8 lg:pr-16">
-      <!-- Eyebrow -->
-      <div class="flex items-center gap-4 reveal">
-        <div class="pulse-dot"></div>
-        <span class="text-brand-gold text-xs font-semibold uppercase tracking-[0.35em]">South Loop · Chicago · Est. 2014</span>
-      </div>
-
-      <!-- Name -->
-      <div class="space-y-2 reveal reveal-delay-1">
-        <h1 class="font-display font-bold text-white leading-[0.9] tracking-tight"
-            style="font-size: clamp(52px, 9vw, 120px);">
-          Antonio<br/>
-          <span class="italic text-brand-gold">"BarberGawd"</span><br/>
-          Willis
-        </h1>
-      </div>
-
-      <div class="gold-line-left max-w-[160px] reveal reveal-delay-2"></div>
-
-      <!-- Tagline -->
-      <p class="text-white/50 text-lg font-light tracking-[0.15em] uppercase reveal reveal-delay-2">
-        Precision · Presence · Prestige
-      </p>
-
-      <!-- Bio line -->
-      <p class="text-white/60 max-w-md leading-relaxed text-base reveal reveal-delay-3">
-        Chicago's premier master barber. Precision cuts, non-surgical hair units, and a grooming experience built around you — not a template.
-      </p>
-
-      <!-- CTAs -->
-      <div class="flex flex-wrap gap-4 pt-2 reveal reveal-delay-3">
-        <a href="booking.html" class="btn-gold px-8 py-4 text-sm uppercase tracking-[0.12em] inline-block">
-          Book Your Appointment
-        </a>
-        <a href="gallery.html" class="btn-outline px-8 py-4 text-sm uppercase tracking-[0.12em] inline-block">
-          View the Portfolio
-        </a>
-      </div>
-
-      <!-- Stats -->
-      <div class="flex flex-wrap gap-8 pt-4 reveal reveal-delay-4">
-        <div class="stat-block">
-          <div class="font-display text-2xl font-bold text-white">10+</div>
-          <div class="text-white/40 text-xs uppercase tracking-wider mt-1">Years Mastery</div>
-        </div>
-        <div class="stat-block">
-          <div class="font-display text-2xl font-bold text-white">5★</div>
-          <div class="text-white/40 text-xs uppercase tracking-wider mt-1">Rated</div>
-        </div>
-        <div class="stat-block">
-          <div class="font-display text-2xl font-bold text-white">1</div>
-          <div class="text-white/40 text-xs uppercase tracking-wider mt-1">Chair. All You.</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Right: Portrait -->
-    <div class="hero-image-wrap h-[70vh] lg:h-screen reveal reveal-delay-1">
-      <img
-        src="https://lh3.googleusercontent.com/aida-public/AB6AXuDf60liNwwJ2wU4mqRQJ2aHSTOo7pQeASj3EiQQ65-NUfpBVCQbqenR8E5T0KqW5_zqc01hKxMba6frPzKyOvPIgvzMgxuCnAKFOQFuDd00P2WCbWRO2M4FImSyRbtlXqtQDmHrEfI9tljPriPvrES1f6u79HGxtJKOTHmAk3S-9MRo2rA8DjE7IC0_bTCcEp2v6GwH3uP0zH0-l0zroWPbWEKJyOoWuih0_xukNqHJH3oxo9GPdS0hi4vNjjFV3VcivmcU_jDZFNCJ"
-        alt="Antonio 'BarberGawd' Willis — Master Barber, The Coil Chicago"
-      />
-      <!-- Gold accent lines -->
-      <div style="position:absolute;bottom:0;left:0;right:0;height:3px;background:#D4AF37;z-index:2;"></div>
-      <div style="position:absolute;top:0;right:0;width:3px;height:40%;background:linear-gradient(to bottom,#D4AF37,transparent);z-index:2;"></div>
-    </div>
-  </div>
-
-  <!-- Scroll indicator -->
-  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 opacity-40">
-    <span class="text-white text-xs uppercase tracking-[0.3em]">Scroll</span>
-    <div style="width:1px;height:40px;background:linear-gradient(to bottom,#D4AF37,transparent);"></div>
-  </div>
-</section>
-
-<!-- ============================================================
-     SERVICES — Clean, premium, no Acuity iframe garbage
-     ============================================================ -->
-<section class="py-24 relative">
-  <div class="max-w-[1400px] mx-auto px-6 md:px-12">
-    <div class="flex items-end justify-between mb-16 reveal">
-      <div>
-        <p class="text-brand-gold text-xs uppercase tracking-[0.35em] mb-3">The Menu</p>
-        <h2 class="font-display text-4xl md:text-5xl font-bold text-white">What I Do</h2>
-      </div>
-      <a href="booking.html" class="btn-gold px-6 py-3 text-xs uppercase tracking-widest hidden md:inline-block">
-        Book Now →
-      </a>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-      <!-- Service 1 -->
-      <div class="service-card p-8 reveal">
-        <div class="text-brand-gold text-3xl mb-4">✂️</div>
-        <h3 class="font-display text-xl font-semibold text-white mb-2">Haircut & Shape Up</h3>
-        <p class="text-white/40 text-sm leading-relaxed mb-6">Precision fade, taper, or cut tailored to your bone structure and style.</p>
-        <div class="flex items-end justify-between">
-          <span class="font-display text-2xl font-bold text-brand-gold">$45</span>
-          <a href="booking.html" class="text-brand-gold text-xs uppercase tracking-wider hover:underline">Book →</a>
-        </div>
-      </div>
-
-      <!-- Service 2 -->
-      <div class="service-card p-8 reveal reveal-delay-1">
-        <div class="text-brand-gold text-3xl mb-4">🧔</div>
-        <h3 class="font-display text-xl font-semibold text-white mb-2">Beard Shape & Line Up</h3>
-        <p class="text-white/40 text-sm leading-relaxed mb-6">Detailed razor lining and sculpting. Your beard, perfected.</p>
-        <div class="flex items-end justify-between">
-          <span class="font-display text-2xl font-bold text-brand-gold">$35</span>
-          <a href="booking.html" class="text-brand-gold text-xs uppercase tracking-wider hover:underline">Book →</a>
-        </div>
-      </div>
-
-      <!-- Service 3 — High ticket -->
-      <div class="service-card p-8 reveal reveal-delay-2" style="border-color:rgba(212,175,55,0.3);">
-        <div class="text-brand-gold text-3xl mb-4">💎</div>
-        <h3 class="font-display text-xl font-semibold text-white mb-2">Hair Unit Install</h3>
-        <p class="text-white/40 text-sm leading-relaxed mb-6">Non-surgical hair replacement. Natural look, undetectable finish. Chicago's best.</p>
-        <div class="flex items-end justify-between">
-          <span class="font-display text-2xl font-bold text-brand-gold">$150</span>
-          <a href="booking.html" class="text-brand-gold text-xs uppercase tracking-wider hover:underline">Book →</a>
-        </div>
-      </div>
-
-      <!-- Service 4 -->
-      <div class="service-card p-8 reveal reveal-delay-3">
-        <div class="text-brand-gold text-3xl mb-4">👑</div>
-        <h3 class="font-display text-xl font-semibold text-white mb-2">VIP Package</h3>
-        <p class="text-white/40 text-sm leading-relaxed mb-6">Full cut, beard shape, and hot towel treatment. The complete experience.</p>
-        <div class="flex items-end justify-between">
-          <span class="font-display text-2xl font-bold text-brand-gold">$90</span>
-          <a href="booking.html" class="text-brand-gold text-xs uppercase tracking-wider hover:underline">Book →</a>
-        </div>
-      </div>
-    </div>
-
-    <!-- Mobile book CTA -->
-    <div class="mt-8 text-center md:hidden reveal">
-      <a href="booking.html" class="btn-gold px-8 py-4 text-sm uppercase tracking-widest inline-block">Book Now</a>
-    </div>
-  </div>
-</section>
-
-<div class="gold-line max-w-[1400px] mx-auto px-6 md:px-12"></div>
-
-<!-- ============================================================
-     ABOUT STRIP — Him, brief, powerful
-     ============================================================ -->
-<section class="py-24 relative overflow-hidden">
-  <div class="watermark" style="left: -5%; top: 50%; transform: translateY(-50%); opacity: 0.02;">G</div>
-  <div class="max-w-[1400px] mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-
-    <!-- Image -->
-    <div class="relative reveal">
-      <div class="aspect-[4/5] overflow-hidden" style="clip-path: polygon(0 0, 100% 0, 100% 100%, 12% 100%);">
-        <img
-          src="https://lh3.googleusercontent.com/aida-public/AB6AXuC6WXZK3A7_sw8gmA6jXz7ygTm7_x86JIG6tyCyA_yHNGHk3ZcDdDel-BvY58r_iPSKIDV5Q7NnS8mTFDy_XdRClAKiAyDUoaKuxSso-GxqaluLuWmOFbl3nGZN3Naj65sEZgcobz7frGsmeAtE8Qa2Hx8gob0TB7tjRL_OeVaBZRUAwNaml9hhDwaX2uKFGv8KJhpfnRB2BxR0Bnx8MPsW5fPD7jQPl81EY0ubo0LSNm6GWYDHc2Zz-GF24e5H9GWevzxvDDV-Xfan"
-          alt="Antonio Willis at work"
-          class="w-full h-full object-cover"
-        />
-      </div>
-      <!-- Gold corner accent -->
-      <div style="position:absolute;top:-12px;left:-12px;width:48px;height:48px;border-top:3px solid #D4AF37;border-left:3px solid #D4AF37;"></div>
-    </div>
-
-    <!-- Text -->
-    <div class="space-y-6 reveal reveal-delay-2">
-      <p class="text-brand-gold text-xs uppercase tracking-[0.35em]">The Man Behind The Chair</p>
-      <h2 class="font-display text-4xl md:text-5xl font-bold text-white leading-tight">
-        Not just a barber.<br/>
-        <span class="italic text-brand-gold">An architect.</span>
-      </h2>
-      <div class="gold-line-left max-w-[100px]"></div>
-      <p class="text-white/60 leading-relaxed max-w-lg">
-        Antonio Willis has spent over a decade mastering the craft of precision grooming. Based in South Loop Chicago, he built The Coil as a private, one-chair experience — because the best work happens when there's no rush, no noise, and no compromise.
-      </p>
-      <p class="text-white/60 leading-relaxed max-w-lg">
-        His specialty in non-surgical hair units has made him one of the most sought-after specialists in the city. Every client leaves looking — and feeling — like the best version of themselves.
-      </p>
-      <div class="flex flex-wrap gap-4 pt-2">
-        <a href="about.html" class="btn-outline px-6 py-3 text-sm uppercase tracking-[0.12em] inline-block">Full Story</a>
-        <a href="https://www.instagram.com/barbergawd/" target="_blank" class="text-white/40 hover:text-brand-gold text-sm flex items-center gap-2 transition-colors py-3">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-          @barbergawd
-        </a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="gold-line max-w-[1400px] mx-auto px-6 md:px-12"></div>
-
-<!-- ============================================================
-     LOCATION + HOURS — Clean, no friction
-     ============================================================ -->
-<section class="py-20 bg-brand-surface">
-  <div class="max-w-[1400px] mx-auto px-6 md:px-12">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-12 reveal">
-
-      <div class="space-y-4">
-        <p class="text-brand-gold text-xs uppercase tracking-[0.35em]">Location</p>
-        <h3 class="font-display text-2xl font-bold text-white">The Coil Studio</h3>
-        <p class="text-white/50 leading-relaxed">
-          558 W Roosevelt Rd<br/>Suite 2<br/>Chicago, IL 60607<br/>
-          <span class="text-white/30 text-sm">Sola Salon Studios · South Loop</span>
-        </p>
-        <a href="https://maps.google.com/?q=558+W+Roosevelt+Rd+Chicago+IL" target="_blank"
-           class="text-brand-gold text-sm uppercase tracking-wider hover:underline inline-block">
-          Get Directions →
-        </a>
-      </div>
-
-      <div class="space-y-4">
-        <p class="text-brand-gold text-xs uppercase tracking-[0.35em]">Hours</p>
-        <h3 class="font-display text-2xl font-bold text-white">When to Come</h3>
-        <div class="space-y-2 text-white/50">
-          <div class="flex justify-between"><span>Tuesday – Thursday</span><span class="text-white/70">10am – 8pm</span></div>
-          <div class="flex justify-between"><span>Friday</span><span class="text-white/70">10am – 8pm</span></div>
-          <div class="flex justify-between"><span>Saturday</span><span class="text-white/70">10am – 8pm</span></div>
-          <div class="flex justify-between"><span>Sunday – Monday</span><span class="text-white/30">Closed</span></div>
-        </div>
-        <p class="text-white/30 text-xs">Late night cuts available after 7pm (+$20)</p>
-      </div>
-
-      <div class="space-y-4">
-        <p class="text-brand-gold text-xs uppercase tracking-[0.35em]">Connect</p>
-        <h3 class="font-display text-2xl font-bold text-white">Stay in the Loop</h3>
-        <p class="text-white/50 text-sm leading-relaxed">
-          Follow @barbergawd for availability drops, fresh cuts, and last-minute slots.
-        </p>
-        <div class="space-y-3">
-          <a href="https://www.instagram.com/barbergawd/" target="_blank"
-             class="flex items-center gap-3 text-white/50 hover:text-brand-gold transition-colors text-sm">
-            <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-            @barbergawd on Instagram
-          </a>
-          <a href="booking.html"
-             class="flex items-center gap-3 text-white/50 hover:text-brand-gold transition-colors text-sm">
-            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-            Book an Appointment
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============================================================
-     PHASE 2 TEASER — The AI version of him, locked/coming soon
-     ============================================================ -->
-<section class="py-24 relative overflow-hidden">
-  <div class="watermark" style="right: -5%; top: 50%; transform: translateY(-50%); font-size: clamp(80px,18vw,280px);">AI</div>
-  <div class="max-w-[1400px] mx-auto px-6 md:px-12">
-    <div class="max-w-2xl reveal">
-      <p class="text-brand-crimson text-xs uppercase tracking-[0.35em] mb-4">Coming Soon · Phase 2</p>
-      <h2 class="font-display text-4xl md:text-5xl font-bold text-white leading-tight mb-6">
-        The AI Version<br/>
-        <span class="italic text-brand-gold">of BarberGawd</span>
-      </h2>
-      <div class="gold-line-left max-w-[100px] mb-8"></div>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 reveal reveal-delay-1">
-      <!-- Card 1 -->
-      <div class="phase2-card p-8 rounded-lg">
-        <div class="text-3xl mb-4">📱</div>
-        <h3 class="font-display text-lg font-semibold text-white mb-2">DM Orchestrator</h3>
-        <p class="text-white/40 text-sm leading-relaxed">
-          An AI that responds to your Instagram DMs 24/7 — books appointments, answers pricing, handles rescheduling. In your voice. While you're in the chair.
-        </p>
-        <div class="mt-4 flex items-center gap-2">
-          <div style="width:6px;height:6px;border-radius:50%;background:#8B1A1A;"></div>
-          <span class="text-white/30 text-xs uppercase tracking-wider">In Development</span>
-        </div>
-      </div>
-
-      <!-- Card 2 -->
-      <div class="phase2-card p-8 rounded-lg">
-        <div class="text-3xl mb-4">🎙️</div>
-        <h3 class="font-display text-lg font-semibold text-white mb-2">Voice & Text AI</h3>
-        <p class="text-white/40 text-sm leading-relaxed">
-          Real-time audio responses. Clients text or call — the AI handles it. Sounds like you, thinks like you, never misses a lead.
-        </p>
-        <div class="mt-4 flex items-center gap-2">
-          <div style="width:6px;height:6px;border-radius:50%;background:#8B1A1A;"></div>
-          <span class="text-white/30 text-xs uppercase tracking-wider">In Development</span>
-        </div>
-      </div>
-
-      <!-- Card 3 -->
-      <div class="phase2-card p-8 rounded-lg">
-        <div class="text-3xl mb-4">🤖</div>
-        <h3 class="font-display text-lg font-semibold text-white mb-2">BarberGawd Bot</h3>
-        <p class="text-white/40 text-sm leading-relaxed">
-          A fully customized AI persona trained on your services, your clients, your style. The chatbot below is just the beginning.
-        </p>
-        <div class="mt-4 flex items-center gap-2">
-          <div class="pulse-dot" style="width:6px;height:6px;"></div>
-          <span class="text-brand-gold text-xs uppercase tracking-wider">Active Now ↓</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Bridge to chatbot -->
-    <div class="mt-8 reveal reveal-delay-2">
-      <p class="text-white/30 text-sm">
-        👇 The AI assistant below is already live. Try it — ask about booking, pricing, or hours.
-      </p>
-    </div>
-  </div>
-</section>
-
-<!-- ============================================================
-     FINAL CTA
-     ============================================================ -->
-<section class="py-32 relative text-center overflow-hidden" style="background: linear-gradient(135deg, #0A0A0A, #111, #0A0A0A);">
-  <div class="watermark" style="top:50%;left:50%;transform:translate(-50%,-50%);font-size:clamp(100px,20vw,320px);">W</div>
-  <div class="relative z-10 max-w-[640px] mx-auto px-6 space-y-8 reveal">
-    <p class="text-brand-gold text-xs uppercase tracking-[0.35em]">Ready?</p>
-    <h2 class="font-display text-5xl md:text-6xl font-bold text-white leading-tight">
-      Your Chair<br/>Is Waiting.
-    </h2>
-    <div class="gold-line max-w-[120px] mx-auto"></div>
-    <p class="text-white/40 max-w-sm mx-auto">
-      One barber. One chair. No rush. Book your appointment and experience the difference.
+  <div class="hero-content">
+    <p class="hero-eyebrow">Downtown Chicago · Sola Salon Studios</p>
+    <h1 class="hero-name">
+      Barber<em>Gawd</em><br>Willis
+    </h1>
+    <p class="hero-title">
+      Master Barber &nbsp;·&nbsp; Hair Units Specialist<br>
+      CEO, The Coil &nbsp;·&nbsp; Downtown Chicago
     </p>
-    <div class="flex flex-wrap justify-center gap-4">
-      <a href="booking.html" class="btn-gold px-10 py-5 text-sm uppercase tracking-[0.15em] inline-block">
-        Book Your Appointment
-      </a>
+    <div class="hero-social-proof">
+      <div class="proof-stat">
+        <span class="proof-num">85.1K</span>
+        <span class="proof-label">Followers</span>
+      </div>
+      <div class="proof-divider"></div>
+      <div class="proof-stat">
+        <span class="proof-num">100+</span>
+        <span class="proof-label">Posts</span>
+      </div>
+      <div class="proof-divider"></div>
+      <div class="proof-stat">
+        <span class="proof-num">✓</span>
+        <span class="proof-label">Verified</span>
+      </div>
     </div>
-    <p class="text-white/20 text-xs">558 W Roosevelt Rd, Suite 2 · South Loop, Chicago</p>
+    <div class="hero-ctas">
+      <a href="https://app.acuityscheduling.com/schedule.php?owner=ACUITY_ID" target="_blank" class="btn-primary">Book Your Appointment</a>
+      <button class="btn-secondary" onclick="document.getElementById('chat-widget').querySelector('.chat-toggle').click()">Chat with AI</button>
+    </div>
+  </div>
+  <div class="hero-image-side">
+    <div class="gold-ring"></div>
+    <div class="gold-ring-2"></div>
+    <div class="hero-ig-embed">
+      <!-- Real IG embed — replace src with actual photo URL from @barbergawd -->
+      <div class="hero-ig-frame" style="background: linear-gradient(160deg, #1a1208 0%, #2d1f0a 30%, #0d0d0d 70%, #080808 100%); display:flex; align-items:center; justify-content:center; flex-direction:column; gap:1rem; height:100%;">
+        <div style="font-size:4rem; opacity:0.15;">💈</div>
+        <p style="font-size:0.7rem; letter-spacing:0.2em; text-transform:uppercase; color:rgba(201,168,76,0.4);">@barbergawd</p>
+        <p style="font-size:0.65rem; color:rgba(245,240,232,0.2); text-align:center; padding:0 2rem;">Drop Antonio's photo here<br>or embed IG widget</p>
+      </div>
+      <div class="hero-ig-overlay"></div>
+      <div class="hero-ig-badge">
+        <span class="ig-handle"><span>@barbergawd</span> · 85.1K</span>
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- ============================================================
-     FOOTER
-     ============================================================ -->
-<footer class="border-t border-white/5 bg-brand-black py-12">
-  <div class="max-w-[1400px] mx-auto px-6 md:px-12 flex flex-wrap items-center justify-between gap-6">
-    <div class="flex items-center gap-3">
-      <div class="w-9 h-9 border border-brand-gold flex items-center justify-center">
-        <span class="font-display font-bold text-brand-gold text-lg leading-none">W</span>
-      </div>
-      <span class="font-display text-lg font-semibold text-white">THE COIL</span>
+<!-- ── GALLERY ── -->
+<section id="gallery">
+  <p class="section-label">The Work</p>
+  <h2 class="section-title">Precision is the<br><em>only standard</em></h2>
+  <div class="divider"></div>
+  <div class="gallery-grid">
+    <div class="gallery-item">
+      <div class="gallery-placeholder gp-1"><span class="gp-icon">✂️</span></div>
+      <div class="gallery-overlay"><span class="gallery-label">Hair Unit Install</span></div>
     </div>
-    <div class="flex flex-wrap gap-6 text-xs text-white/30 uppercase tracking-wider">
-      <a href="index.html" class="hover:text-brand-gold transition-colors">Home</a>
-      <a href="booking.html" class="hover:text-brand-gold transition-colors">Services</a>
-      <a href="gallery.html" class="hover:text-brand-gold transition-colors">Gallery</a>
-      <a href="about.html" class="hover:text-brand-gold transition-colors">About</a>
-      <a href="https://thecoilgrooming.com/collections/all" target="_blank" class="hover:text-brand-gold transition-colors">Shop</a>
+    <div class="gallery-item">
+      <div class="gallery-placeholder gp-2"><span class="gp-icon">🪒</span></div>
+      <div class="gallery-overlay"><span class="gallery-label">Beard Sculpt</span></div>
     </div>
-    <p class="text-white/20 text-xs">© 2025 Antonio Willis. All rights reserved.</p>
+    <div class="gallery-item">
+      <div class="gallery-placeholder gp-3"><span class="gp-icon">💈</span></div>
+      <div class="gallery-overlay"><span class="gallery-label">Shape Up</span></div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-placeholder gp-4"><span class="gp-icon">👑</span></div>
+      <div class="gallery-overlay"><span class="gallery-label">VIP Package</span></div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-placeholder gp-5"><span class="gp-icon">🔧</span></div>
+      <div class="gallery-overlay"><span class="gallery-label">Unit Maintenance</span></div>
+    </div>
   </div>
+  <p style="margin-top:2rem; font-size:0.7rem; color:rgba(245,240,232,0.3); letter-spacing:0.1em;">
+    Follow <a href="https://instagram.com/barbergawd" target="_blank" style="color:var(--gold); text-decoration:none;">@barbergawd</a> for the full portfolio
+  </p>
+</section>
+
+<!-- ── SERVICES ── -->
+<section id="services">
+  <p class="section-label">Services & Pricing</p>
+  <h2 class="section-title">Every cut is a<br><em>statement</em></h2>
+  <div class="divider"></div>
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-price">$45</div>
+      <div class="service-name">Haircut & Shape Up</div>
+      <div class="service-desc">Precision fade, taper, or cut with a crisp lineup. The foundation of the BarberGawd standard.</div>
+      <a href="https://app.acuityscheduling.com/schedule.php?owner=ACUITY_ID" target="_blank" class="service-book">Book This</a>
+    </div>
+    <div class="service-card">
+      <div class="service-price">$35</div>
+      <div class="service-name">Beard Shape & Line Up</div>
+      <div class="service-desc">Sculpted, defined, and razor-sharp. Your beard deserves the same attention as your cut.</div>
+      <a href="https://app.acuityscheduling.com/schedule.php?owner=ACUITY_ID" target="_blank" class="service-book">Book This</a>
+    </div>
+    <div class="service-card">
+      <div class="service-price">$150</div>
+      <div class="service-name">Hair Unit Install</div>
+      <div class="service-desc">Chicago's premier hair unit specialist. Natural-looking, seamless installs that transform confidence.</div>
+      <a href="https://app.acuityscheduling.com/schedule.php?owner=ACUITY_ID" target="_blank" class="service-book">Book This</a>
+    </div>
+    <div class="service-card">
+      <div class="service-price">$75</div>
+      <div class="service-name">Unit Maintenance</div>
+      <div class="service-desc">Keep your unit fresh, clean, and properly secured. Regular maintenance extends the life of your investment.</div>
+      <a href="https://app.acuityscheduling.com/schedule.php?owner=ACUITY_ID" target="_blank" class="service-book">Book This</a>
+    </div>
+    <div class="service-card">
+      <div class="service-price">$90</div>
+      <div class="service-name">VIP Package</div>
+      <div class="service-desc">The full experience — precision cut, beard sculpt, and hot towel treatment. The Gawd treatment.</div>
+      <a href="https://app.acuityscheduling.com/schedule.php?owner=ACUITY_ID" target="_blank" class="service-book">Book This</a>
+    </div>
+    <div class="service-card">
+      <div class="service-price">+$20</div>
+      <div class="service-name">Late Night Premium</div>
+      <div class="service-desc">After 7pm slots available for those who move on their own schedule. Premium applies to any service.</div>
+      <a href="https://app.acuityscheduling.com/schedule.php?owner=ACUITY_ID" target="_blank" class="service-book">Book This</a>
+    </div>
+  </div>
+  <p style="margin-top:2rem; font-size:0.75rem; color:var(--white-dim);">
+    📍 558 W Roosevelt Rd, Suite 2, Chicago IL 60607 &nbsp;·&nbsp; Tue–Sat 10am–8pm
+  </p>
+</section>
+
+<!-- ── SYSTEM ── -->
+<section id="system">
+  <p class="section-label">The Coil AI System</p>
+  <h2 class="section-title">Your business,<br><em>automated</em></h2>
+  <div class="divider"></div>
+  <div class="system-grid">
+    <div class="system-card">
+      <span class="system-status status-live">● Live</span>
+      <div class="system-icon">💬</div>
+      <div class="system-name">AI Concierge</div>
+      <div class="system-desc">A Gemini-powered assistant that handles client inquiries, booking guidance, pricing questions, and lead qualification — 24/7, without you lifting a finger.</div>
+    </div>
+    <div class="system-card">
+      <span class="system-status status-live">● Live</span>
+      <div class="system-icon">📱</div>
+      <div class="system-name">SMS Reminders</div>
+      <div class="system-desc">Automated confirmation texts at booking, 24-hour reminders, and 2-hour day-of alerts. No-shows drop. Revenue recovers.</div>
+    </div>
+    <div class="system-card">
+      <span class="system-status status-flagship">★ Flagship</span>
+      <div class="system-icon">📡</div>
+      <div class="system-name">Push Engine</div>
+      <div class="system-desc">Broadcast to your entire client base with surgical precision. Segment by VIP, dormant, or new clients. Schedule gap-fill blasts, promos, and re-engagement campaigns from a single admin panel.</div>
+      <div class="system-note">Advanced audience segmentation · Blast scheduling · Revenue analytics</div>
+    </div>
+    <div class="system-card">
+      <span class="system-status status-pending">◌ Coming Soon</span>
+      <div class="system-icon">✉️</div>
+      <div class="system-name">DM Automation</div>
+      <div class="system-desc">AI-powered Instagram DM responses that qualify leads, answer pricing questions, and convert followers into booked appointments — automatically.</div>
+      <div class="system-note">Requires Meta Business API verification · Timeline: Phase 2</div>
+    </div>
+    <div class="system-card">
+      <span class="system-status status-live">● Live</span>
+      <div class="system-icon">📅</div>
+      <div class="system-name">Smart Booking</div>
+      <div class="system-desc">One link. All services. Real-time availability via Acuity. No more fragmented links, no more back-and-forth. Clients book themselves.</div>
+    </div>
+    <div class="system-card">
+      <span class="system-status status-flagship">★ Flagship</span>
+      <div class="system-icon">🔒</div>
+      <div class="system-name">Adversarial Security</div>
+      <div class="system-desc">Five-layer protection: origin enforcement, rate limiting, injection detection, input sanitization, and platform-level content governance. Enterprise-grade, independent-operator economics.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PRICING ── -->
+<section id="pricing">
+  <p class="section-label">Investment</p>
+  <h2 class="section-title">Built to pay<br><em>for itself</em></h2>
+  <div class="divider"></div>
+  <p style="max-width:560px; font-size:0.85rem; color:var(--white-dim); line-height:1.8; margin-bottom:1rem;">
+    One recovered no-show per week covers the retainer. The system runs the rest.
+  </p>
+  <div class="pricing-grid">
+    <div class="pricing-card">
+      <div class="pricing-module">Module 1 — Foundation</div>
+      <div class="pricing-upfront"><span>$</span>1,000</div>
+      <div class="pricing-upfront-label">One-time setup & infrastructure</div>
+      <div class="pricing-monthly">then $200 / month</div>
+      <ul class="pricing-features">
+        <li>Willis Landing Page (this page)</li>
+        <li>AI Concierge Chatbot</li>
+        <li>Unified Booking Integration</li>
+        <li>SMS Appointment Reminders</li>
+        <li>Adversarial Security Stack</li>
+        <li>Monthly maintenance & updates</li>
+        <li class="pending">Push Notification Engine</li>
+        <li class="pending">DM Automation (Meta API)</li>
+      </ul>
+      <a href="https://app.acuityscheduling.com/schedule.php?owner=ACUITY_ID" target="_blank" class="btn-primary" style="display:block; text-align:center;">Start with Module 1</a>
+    </div>
+    <div class="pricing-card featured">
+      <div class="pricing-badge">Full System</div>
+      <div class="pricing-module">Module 2 — Complete OS</div>
+      <div class="pricing-upfront"><span>$</span>1,000</div>
+      <div class="pricing-upfront-label">One-time setup & infrastructure</div>
+      <div class="pricing-monthly">then $350 / month</div>
+      <ul class="pricing-features">
+        <li>Everything in Module 1</li>
+        <li>Push Notification Engine ★</li>
+        <li>Audience Segmentation (VIP / Dormant / New)</li>
+        <li>Blast Scheduling & Queue</li>
+        <li>Revenue Recovery Analytics</li>
+        <li>DM Automation (when Meta API active)</li>
+        <li>Priority support & feature updates</li>
+      </ul>
+      <a href="https://app.acuityscheduling.com/schedule.php?owner=ACUITY_ID" target="_blank" class="btn-primary" style="display:block; text-align:center;">Get the Full System</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-brand">The Coil</div>
+  <div class="footer-links">
+    <a href="https://instagram.com/barbergawd" target="_blank">@barbergawd</a>
+    <a href="https://app.acuityscheduling.com/schedule.php?owner=ACUITY_ID" target="_blank">Book Now</a>
+    <a href="https://maps.google.com/?q=558+W+Roosevelt+Rd+Chicago+IL" target="_blank">558 W Roosevelt Rd</a>
+  </div>
+  <div class="footer-copy">© 2025 The Coil · Downtown Chicago</div>
 </footer>
 
-<!-- ============================================================
-     AI CHATBOT WIDGET
-     ============================================================ -->
-
-<!-- Bubble button -->
-<button id="chat-bubble" onclick="toggleChat()" aria-label="Chat with The Coil AI">
-  <svg id="chat-icon-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-  </svg>
-  <svg id="chat-icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="display:none;">
-    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-  </svg>
-  <div class="notif-dot"></div>
-</button>
-
-<!-- Chat window -->
-<div id="chat-window">
-  <!-- Header -->
-  <div class="chat-header">
-    <div class="chat-avatar">
-      <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDf60liNwwJ2wU4mqRQJ2aHSTOo7pQeASj3EiQQ65-NUfpBVCQbqenR8E5T0KqW5_zqc01hKxMba6frPzKyOvPIgvzMgxuCnAKFOQFuDd00P2WCbWRO2M4FImSyRbtlXqtQDmHrEfI9tljPriPvrES1f6u79HGxtJKOTHmAk3S-9MRo2rA8DjE7IC0_bTCcEp2v6GwH3uP0zH0-l0zroWPbWEKJyOoWuih0_xukNqHJH3oxo9GPdS0hi4vNjjFV3VcivmcU_jDZFNCJ"
-           alt="BarberGawd AI"/>
-    </div>
-    <div class="flex-1">
-      <div class="text-white font-semibold text-sm">The Coil AI</div>
-      <div class="chat-status">
-        <div class="chat-status-dot"></div>
-        <span class="text-white/40 text-xs">BarberGawd's assistant · Online</span>
+<!-- ── AI CHAT WIDGET ── -->
+<div id="chat-widget">
+  <div class="chat-panel" id="chat-panel">
+    <div class="chat-header">
+      <div class="chat-avatar">💈</div>
+      <div class="chat-header-info">
+        <div class="chat-header-name">Coil AI Concierge</div>
+        <div class="chat-header-status">Online · Powered by BarberGawd OS</div>
       </div>
     </div>
-    <button onclick="toggleChat()" class="text-white/30 hover:text-white transition-colors p-1">
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-      </svg>
-    </button>
+    <div class="chat-messages" id="chat-messages">
+      <div class="msg msg-bot">Hey! Welcome to The Coil. 👋 I'm the AI concierge for Antonio "BarberGawd" Willis. Ask me about services, pricing, hours, or booking — what can I help you with?</div>
+    </div>
+    <div class="chat-input-row">
+      <input type="text" class="chat-input" id="chat-input" placeholder="Ask about booking, pricing, hours..." />
+      <button class="chat-send" id="chat-send">→</button>
+    </div>
   </div>
-
-  <!-- Messages -->
-  <div id="chat-messages">
-    <!-- Welcome message injected by JS -->
-  </div>
-
-  <!-- Quick replies -->
-  <div class="chat-quick-replies" id="quick-replies">
-    <button class="quick-reply" onclick="sendQuick('Book an appointment')">📅 Book</button>
-    <button class="quick-reply" onclick="sendQuick('What are your prices?')">💰 Pricing</button>
-    <button class="quick-reply" onclick="sendQuick('What are your hours?')">🕐 Hours</button>
-    <button class="quick-reply" onclick="sendQuick('Where are you located?')">📍 Location</button>
-  </div>
-
-  <!-- Input -->
-  <div class="chat-input-row">
-    <input id="chat-input" type="text" placeholder="Ask anything..." autocomplete="off"
-           onkeydown="if(event.key==='Enter')sendMessage()"/>
-    <button id="chat-send" onclick="sendMessage()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
-      </svg>
-    </button>
-  </div>
+  <button class="chat-toggle" id="chat-toggle" onclick="toggleChat()">💬</button>
 </div>
 
 <script>
-// ===== SCROLL REVEAL =====
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+// ── THREE.JS INTRO ──────────────────────────────────────────────────────────
+(function() {
+  const canvas = document.getElementById('intro-canvas');
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-// ===== CHATBOT =====
-let chatOpen = false;
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+  camera.position.z = 5;
+
+  // Gold particle field
+  const particleCount = 2000;
+  const positions = new Float32Array(particleCount * 3);
+  const colors = new Float32Array(particleCount * 3);
+  const goldR = 201/255, goldG = 168/255, goldB = 76/255;
+
+  for (let i = 0; i < particleCount; i++) {
+    positions[i*3]   = (Math.random() - 0.5) * 20;
+    positions[i*3+1] = (Math.random() - 0.5) * 20;
+    positions[i*3+2] = (Math.random() - 0.5) * 20;
+    const brightness = 0.4 + Math.random() * 0.6;
+    colors[i*3]   = goldR * brightness;
+    colors[i*3+1] = goldG * brightness;
+    colors[i*3+2] = goldB * brightness;
+  }
+
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+  const mat = new THREE.PointsMaterial({
+    size: 0.04,
+    vertexColors: true,
+    transparent: true,
+    opacity: 0,
+    sizeAttenuation: true,
+  });
+
+  const particles = new THREE.Points(geo, mat);
+  scene.add(particles);
+
+  // Central gold ring
+  const ringGeo = new THREE.TorusGeometry(1.5, 0.008, 8, 120);
+  const ringMat = new THREE.MeshBasicMaterial({ color: 0xC9A84C, transparent: true, opacity: 0 });
+  const ring = new THREE.Mesh(ringGeo, ringMat);
+  scene.add(ring);
+
+  const ring2Geo = new THREE.TorusGeometry(2.2, 0.004, 8, 120);
+  const ring2Mat = new THREE.MeshBasicMaterial({ color: 0xC9A84C, transparent: true, opacity: 0 });
+  const ring2 = new THREE.Mesh(ring2Geo, ring2Mat);
+  ring2.rotation.x = Math.PI / 4;
+  scene.add(ring2);
+
+  let startTime = Date.now();
+  let done = false;
+
+  function easeInOut(t) { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; }
+
+  function animate() {
+    if (done) return;
+    requestAnimationFrame(animate);
+
+    const elapsed = (Date.now() - startTime) / 1000;
+    const total = 3.5; // seconds before fade out
+
+    // Phase 1: particles fade in (0-1s)
+    if (elapsed < 1) {
+      mat.opacity = easeInOut(elapsed);
+    }
+    // Phase 2: rings appear (0.5-1.5s)
+    if (elapsed > 0.5 && elapsed < 1.5) {
+      const t = (elapsed - 0.5) / 1.0;
+      ringMat.opacity = easeInOut(t) * 0.8;
+      ring2Mat.opacity = easeInOut(t) * 0.4;
+    }
+    // Full opacity
+    if (elapsed >= 1 && elapsed < total - 0.5) {
+      mat.opacity = 1;
+      ringMat.opacity = 0.8;
+      ring2Mat.opacity = 0.4;
+    }
+    // Phase 3: fade out (total-0.5 to total)
+    if (elapsed >= total - 0.5) {
+      const t = (elapsed - (total - 0.5)) / 0.5;
+      const fade = 1 - easeInOut(Math.min(t, 1));
+      mat.opacity = fade;
+      ringMat.opacity = fade * 0.8;
+      ring2Mat.opacity = fade * 0.4;
+    }
+    // Done
+    if (elapsed >= total) {
+      endIntro();
+      return;
+    }
+
+    // Animate
+    particles.rotation.y = elapsed * 0.08;
+    particles.rotation.x = elapsed * 0.03;
+    ring.rotation.z = elapsed * 0.3;
+    ring2.rotation.y = elapsed * 0.2;
+
+    // Camera drift
+    camera.position.x = Math.sin(elapsed * 0.2) * 0.3;
+    camera.position.y = Math.cos(elapsed * 0.15) * 0.2;
+    camera.lookAt(0, 0, 0);
+
+    renderer.render(scene, camera);
+  }
+
+  function endIntro() {
+    if (done) return;
+    done = true;
+    canvas.classList.add('fade-out');
+    document.getElementById('skip-intro').style.display = 'none';
+    setTimeout(() => { canvas.style.display = 'none'; }, 1200);
+  }
+
+  document.getElementById('skip-intro').addEventListener('click', endIntro);
+
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+
+  animate();
+})();
+
+// ── CHAT WIDGET ─────────────────────────────────────────────────────────────
 let chatHistory = [];
-let isTyping = false;
-let chatInitialized = false;
+let chatOpen = false;
 
 function toggleChat() {
   chatOpen = !chatOpen;
-  const win = document.getElementById('chat-window');
-  const iconOpen = document.getElementById('chat-icon-open');
-  const iconClose = document.getElementById('chat-icon-close');
-  const notif = document.querySelector('#chat-bubble .notif-dot');
-
-  if (chatOpen) {
-    win.classList.add('open');
-    iconOpen.style.display = 'none';
-    iconClose.style.display = 'block';
-    if (notif) notif.style.display = 'none';
-    if (!chatInitialized) initChat();
-    setTimeout(() => document.getElementById('chat-input').focus(), 300);
-  } else {
-    win.classList.remove('open');
-    iconOpen.style.display = 'block';
-    iconClose.style.display = 'none';
-  }
+  const panel = document.getElementById('chat-panel');
+  const toggle = document.getElementById('chat-toggle');
+  panel.classList.toggle('open', chatOpen);
+  toggle.textContent = chatOpen ? '✕' : '💬';
+  if (chatOpen) document.getElementById('chat-input').focus();
 }
 
-function initChat() {
-  chatInitialized = true;
-  addBotMessage("Hey! 👋 I'm the AI assistant for The Coil.\n\nAsk me about booking, pricing, hours, or anything else. I'm here 24/7.");
-}
-
-function addBotMessage(text) {
+function addMsg(text, role) {
   const msgs = document.getElementById('chat-messages');
   const div = document.createElement('div');
-  div.className = 'chat-msg bot';
-  // Convert **bold** markdown
-  const formatted = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-  div.innerHTML = `<div class="chat-msg-bubble">${formatted}</div>`;
+  div.className = `msg msg-${role}`;
+  div.innerHTML = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
   msgs.appendChild(div);
   msgs.scrollTop = msgs.scrollHeight;
-}
-
-function addUserMessage(text) {
-  const msgs = document.getElementById('chat-messages');
-  const div = document.createElement('div');
-  div.className = 'chat-msg user';
-  div.innerHTML = `<div class="chat-msg-bubble">${text}</div>`;
-  msgs.appendChild(div);
-  msgs.scrollTop = msgs.scrollHeight;
+  return div;
 }
 
 function showTyping() {
   const msgs = document.getElementById('chat-messages');
   const div = document.createElement('div');
-  div.className = 'chat-msg bot';
+  div.className = 'msg msg-bot msg-typing';
   div.id = 'typing-indicator';
-  div.innerHTML = `<div class="chat-msg-bubble typing-indicator">
-    <div class="typing-dot"></div>
-    <div class="typing-dot"></div>
-    <div class="typing-dot"></div>
-  </div>`;
+  div.innerHTML = '<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>';
   msgs.appendChild(div);
   msgs.scrollTop = msgs.scrollHeight;
 }
 
-function removeTyping() {
-  const el = document.getElementById('typing-indicator');
-  if (el) el.remove();
-}
-
-function hideQuickReplies() {
-  const qr = document.getElementById('quick-replies');
-  if (qr) qr.style.display = 'none';
+function hideTyping() {
+  const t = document.getElementById('typing-indicator');
+  if (t) t.remove();
 }
 
 async function sendMessage() {
   const input = document.getElementById('chat-input');
-  const sendBtn = document.getElementById('chat-send');
   const text = input.value.trim();
-  if (!text || isTyping) return;
-
+  if (!text) return;
   input.value = '';
-  hideQuickReplies();
-  addUserMessage(text);
-  chatHistory.push({ role: 'user', content: text });
 
-  isTyping = true;
-  sendBtn.disabled = true;
+  addMsg(text, 'user');
+  chatHistory.push({ role: 'user', content: text });
   showTyping();
 
   try {
     const res = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: text, history: chatHistory.slice(-8) }),
+      body: JSON.stringify({ message: text, history: chatHistory.slice(-6) }),
     });
-
     const data = await res.json();
-    removeTyping();
-
-    const reply = data.reply || "Let me connect you with Antonio directly — DM @barbergawd on IG. 🤝";
-    addBotMessage(reply);
+    hideTyping();
+    const reply = data.reply || "Hit Antonio on IG @barbergawd for that one.";
+    addMsg(reply, 'bot');
     chatHistory.push({ role: 'assistant', content: reply });
-
-  } catch (err) {
-    removeTyping();
-    addBotMessage("Having a quick connection issue. For immediate help, DM @barbergawd on Instagram or tap Book Now above. 💈");
+  } catch {
+    hideTyping();
+    addMsg("Having trouble connecting right now. Hit Antonio on IG **@barbergawd** or tap **Book Now** above. 💈", 'bot');
   }
-
-  isTyping = false;
-  sendBtn.disabled = false;
-  input.focus();
 }
 
-function sendQuick(text) {
-  document.getElementById('chat-input').value = text;
-  sendMessage();
-}
+document.getElementById('chat-send').addEventListener('click', sendMessage);
+document.getElementById('chat-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') sendMessage();
+});
 </script>
-
 </body>
 </html>
