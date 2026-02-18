@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>About — Antonio "BarberGawd" Willis | The Coil</title>
+<meta name="description" content="Meet Antonio 'BarberGawd' Willis — master barber with 10+ years of experience in precision haircuts, non-surgical hair replacement, and classic grooming. South Loop, Chicago.">
+<meta name="theme-color" content="#0A0A0A">
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;0,6..72,800;1,6..72,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        brand: { black: "#0A0A0A", gold: "#D4AF37", "gold-light": "#E8C96A", crimson: "#8B1A1A", "crimson-light": "#A91D1D", muted: "#999999", surface: "#141414", "surface-light": "#1E1E1E" },
+      },
+      fontFamily: { display: ["Newsreader", "Georgia", "serif"], body: ["Inter", "system-ui", "sans-serif"] },
+    },
+  },
+};
+</script>
+<style>
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Inter', system-ui, sans-serif; background: #0A0A0A; color: #F5F5F5; }
+  .font-display { font-family: 'Newsreader', Georgia, serif; }
+  .gold-divider { height: 1px; background: linear-gradient(90deg, transparent, #D4AF37, transparent); }
+  .nav-link { position: relative; }
+  .nav-link::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 1px; background: #D4AF37; transition: width 0.3s ease; }
+  .nav-link:hover::after { width: 100%; }
+  .btn-gold { background: #D4AF37; color: #0A0A0A; font-weight: 600; letter-spacing: 0.05em; transition: all 0.3s ease; }
+  .btn-gold:hover { background: #E8C96A; transform: translateY(-1px); box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3); }
+  .btn-outline-gold { border: 1px solid #D4AF37; color: #D4AF37; transition: all 0.3s ease; }
+  .btn-outline-gold:hover { background: rgba(212, 175, 55, 0.1); }
+  .craft-block { border: 1px solid rgba(212, 175, 55, 0.15); transition: all 0.3s ease; }
+  .craft-block:hover { border-color: rgba(212, 175, 55, 0.4); }
+  .w-watermark { position: absolute; font-family: 'Newsreader', serif; font-size: 50vw; font-weight: 800; color: rgba(212, 175, 55, 0.02); top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none; user-select: none; z-index: 0; line-height: 1; }
+</style>
+</head>
+<body class="antialiased min-h-screen overflow-x-hidden">
+
+<!-- Navigation -->
+<nav class="fixed top-0 left-0 right-0 z-50 bg-brand-black/90 backdrop-blur-md border-b border-white/5">
+  <div class="max-w-[1440px] mx-auto px-8 h-20 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-3 text-white no-underline">
+      <div class="w-10 h-10 border border-brand-gold flex items-center justify-center">
+        <span class="font-display font-bold text-brand-gold text-xl leading-none">W</span>
+      </div>
+      <span class="font-display text-xl font-semibold tracking-tight">THE COIL</span>
+    </a>
+    <div class="hidden md:flex items-center gap-8">
+      <a href="booking.html" class="nav-link text-sm font-medium text-white/70 hover:text-white tracking-wide uppercase">Services</a>
+      <a href="gallery.html" class="nav-link text-sm font-medium text-white/70 hover:text-white tracking-wide uppercase">Gallery</a>
+      <a href="about.html" class="nav-link text-sm font-medium text-white tracking-wide uppercase border-b border-brand-gold pb-0.5">About</a>
+      <a href="https://thecoilgrooming.com/collections/all" target="_blank" class="nav-link text-sm font-medium text-white/70 hover:text-white tracking-wide uppercase">Shop</a>
+      <a href="https://app.acuityscheduling.com/schedule/97ecbd23/?calendarIds=5426664" target="_blank" class="btn-gold px-6 py-2.5 text-sm uppercase tracking-widest">Book Now</a>
+    </div>
+    <button class="md:hidden text-white" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+  </div>
+  <div id="mobile-menu" class="hidden md:hidden bg-brand-black border-t border-white/5 px-8 py-6 space-y-4">
+    <a href="booking.html" class="block text-white/70 hover:text-white text-sm uppercase tracking-wide">Services</a>
+    <a href="gallery.html" class="block text-white/70 hover:text-white text-sm uppercase tracking-wide">Gallery</a>
+    <a href="about.html" class="block text-white text-sm uppercase tracking-wide font-semibold">About</a>
+    <a href="https://thecoilgrooming.com/collections/all" target="_blank" class="block text-white/70 hover:text-white text-sm uppercase tracking-wide">Shop</a>
+    <a href="https://app.acuityscheduling.com/schedule/97ecbd23/?calendarIds=5426664" target="_blank" class="btn-gold block text-center px-6 py-3 text-sm uppercase tracking-widest mt-4">Book Now</a>
+  </div>
+</nav>
+
+<!-- The Man Behind The Chair -->
+<section class="pt-32 pb-24 relative">
+  <div class="w-watermark">W</div>
+  <div class="max-w-[1440px] mx-auto px-8">
+    <!-- Section label -->
+    <p class="text-brand-gold text-sm uppercase tracking-[0.3em] mb-16 text-center">About The Barber</p>
+
+    <!-- Split: Portrait + Bio -->
+    <div class="grid grid-cols-1 lg:grid-cols-5 gap-0 items-stretch">
+      <!-- Portrait (60%) -->
+      <div class="lg:col-span-3 relative">
+        <div class="aspect-[4/5] lg:aspect-auto lg:h-full overflow-hidden">
+          <img
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDf60liNwwJ2wU4mqRQJ2aHSTOo7pQeASj3EiQQ65-NUfpBVCQbqenR8E5T0KqW5_zqc01hKxMba6frPzKyOvPIgvzMgxuCnAKFOQFuDd00P2WCbWRO2M4FImSyRbtlXqtQDmHrEfI9tljPriPvrES1f6u79HGxtJKOTHmAk3S-9MRo2rA8DjE7IC0_bTCcEp2v6GwH3uP0zH0-l0zroWPbWEKJyOoWuih0_xukNqHJH3oxo9GPdS0hi4vNjjFV3VcivmcU_jDZFNCJ"
+            alt="Antonio 'BarberGawd' Willis — Master Barber, South Loop Chicago"
+            class="w-full h-full object-cover"
+          />
+        </div>
+        <!-- Gold accent line -->
+        <div class="absolute bottom-0 left-0 w-full h-1 bg-brand-gold"></div>
+      </div>
+
+      <!-- Bio (40%) -->
+      <div class="lg:col-span-2 bg-brand-surface border border-white/5 p-12 lg:p-16 flex flex-col justify-center space-y-8">
+        <h1 class="font-display text-4xl md:text-5xl font-bold text-white leading-tight">
+          The Man<br/>Behind<br/>The Chair
+        </h1>
+        <div class="w-16 h-0.5 bg-brand-gold"></div>
+        <h2 class="font-display text-2xl text-brand-gold italic">Antonio "BarberGawd" Willis</h2>
+        <p class="text-white/60 leading-relaxed font-light">
+          Redefining precision and luxury in the heart of South Loop Chicago. Antonio is not merely a barber — he is an architect of the gentleman's profile, merging the sharp lines of modern geometry with the soulful traditions of classic grooming.
+        </p>
+        <p class="text-white/60 leading-relaxed font-light">
+          For over a decade, his chair has served as a sanctuary. From high-profile athletes to the discerning businessman, the BarberGawd experience is an uncompromising pursuit of excellence, executed with the steady hand of a master craftsman.
+        </p>
+        <div class="flex gap-8 text-center pt-4">
+          <div>
+            <p class="font-display text-3xl font-bold text-brand-gold">10+</p>
+            <p class="text-white/30 text-xs uppercase tracking-wider mt-1">Years</p>
+          </div>
+          <div>
+            <p class="font-display text-3xl font-bold text-brand-gold">5★</p>
+            <p class="text-white/30 text-xs uppercase tracking-wider mt-1">Rated</p>
+          </div>
+          <div>
+            <p class="font-display text-3xl font-bold text-brand-gold">1K+</p>
+            <p class="text-white/30 text-xs uppercase tracking-wider mt-1">Clients</p>
+          </div>
+        </div>
+        <a href="https://www.instagram.com/barbergawd/" target="_blank" class="btn-outline-gold px-6 py-3 text-sm uppercase tracking-[0.15em] inline-block w-fit">Follow @barbergawd</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- The Craft -->
+<section class="py-24 border-y border-white/5">
+  <div class="max-w-[1440px] mx-auto px-8">
+    <div class="text-center mb-16 space-y-4">
+      <p class="text-brand-gold text-sm uppercase tracking-[0.3em]">What We Do</p>
+      <h2 class="font-display text-4xl md:text-5xl font-bold text-white">The Craft</h2>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-px bg-white/5">
+      <!-- Precision Cuts -->
+      <div class="craft-block bg-brand-black p-12 space-y-4">
+        <div class="w-12 h-0.5 bg-brand-gold"></div>
+        <h3 class="font-display text-2xl font-semibold text-white">Precision Cuts</h3>
+        <p class="text-white/50 leading-relaxed">
+          Bespoke shear work and detailed fading techniques tailored to individual bone structure. A cut that grows out as beautifully as it looks on day one.
+        </p>
+        <a href="booking.html" class="text-brand-gold text-sm uppercase tracking-wider hover:text-brand-gold-light transition-colors">Book →</a>
+      </div>
+
+      <!-- Hair Units -->
+      <div class="craft-block bg-brand-black p-12 space-y-4">
+        <div class="w-12 h-0.5 bg-brand-crimson"></div>
+        <h3 class="font-display text-2xl font-semibold text-white">Hair Units</h3>
+        <p class="text-white/50 leading-relaxed">
+          Advanced non-surgical hair replacement solutions. Custom fitted units that blend seamlessly, specifically designed to restore confidence and a youthful hairline.
+        </p>
+        <a href="booking.html" class="text-brand-gold text-sm uppercase tracking-wider hover:text-brand-gold-light transition-colors">Book →</a>
+      </div>
+
+      <!-- Classic Shaves -->
+      <div class="craft-block bg-brand-black p-12 space-y-4">
+        <div class="w-12 h-0.5 bg-brand-crimson"></div>
+        <h3 class="font-display text-2xl font-semibold text-white">Classic Shaves</h3>
+        <p class="text-white/50 leading-relaxed">
+          The traditional straight razor experience. Hot towels, essential oils, and a steady hand ensure the closest, most comfortable shave of your life.
+        </p>
+        <a href="booking.html" class="text-brand-gold text-sm uppercase tracking-wider hover:text-brand-gold-light transition-colors">Book →</a>
+      </div>
+
+      <!-- Beard Sculpting -->
+      <div class="craft-block bg-brand-black p-12 space-y-4">
+        <div class="w-12 h-0.5 bg-brand-gold"></div>
+        <h3 class="font-display text-2xl font-semibold text-white">Beard Sculpting</h3>
+        <p class="text-white/50 leading-relaxed">
+          Detailed beard shaping with razor lining, oil treatment, and hot towel. Architecture for your jawline.
+        </p>
+        <a href="booking.html" class="text-brand-gold text-sm uppercase tracking-wider hover:text-brand-gold-light transition-colors">Book →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- South Loop Sanctuary -->
+<section class="py-24 relative">
+  <div class="max-w-[1440px] mx-auto px-8">
+    <div class="text-center mb-16 space-y-4">
+      <p class="text-brand-gold text-sm uppercase tracking-[0.3em]">The Shop</p>
+      <h2 class="font-display text-4xl md:text-5xl font-bold text-white">South Loop Sanctuary</h2>
+      <p class="text-white/40 max-w-lg mx-auto">An atmosphere of curated cool. Dark walls, signature red tufted leather, and the hum of conversation. Where the city's elite come to reset.</p>
+    </div>
+
+    <!-- Full-width shop image -->
+    <div class="relative aspect-[21/9] overflow-hidden">
+      <img
+        src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlR4fGtHuLlvx5f9_by0kmM_FLFcGZekhhrKi5SD8c_cbhMDANTHQeqoKg9xYBRJyhgSVN0lYhQXSLF6iUr9_jJstEkJs18iHsgi51fcU-TA22ekMg2eT2GJ2nXKyus4dlfP1hgGLImYmw-7S0g5T8zICMDLSHkIUbrlKi7VZc6_WFwFVjGH9rN-KMB4wfVRbU3xSp7ItD-D4rxAFSflMDbxVs21xqEp5uCbG3pxJTvgWuzCFtnOlVS2ob6DCEcdjAAQRHLhd9VyMK"
+        alt="The Coil — South Loop barbershop interior"
+        class="w-full h-full object-cover"
+      />
+      <div class="absolute inset-0 bg-gradient-to-t from-brand-black via-transparent to-transparent"></div>
+      <!-- Quote overlay -->
+      <div class="absolute bottom-8 left-8 right-8">
+        <blockquote class="font-display text-2xl italic text-white/80 max-w-lg">
+          "The best cut in Chicago, hands down."
+        </blockquote>
+        <p class="text-white/30 text-sm mt-2 uppercase tracking-wider">— Verified Client Review</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="py-24 bg-brand-surface border-y border-white/5 text-center">
+  <div class="max-w-[640px] mx-auto px-8 space-y-8">
+    <h2 class="font-display text-4xl font-bold text-white">Experience The Coil</h2>
+    <div class="w-16 h-0.5 bg-brand-gold mx-auto"></div>
+    <p class="text-white/50">Book your session with BarberGawd today.</p>
+    <a href="https://app.acuityscheduling.com/schedule/97ecbd23/?calendarIds=5426664" target="_blank" class="btn-gold px-10 py-4 text-sm uppercase tracking-[0.15em] inline-block">Book Your Appointment</a>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="border-t border-white/5 bg-brand-black">
+  <div class="max-w-[1440px] mx-auto px-8 py-16">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+      <div class="space-y-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 border border-brand-gold flex items-center justify-center">
+            <span class="font-display font-bold text-brand-gold text-xl leading-none">W</span>
+          </div>
+          <span class="font-display text-xl font-semibold text-white">THE COIL</span>
+        </div>
+        <p class="text-white/40 text-sm leading-relaxed">Premium grooming by Antonio "BarberGawd" Willis. South Loop, Chicago.</p>
+      </div>
+      <div class="space-y-4">
+        <h4 class="text-brand-gold text-xs uppercase tracking-[0.25em] font-semibold">Location</h4>
+        <p class="text-white/40 text-sm">South Loop, Chicago, IL</p>
+        <p class="text-white/40 text-sm">Tues – Sat: 10am – 8pm<br/>Sun – Mon: Closed</p>
+      </div>
+      <div class="space-y-4">
+        <h4 class="text-brand-gold text-xs uppercase tracking-[0.25em] font-semibold">Connect</h4>
+        <div class="space-y-2">
+          <a href="https://www.instagram.com/barbergawd/" target="_blank" class="block text-white/40 hover:text-brand-gold text-sm transition-colors">Instagram — @barbergawd</a>
+          <a href="https://thecoilgrooming.com" target="_blank" class="block text-white/40 hover:text-brand-gold text-sm transition-colors">thecoilgrooming.com</a>
+          <a href="https://thecoilgrooming.com/collections/all" target="_blank" class="block text-white/40 hover:text-brand-gold text-sm transition-colors">Shop Products</a>
+        </div>
+      </div>
+    </div>
+    <div class="gold-divider mt-12 mb-8"></div>
+    <div class="flex flex-wrap items-center justify-between text-xs text-white/20 uppercase tracking-wider">
+      <span>© 2024 Antonio Willis. All rights reserved.</span>
+      <span>The Coil — South Loop, Chicago</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

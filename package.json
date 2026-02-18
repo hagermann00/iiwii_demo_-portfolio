@@ -1,0 +1,16 @@
+{
+  "name": "the-coil-barbershop",
+  "version": "1.0.0",
+  "description": "The Coil AI Barbershop System — Premium booking, AI automation, and client management",
+  "private": true,
+  "scripts": {
+    "dev": "netlify dev",
+    "build": "echo 'Static site — no build step required'"
+  },
+  "dependencies": {
+    "@netlify/functions": "^3.0.0"
+  },
+  "devDependencies": {
+    "netlify-cli": "^18.0.0"
+  }
+}

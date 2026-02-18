@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0a0a0a">
+<title>COIL_SYS // Terminal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a0a;--fg:#00ff41;--fg2:#00cc33;--dim:#1a3d1a;--panel:#0f0f0f;--border:#1a1a1a;--amber:#ffb300;--red:#ff3333;--cyan:#00e5ff;--white:rgba(255,255,255,.85);--wh2:rgba(255,255,255,.4);--fm:'JetBrains Mono',monospace;--fs:'Space Grotesk',sans-serif;--st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px)}
+html{scroll-snap-type:y mandatory;scroll-behavior:smooth;overflow-x:hidden}
+body{font-family:var(--fm);background:var(--bg);color:var(--fg);-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;overflow-x:hidden;font-size:13px;line-height:1.6}
+
+/* SCANLINES */
+body::before{content:'';position:fixed;inset:0;z-index:9998;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,65,.03) 2px,rgba(0,255,65,.03) 4px)}
+body::after{content:'';position:fixed;inset:0;z-index:9997;pointer-events:none;background:radial-gradient(ellipse at center,transparent 50%,rgba(0,0,0,.4))}
+
+/* LAYOUT */
+.s{scroll-snap-align:start;min-height:100dvh;display:flex;flex-direction:column;justify-content:center;padding:32px 20px calc(32px + var(--sb));padding-top:calc(32px + var(--st));position:relative}
+.si{max-width:480px;margin:0 auto;width:100%}
+
+/* PROMPT */
+.pr{color:var(--fg2);margin-bottom:4px;font-size:11px}
+.pr::before{content:'> '}
+.cmd{color:var(--fg);font-weight:700}
+.cmt{color:var(--wh2);font-style:italic}
+.hl{color:var(--amber)}
+.err{color:var(--red)}
+.cy{color:var(--cyan)}
+
+/* HERO */
+.hero{justify-content:flex-end;padding-bottom:calc(80px + var(--sb))}
+.ascii-art{font-size:clamp(6px,2.2vw,9px);line-height:1.2;color:var(--fg);opacity:0;animation:fi .8s ease .2s forwards;white-space:pre;overflow:hidden;margin-bottom:24px}
+.hero-cmd{font-size:clamp(24px,7vw,36px);font-weight:700;font-family:var(--fs);color:var(--white);line-height:1.15;opacity:0;animation:fi .8s ease .5s forwards}
+.hero-cmd em{font-style:normal;color:var(--fg)}
+.hero-sub{margin-top:16px;color:var(--wh2);font-size:12px;line-height:1.7;opacity:0;animation:fi .8s ease .8s forwards}
+.hero-sub strong{color:var(--fg)}
+.cursor{display:inline-block;width:8px;height:16px;background:var(--fg);animation:blink 1s step-end infinite;vertical-align:text-bottom;margin-left:4px}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+@keyframes fi{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.sc{position:absolute;bottom:calc(24px + var(--sb));left:50%;transform:translateX(-50%);text-align:center;opacity:0;animation:fi 1s ease 1.6s forwards}
+.sc span{font-size:8px;letter-spacing:4px;color:var(--wh2)}
+
+/* STAT BAR */
+.stats{display:flex;border:1px solid var(--border);margin-top:32px}
+.stat{flex:1;padding:16px 8px;text-align:center;border-right:1px solid var(--border)}
+.stat:last-child{border-right:none}
+.stat .v{font-size:24px;font-weight:700;font-family:var(--fs)}
+.stat .v.g{color:var(--fg)}
+.stat .v.a{color:var(--amber)}
+.stat .l{font-size:8px;letter-spacing:2px;color:var(--wh2);margin-top:4px;text-transform:uppercase}
+
+/* LOG BLOCK */
+.log{background:var(--panel);border:1px solid var(--border);border-radius:2px;padding:16px;font-size:12px;margin-bottom:12px}
+.log-title{color:var(--amber);font-weight:700;margin-bottom:12px;font-size:11px;letter-spacing:2px;text-transform:uppercase}
+.log-line{padding:6px 0;border-bottom:1px solid var(--border);display:flex;gap:8px}
+.log-line:last-child{border-bottom:none}
+.log-num{color:var(--wh2);min-width:20px;text-align:right}
+.log-txt{color:var(--white)}
+.log-txt .tag{padding:1px 6px;border-radius:2px;font-size:10px;margin-left:6px}
+.tag.ok{background:rgba(0,255,65,.1);color:var(--fg)}
+.tag.run{background:rgba(0,229,255,.1);color:var(--cyan)}
+.tag.wait{background:rgba(255,179,0,.1);color:var(--amber)}
+
+/* DM SIM */
+.df{background:var(--panel);border:1px solid var(--border);border-radius:2px;overflow:hidden}
+.db{padding:10px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border)}
+.db h3{font-size:11px;letter-spacing:2px;color:var(--amber)}
+.db .en{font-size:9px;padding:2px 8px;background:rgba(0,255,65,.1);color:var(--fg);border-radius:2px}
+.tabs{display:flex;border-bottom:1px solid var(--border)}
+.tab{flex:1;padding:10px 0;border:none;background:none;color:var(--wh2);font-family:var(--fm);font-size:10px;letter-spacing:1.5px;cursor:pointer;transition:color .2s}
+.tab.on{color:var(--fg)}
+.tab.on::after{content:'';display:block;height:1px;background:var(--fg);margin-top:8px}
+.dt{height:260px;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;scroll-behavior:smooth}
+.dt::-webkit-scrollbar{width:0}
+.dm{display:flex;gap:8px;align-items:flex-end;opacity:0;transform:translateY(8px);animation:mi .3s ease forwards}
+.dm.cl{flex-direction:row-reverse}
+.da{width:26px;height:26px;min-width:26px;border:1px solid;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700}
+.dm.ai .da{border-color:var(--fg);color:var(--fg)}
+.dm.cl .da{border-color:var(--amber);color:var(--amber)}
+.dbb{max-width:78%;padding:10px 14px;font-size:12px;line-height:1.5}
+.dm.ai .dbb{background:rgba(0,255,65,.05);border-left:2px solid var(--fg);color:var(--white)}
+.dm.cl .dbb{background:rgba(255,179,0,.05);border-right:2px solid var(--amber);color:var(--white)}
+.bb{display:inline-block;margin-top:8px;padding:6px 14px;border:1px solid var(--fg);background:none;color:var(--fg);font-family:var(--fm);font-size:10px;letter-spacing:1px;cursor:pointer}
+.bb:active{background:var(--fg);color:var(--bg)}
+@keyframes mi{to{opacity:1;transform:translateY(0)}}
+.tp span{display:inline-block;width:5px;height:5px;background:var(--fg);margin:0 2px;animation:td 1.4s infinite}
+.tp span:nth-child(2){animation-delay:.2s}.tp span:nth-child(3){animation-delay:.4s}
+@keyframes td{0%,60%,100%{opacity:.3}30%{opacity:1}}
+.dib{display:flex;border-top:1px solid var(--border)}
+.dib input{flex:1;padding:12px 16px;background:none;border:none;color:var(--fg);font-family:var(--fm);font-size:13px;outline:none}
+.dib input::placeholder{color:var(--dim)}
+.dib button{padding:12px 18px;border:none;background:none;color:var(--fg);font-family:var(--fm);font-size:11px;letter-spacing:2px;cursor:pointer;font-weight:700}
+
+/* SCHEDULE */
+.sf{background:var(--panel);border:1px solid var(--border);border-radius:2px;overflow:hidden}
+.sh{padding:10px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border)}
+.sh h3{font-size:11px;letter-spacing:2px;color:var(--amber)}
+.lv{font-size:9px;padding:2px 8px;background:rgba(0,255,65,.1);color:var(--fg);border-radius:2px}
+.sb{padding:12px 16px}
+.sdy{font-size:10px;letter-spacing:3px;color:var(--wh2);margin-bottom:2px}
+.sdt{font-size:11px;color:var(--wh2);margin-bottom:14px}
+.slot{display:flex;gap:10px;margin-bottom:4px;opacity:0;animation:si .4s ease forwards}
+.slot:nth-child(1){animation-delay:.05s}.slot:nth-child(2){animation-delay:.1s}.slot:nth-child(3){animation-delay:.15s}.slot:nth-child(4){animation-delay:.2s}.slot:nth-child(5){animation-delay:.25s}.slot:nth-child(6){animation-delay:.3s}.slot:nth-child(7){animation-delay:.35s}.slot:nth-child(8){animation-delay:.4s}
+@keyframes si{from{opacity:0;transform:translateX(-4px)}to{opacity:1;transform:translateX(0)}}
+.stm{width:42px;text-align:right;font-size:11px;color:var(--wh2);padding-top:8px;flex-shrink:0}
+.sbr{flex:1;padding:8px 12px;min-height:40px;position:relative}
+.sbr.bk{background:rgba(255,255,255,.03);border-left:2px solid var(--wh2)}
+.sbr.af{background:rgba(0,255,65,.04);border-left:2px solid var(--fg)}
+.sbr.op{border:1px dashed var(--border)}
+.snm{font-size:12px;font-weight:500;color:var(--white)}
+.ssv{font-size:10px;color:var(--wh2)}
+.ssr{font-size:8px;letter-spacing:.5px;color:var(--fg);margin-top:2px}
+.sbg{position:absolute;top:8px;right:10px;font-size:8px;letter-spacing:1px;padding:2px 6px}
+.sbg.pd{color:var(--fg)}.sbg.dp{color:var(--cyan)}.sbg.ot{color:var(--wh2)}
+
+/* PUSH */
+.pe{width:240px;margin:0 auto 28px;background:#111;border:1px solid var(--border);border-radius:20px;padding:12px}
+.pn{width:60px;height:16px;margin:0 auto 8px;background:var(--bg);border-radius:8px}
+.pnf{background:rgba(255,255,255,.04);border-radius:8px;padding:10px;margin-bottom:4px;text-align:left}
+.pnt{display:flex;justify-content:space-between;font-size:8px;color:var(--wh2);margin-bottom:3px}
+.pnt .ap{font-weight:700;color:var(--fg)}
+.pnh{font-size:11px;font-weight:700;color:var(--white);margin-bottom:2px}
+.pnb{font-size:10px;color:var(--wh2);line-height:1.4}
+
+/* TIERS */
+.tier{background:var(--panel);border:1px solid var(--border);padding:20px;margin-bottom:12px;position:relative;overflow:hidden;transition:border-color .2s}
+.tier:active{border-color:var(--fg)}
+.tier::before{content:'';position:absolute;top:0;left:0;bottom:0;width:3px}
+.tier.t1::before{background:var(--fg)}.tier.t2::before{background:var(--amber)}
+.ttop{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+.tnm{font-size:14px;font-weight:700;font-family:var(--fs);color:var(--white)}
+.ttg{font-size:9px;letter-spacing:2px;padding:2px 8px;margin-top:4px}
+.t1 .ttg{color:var(--fg)}.t2 .ttg{color:var(--amber)}
+.tro{font-size:28px;font-weight:700;font-family:var(--fs)}
+.t1 .tro{color:var(--fg)}.t2 .tro{color:var(--amber)}
+.tds{font-size:12px;color:var(--wh2);line-height:1.6;margin-bottom:14px}
+.tf{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--wh2);padding:4px 0}
+.tf::before{content:'>';font-weight:700;min-width:12px}
+.t1 .tf::before{color:var(--fg)}.t2 .tf::before{color:var(--amber)}
+
+/* CTA */
+.cta{text-align:center}
+.ch{font-size:clamp(24px,7vw,34px);font-weight:700;font-family:var(--fs);color:var(--white);margin-bottom:12px;line-height:1.15}
+.cd{font-size:13px;color:var(--wh2);margin-bottom:32px;line-height:1.65}
+.cb{display:inline-block;padding:14px 40px;border:1px solid var(--fg);background:none;color:var(--fg);font-family:var(--fm);font-size:12px;letter-spacing:3px;text-decoration:none;transition:all .2s}
+.cb:active{background:var(--fg);color:var(--bg)}
+.ce{display:block;margin-top:20px;font-size:11px;color:var(--wh2)}
+.co{margin-top:48px;padding-top:20px;border-top:1px solid var(--border);font-size:8px;letter-spacing:2px;color:var(--wh2);text-transform:uppercase}
+
+/* PROGRESS */
+.rail{position:fixed;right:12px;top:50%;transform:translateY(-50%);z-index:9000;display:flex;flex-direction:column;gap:6px}
+.dot{width:6px;height:6px;border:1px solid var(--dim);transition:all .3s}
+.dot.on{background:var(--fg);border-color:var(--fg);box-shadow:0 0 8px var(--fg)}
+
+/* REVEAL */
+.rv{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s cubic-bezier(.16,1,.3,1)}
+.rv.vis{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+<nav class="rail" id="rail"></nav>
+
+<!-- HERO -->
+<section class="s hero" data-s="0">
+<div class="si">
+<div class="ascii-art">
+ ██████╗ ██████╗ ██╗██╗
+██╔════╝██╔═══██╗██║██║
+██║     ██║   ██║██║██║
+██║     ██║   ██║██║██║
+╚██████╗╚██████╔╝██║███████╗
+ ╚═════╝ ╚═════╝ ╚═╝╚══════╝
+</div>
+<h1 class="hero-cmd">$ init <em>--smart-receptionist</em><span class="cursor"></span></h1>
+<p class="hero-sub"><strong>// AI-powered DM engine</strong> that books clients while you cut. Reads intent, checks your Acuity schedule, sends links, collects deposits. Zero missed DMs.</p>
+</div>
+<div class="sc"><span>SCROLL</span></div>
+</section>
+
+<!-- STATS -->
+<section class="s" data-s="1">
+<div class="si">
+<div class="rv"><div class="pr">system.metrics --live</div>
+<p class="cmd" style="font-size:clamp(18px,5vw,24px);line-height:1.4;color:var(--white);margin-bottom:8px">While you&rsquo;re still <span class="hl">texting back</span>, the AI already <span style="color:var(--fg)">filled your chair</span>.</p>
+<p class="cmt">// zero human intervention required</p></div>
+<div class="stats rv">
+<div class="stat"><div class="v g">$3,840</div><div class="l">Revenue / Day</div></div>
+<div class="stat"><div class="v a">247</div><div class="l">DMs Handled</div></div>
+<div class="stat"><div class="v g">0</div><div class="l">Missed</div></div>
+</div>
+</div>
+</section>
+
+<!-- HOW -->
+<section class="s" data-s="2">
+<div class="si">
+<div class="rv"><div class="pr">cat pipeline.md</div></div>
+<div class="log rv">
+<div class="log-title">EXECUTION PIPELINE</div>
+<div class="log-line"><span class="log-num">01</span><span class="log-txt">client.dm.received("You free Saturday?")<span class="tag ok">CAPTURED</span></span></div>
+<div class="log-line"><span class="log-num">02</span><span class="log-txt">ai.parse_intent(service, date, urgency)<span class="tag run">PROCESSING</span></span></div>
+<div class="log-line"><span class="log-num">03</span><span class="log-txt">acuity.check_availability(sat, slots)<span class="tag ok">200 OK</span></span></div>
+<div class="log-line"><span class="log-num">04</span><span class="log-txt">ai.respond(slot_offer, booking_link)<span class="tag ok">SENT</span></span></div>
+<div class="log-line"><span class="log-num">05</span><span class="log-txt">payment.collect_deposit($75)<span class="tag ok">CONFIRMED</span></span></div>
+</div>
+</div>
+</section>
+
+<!-- DM SIM -->
+<section class="s" data-s="3" id="dm-sec">
+<div class="si">
+<div class="rv"><div class="pr">./simulate --interactive</div></div>
+<div class="df rv">
+<div class="db"><h3>DM SIMULATOR</h3><span class="en">GEMINI 3</span></div>
+<div class="tabs">
+<button class="tab on" onclick="run('booking',this)">BOOKING</button>
+<button class="tab" onclick="run('reschedule',this)">RESCHD</button>
+<button class="tab" onclick="run('pricing',this)">PRICING</button>
+</div>
+<div class="dt" id="thrd"></div>
+<div class="dib"><input id="inp" placeholder="$ enter_dm --custom" onkeydown="if(event.key==='Enter')send()"><button onclick="send()">EXEC</button></div>
+</div>
+</div>
+</section>
+
+<!-- SCHEDULE -->
+<section class="s" data-s="4">
+<div class="si">
+<div class="rv"><div class="pr">acuity.schedule --day saturday --format grid</div></div>
+<div class="sf rv">
+<div class="sh"><h3>ACUITY SCHEDULE</h3><span class="lv">&#9679; LIVE</span></div>
+<div class="sb"><div class="sdy">SATURDAY</div><div class="sdt">February 15, 2026</div><div id="slots"></div></div>
+</div>
+</div>
+</section>
+
+<!-- PUSH -->
+<section class="s" data-s="5" style="text-align:center">
+<div class="si">
+<div class="rv"><div class="pr" style="text-align:left">push.engine --fill-cancellation</div></div>
+<div class="pe rv">
+<div class="pn"></div>
+<div class="pnf"><div class="pnt"><span class="ap">COIL_SYS</span><span>now</span></div><div class="pnh">&#128293; Slot opened</div><div class="pnb">Sat 2:30 PM &mdash; unit install + lineup. First reply locks it.</div></div>
+<div class="pnf" style="opacity:.5"><div class="pnt"><span class="ap">COIL_SYS</span><span>2h</span></div><div class="pnh">&#128197; Reminder</div><div class="pnb">Appointment tmrw 11 AM. Reply C to cancel.</div></div>
+</div>
+<div class="stats rv" style="margin-top:0">
+<div class="stat"><div class="v g">94%</div><div class="l">Open Rate</div></div>
+<div class="stat"><div class="v a">12min</div><div class="l">Response</div></div>
+<div class="stat"><div class="v g">$0</div><div class="l">Wasted</div></div>
+</div>
+</div>
+</section>
+
+<!-- TIERS -->
+<section class="s" data-s="6">
+<div class="si">
+<div class="rv"><div class="pr">cat pricing.yml</div></div>
+<div class="tier t1 rv">
+<div class="ttop"><div><div class="tnm">The Concierge</div><div class="ttg">$500/MO</div></div><div class="tro">01</div></div>
+<div class="tds">Flat monthly. You own the system. I build, maintain, optimize.</div>
+<div class="tf">AI DM engine + Acuity sync</div><div class="tf">Push notification system</div><div class="tf">Monthly optimization reports</div><div class="tf">Priority support channel</div>
+</div>
+<div class="tier t2 rv">
+<div class="ttop"><div><div class="tnm">The Autopilot</div><div class="ttg">15% COMMISSION</div></div><div class="tro">02</div></div>
+<div class="tds">Zero upfront. I eat only when you eat. 15% of AI-booked revenue.</div>
+<div class="tf">Everything in Concierge</div><div class="tf">Revenue-aligned incentives</div><div class="tf">No monthly commitment</div>
+</div>
+</div>
+</section>
+
+<!-- CTA -->
+<section class="s cta" data-s="7">
+<div class="si"><div class="rv">
+<h2 class="ch">$ connect<span class="cursor"></span></h2>
+<p class="cd">DM me, reply to this, or just say "I'm in."</p>
+<a href="https://instagram.com/direct/t/" class="cb">OPEN DM &rarr;</a>
+<span class="ce">b.hagemann@y-it.shop</span>
+<div class="co">COIL_SYS &times; Y-IT SYSTEMS // 2026</div>
+</div></div>
+</section>
+
+<script>
+const SC={booking:[{t:'cl',m:'Yo bro you free Saturday? Need a unit install \uD83D\uDD25'},{t:'ai',m:'Checking schedule... \uD83D\uDCC5'},{t:'ai',m:'3:00 PM slot open \u2014 unit install + lineup. 2.5hrs. Lock it in?',b:'BOOK SAT 3PM'}],reschedule:[{t:'cl',m:'Gotta push Thursday back \uD83D\uDE24'},{t:'ai',m:'Scanning open slots...'},{t:'ai',m:'Friday 1PM or Saturday 11AM available.',b:'MOVE TO FRI 1PM'}],pricing:[{t:'cl',m:'What you charging for unit install?'},{t:'ai',m:'unit_install: $350\nunit_lineup: $400\nmaintenance: $150\n\nAll include consult.'},{t:'ai',m:'Want me to check availability?',b:'CHECK THIS WEEK'}]};
+const SD=[{t:'9:00',n:'Darius W.',s:'Lineup + Beard',r:'AI-BOOKED',c:'af',b:'PAID',bc:'pd'},{t:'10:00',n:'Marcus T.',s:'Unit Install',r:'',c:'bk',b:'PAID',bc:'pd'},{t:'11:30',n:'Chris B.',s:'Unit Maintenance',r:'AI-BOOKED',c:'af',b:'$75 DEP',bc:'dp'},{t:'1:00',n:'',s:'',r:'',c:'op',b:'OPEN',bc:'ot'},{t:'2:00',n:'Jamal P.',s:'Lineup + Design',r:'',c:'bk',b:'PAID',bc:'pd'},{t:'3:00',n:'Terrance M.',s:'Unit + Lineup',r:'AI-BOOKED',c:'af',b:'$75 DEP',bc:'dp'},{t:'5:30',n:'Devon R.',s:'Beard Sculpt',r:'AI-BOOKED',c:'af',b:'PAID',bc:'pd'},{t:'7:00',n:'',s:'',r:'',c:'op',b:'OPEN',bc:'ot'}];
+const th=document.getElementById('thrd');let tmr;
+function msg(o){const d=document.createElement('div');d.className='dm '+(o.t==='ai'?'ai':'cl');d.innerHTML=`<div class="da">${o.t==='ai'?'AI':'MC'}</div><div class="dbb">${o.m.replace(/\n/g,'<br>')}${o.b?'<br><button class="bb">'+o.b+'</button>':''}</div>`;th.appendChild(d);th.scrollTop=1e5}
+function typ(){const d=document.createElement('div');d.className='dm ai';d.id='typ';d.innerHTML='<div class="da">AI</div><div class="dbb tp"><span></span><span></span><span></span></div>';th.appendChild(d);th.scrollTop=1e5}
+function run(k,btn){clearTimeout(tmr);document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));btn.classList.add('on');th.innerHTML='';const ms=SC[k];let i=0;(function nx(){if(i>=ms.length)return;const m=ms[i++];if(m.t==='ai'){typ();tmr=setTimeout(()=>{document.getElementById('typ')?.remove();msg(m);tmr=setTimeout(nx,600)},1200)}else{msg(m);tmr=setTimeout(nx,800)}})()}
+function send(){const inp=document.getElementById('inp'),v=inp.value.trim();if(!v)return;inp.value='';msg({t:'cl',m:v});typ();tmr=setTimeout(()=>{document.getElementById('typ')?.remove();msg({t:'ai',m:'Scanning... Thu 2PM and Sat 11AM open. Lock?',b:'BOOK THU 2PM'})},1500)}
+const sl=document.getElementById('slots');SD.forEach(s=>{const o=s.c==='op';sl.innerHTML+=`<div class="slot"><div class="stm">${s.t}</div><div class="sbr ${s.c}">${o?'<div class="snm" style="color:var(--wh2);font-style:italic">Available</div>':`<div class="snm">${s.n}</div><div class="ssv">${s.s}</div>${s.r?'<div class="ssr">'+s.r+'</div>':''}`}<div class="sbg ${s.bc}">${s.b}</div></div></div>`});
+
+// Progress dots
+const secs=document.querySelectorAll('[data-s]');const rail=document.getElementById('rail');
+secs.forEach((_,i)=>{const d=document.createElement('div');d.className='dot'+(i===0?' on':'');rail.appendChild(d)});
+const dots=document.querySelectorAll('.dot');
+const secObs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting){const i=+x.target.dataset.s;dots.forEach((d,j)=>d.classList.toggle('on',j===i))}})},{threshold:.5});
+secs.forEach(s=>secObs.observe(s));
+
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('vis')})},{threshold:.15});document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+let ds=false;const dmo=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting&&!ds){ds=true;run('booking',document.querySelector('.tab'))}})},{threshold:.5});document.getElementById('dm-sec')&&dmo.observe(document.getElementById('dm-sec'));
+</script>
+</body>
+</html>

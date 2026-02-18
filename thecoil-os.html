@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>The Coil OS | Master Prototype</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Manrope:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        obsidian: '#050505',
+                        gold: '#D4AF37',
+                        oxblood: '#5A0A0A',
+                        crimson: '#8B1A1A',
+                        glass: 'rgba(10, 10, 10, 0.75)'
+                    },
+                    fontFamily: {
+                        display: ['Cinzel', 'serif'],
+                        body: ['Manrope', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #050505;
+            color: #ffffff;
+            overflow: hidden; /* App-like feel, scrolling handled inside */
+        }
+        
+        /* Low-Key Atmospheric Background (Antonio Praying Shot) */
+        .bg-presence {
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDf60liNwwJ2wU4mqRQJ2aHSTOo7pQeASj3EiQQ65-NUfpBVCQbqenR8E5T0KqW5_zqc01hKxMba6frPzKyOvPIgvzMgxuCnAKFOQFuDd00P2WCbWRO2M4FImSyRbtlXqtQDmHrEfI9tljPriPvrES1f6u79HGxtJKOTHmAk3S-9MRo2rA8DjE7IC0_bTCcEp2v6GwH3uP0zH0-l0zroWPbWEKJyOoWuih0_xukNqHJH3oxo9GPdS0hi4vNjjFV3VcivmcU_jDZFNCJ');
+            background-size: cover;
+            background-position: center 20%;
+            opacity: 0.15;
+            mix-blend-mode: luminosity;
+            filter: contrast(140%) brightness(50%);
+        }
+
+        .bg-vignette {
+            position: fixed; inset: 0; z-index: -1;
+            background: radial-gradient(circle at 50% 40%, transparent 10%, #050505 95%);
+            pointer-events: none;
+        }
+
+        .glass-panel {
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+
+        /* Hardened AI Avatar Filter */
+        .ai-avatar {
+            background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDf60liNwwJ2wU4mqRQJ2aHSTOo7pQeASj3EiQQ65-NUfpBVCQbqenR8E5T0KqW5_zqc01hKxMba6frPzKyOvPIgvzMgxuCnAKFOQFuDd00P2WCbWRO2M4FImSyRbtlXqtQDmHrEfI9tljPriPvrES1f6u79HGxtJKOTHmAk3S-9MRo2rA8DjE7IC0_bTCcEp2v6GwH3uP0zH0-l0zroWPbWEKJyOoWuih0_xukNqHJH3oxo9GPdS0hi4vNjjFV3VcivmcU_jDZFNCJ');
+            background-size: cover;
+            background-position: center top;
+            filter: grayscale(90%) contrast(160%) brightness(80%) sepia(40%) hue-rotate(345deg);
+            border: 1px solid var(--gold);
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.9), 0 0 15px rgba(212, 175, 55, 0.2);
+        }
+
+        /* Toggle Switch CSS */
+        .toggle-checkbox:checked { right: 0; border-color: #D4AF37; }
+        .toggle-checkbox:checked + .toggle-label { background-color: #D4AF37; }
+
+        /* App Layout */
+        #app-container { height: 100dvh; display: flex; flex-direction: column; }
+        #scroll-area { flex: 1; overflow-y: auto; padding-bottom: 90px; }
+        
+        .tab-content { display: none; animation: fadeIn 0.3s ease-in-out; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        ::-webkit-scrollbar { width: 0px; display: none; }
+        
+        /* Nav Active State */
+        .nav-btn.active { color: #D4AF37; }
+        .nav-btn.active svg { filter: drop-shadow(0 0 5px rgba(212,175,55,0.5)); }
+        
+        /* Barber Pole Line */
+        .barber-pole-line {
+            background: repeating-linear-gradient(45deg, #000, #000 10px, #fff 10px, #fff 20px);
+            height: 3px; width: 100%; opacity: 0.5;
+        }
+    </style>
+</head>
+<body class="font-body antialiased max-w-[480px] mx-auto border-x border-white/5 relative shadow-2xl">
+
+    <div class="bg-presence"></div>
+    <div class="bg-vignette"></div>
+
+    <div id="app-container">
+        <header class="glass-panel border-b-0 border-white/10 px-5 py-4 flex justify-between items-center z-40 sticky top-0 rounded-b-xl">
+            <div class="barber-pole-line absolute top-0 left-0"></div>
+            <div class="flex items-center gap-3 mt-1">
+                <img src="https://thecoilgrooming.com/cdn/shop/files/Site_logo.png?v=1715055751" alt="Pole" class="h-8 filter invert opacity-90">
+                <div class="w-px h-5 bg-white/20"></div>
+                <div class="w-8 h-8 border border-gold flex items-center justify-center bg-black/60 shadow-[0_0_10px_rgba(212,175,55,0.3)]">
+                    <span class="font-display font-bold text-gold text-lg leading-none">W</span>
+                </div>
+            </div>
+            <div class="text-right">
+                <p class="font-display font-bold text-white tracking-widest text-xs uppercase">The Coil <span class="text-gold">OS</span></p>
+                <p class="font-mono text-[7px] text-green-500 tracking-widest uppercase"><span class="w-1.5 h-1.5 inline-block bg-green-500 rounded-full animate-pulse mr-0.5"></span> LIVE</p>
+            </div>
+        </header>
+
+        <div id="scroll-area">
+            
+            <div id="tab-front" class="tab-content active px-5 pt-8">
+                <p class="text-gold tracking-[0.4em] text-[9px] uppercase mb-2 border-l-2 border-gold pl-2">South Loop Sanctuary</p>
+                <h1 class="font-display text-5xl font-black leading-[0.9] tracking-tight mb-2">BARBER<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-gold to-white">GAWD.</span></h1>
+                <p class="font-display text-xl italic text-gray-400 mb-8">Uncompromising Presence.</p>
+
+                <div class="relative w-full aspect-square mb-8 rounded-xl overflow-hidden border border-white/10 shadow-[0_10px_40px_rgba(139,26,26,0.3)] group">
+                    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlR4fGtHuLlvx5f9_by0kmM_FLFcGZekhhrKi5SD8c_cbhMDANTHQeqoKg9xYBRJyhgSVN0lYhQXSLF6iUr9_jJstEkJs18iHsgi51fcU-TA22ekMg2eT2GJ2nXKyus4dlfP1hgGLImYmw-7S0g5T8zICMDLSHkIUbrlKi7VZc6_WFwFVjGH9rN-KMB4wfVRbU3xSp7ItD-D4rxAFSflMDbxVs21xqEp5uCbG3pxJTvgWuzCFtnOlVS2ob6DCEcdjAAQRHLhd9VyMK" class="w-full h-full object-cover filter contrast-125 group-hover:scale-105 transition-transform duration-1000">
+                    <div class="absolute inset-0 bg-gradient-to-t from-obsidian via-obsidian/40 to-transparent"></div>
+                    <div class="absolute bottom-6 left-6 text-white pr-6">
+                        <p class="font-display text-3xl font-bold text-white mb-1">Antonio Willis</p>
+                        <p class="text-[10px] uppercase tracking-widest text-gold font-mono leading-relaxed">Master Barber • South Loop</p>
+                    </div>
+                </div>
+
+                <button onclick="switchTab('tab-chat', document.getElementById('nav-chat'))" class="w-full bg-gradient-to-r from-gold to-yellow-600 text-obsidian font-bold uppercase tracking-widest py-4 rounded text-xs shadow-[0_0_20px_rgba(212,175,55,0.4)] active:scale-95 transition-transform mb-4">
+                    Secure Your Seat
+                </button>
+                <button class="w-full bg-black/50 border border-white/10 text-white font-bold uppercase tracking-widest py-4 rounded text-[10px] hover:bg-white/5 mb-8">
+                    Shop Official Merch
+                </button>
+            </div>
+
+            <div id="tab-chat" class="tab-content px-4 pt-6">
+                <div class="mb-4 px-2">
+                    <h2 class="font-display text-2xl font-bold text-white">The Enforcer</h2>
+                    <p class="text-[10px] text-gray-400 uppercase tracking-widest mt-1">Intercepting Tire-Kickers</p>
+                </div>
+
+                <div class="glass-panel rounded-xl overflow-hidden flex flex-col h-[60vh] border-gold/20 shadow-2xl">
+                    
+                    <div class="bg-black/90 p-3 border-b border-white/10 flex items-center gap-3">
+                        <div class="relative w-10 h-10 rounded-full ai-avatar overflow-hidden">
+                            <div class="absolute inset-0 bg-gold/10 mix-blend-color"></div>
+                        </div>
+                        <div>
+                            <h3 class="font-display font-bold text-sm text-white leading-tight">Digital Proxy</h3>
+                            <p class="text-[8px] text-gold uppercase tracking-widest font-mono flex items-center gap-1 mt-0.5"><span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span> Acuity Synced</p>
+                        </div>
+                    </div>
+
+                    <div class="flex-1 p-4 overflow-y-auto space-y-5 bg-obsidian/60">
+                        <div class="flex gap-2 w-[90%]">
+                            <div class="bg-gradient-to-br from-[#1a1405] to-obsidian border border-gold/30 p-3 rounded-xl rounded-tl-none text-xs text-white shadow-lg relative">
+                                <span class="absolute -top-3 left-0 text-[7px] text-gold font-mono font-bold uppercase bg-black px-1 border border-gold/30 rounded">AI TONY</span>
+                                Yo. I'm Antonio's digital clone. He's got clippers in his hand, so I run the book today. What do you need?
+                            </div>
+                        </div>
+
+                        <div class="flex gap-2 w-[85%] ml-auto flex-row-reverse">
+                            <div class="bg-zinc-800 p-3 rounded-xl rounded-tr-none text-xs text-gray-300 border border-white/5">
+                                How much for a unit install? And do you got time Friday? Can you hook a brother up? 😂
+                            </div>
+                        </div>
+
+                        <div class="flex gap-2 w-[95%]">
+                            <div class="w-6 h-6 rounded-full ai-avatar shrink-0 mt-1"></div>
+                            <div class="bg-gradient-to-br from-[#1a1405] to-obsidian border border-gold/30 p-3 rounded-xl rounded-tl-none text-xs text-white shadow-[0_0_20px_rgba(212,175,55,0.1)] relative">
+                                <span class="absolute -top-3 left-0 text-[7px] text-gold font-mono font-bold uppercase bg-black px-1 border border-gold/30 rounded">AI TONY</span>
+                                First time unit install + custom blend is $350. The Gawd doesn't do discounts on perfection. Takes 2.5 hours. 
+                                <br><br>
+                                I checked the backend. I have a <strong>1:00 PM</strong> or a <strong>4:30 PM</strong> this Friday. 
+                                <button class="w-full mt-3 bg-gold text-black py-2.5 rounded font-bold tracking-widest uppercase text-[10px] active:scale-95 shadow-[0_0_10px_rgba(212,175,55,0.3)]">Lock 1:00 PM ($75 Dep)</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-3 bg-black/90 border-t border-white/10">
+                        <div class="bg-white/5 border border-white/10 rounded-full py-2 px-4 flex justify-between items-center text-xs text-gray-500">
+                            <span>Message the proxy...</span>
+                            <span class="w-7 h-7 bg-gold text-black rounded-full flex items-center justify-center font-bold">↑</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-operator" class="tab-content px-5 pt-6">
+                <div class="flex justify-between items-end mb-6">
+                    <div>
+                        <h2 class="font-display font-bold text-2xl text-white">God Mode</h2>
+                        <p class="font-mono text-[9px] text-gold uppercase tracking-widest mt-1">Command Center</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-[9px] text-gray-400 uppercase tracking-widest">MTD Revenue</p>
+                        <p class="font-mono text-white font-bold text-xl">$14,250</p>
+                    </div>
+                </div>
+
+                <div class="glass-panel p-5 rounded-xl border-t-2 border-t-crimson bg-black/80 relative overflow-hidden mb-6 shadow-2xl">
+                    <div class="absolute -right-10 -top-10 w-32 h-32 bg-crimson/20 blur-3xl rounded-full"></div>
+                    
+                    <h3 class="font-bold text-sm text-white uppercase tracking-wider mb-4 border-b border-white/10 pb-2">Push Autonomy Engine</h3>
+                    
+                    <div class="space-y-3 mb-5">
+                        <div class="flex items-center justify-between bg-white/5 p-3 rounded-lg border border-white/10">
+                            <div>
+                                <p class="text-xs text-white font-bold">Wingman Mode (Active)</p>
+                                <p class="text-[9px] text-gray-400 mt-0.5">AI drafts blast, waits for your approval.</p>
+                            </div>
+                            <div class="relative inline-block w-10 shrink-0 align-middle select-none transition duration-200 ease-in">
+                                <input type="checkbox" id="toggle-manual" checked class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer z-10"/>
+                                <label for="toggle-manual" class="toggle-label block overflow-hidden h-5 rounded-full bg-gold cursor-pointer"></label>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between bg-white/5 p-3 rounded-lg border border-white/10">
+                            <div>
+                                <p class="text-xs text-red-400 font-bold">Full Autonomy</p>
+                                <p class="text-[9px] text-gray-400 mt-0.5 max-w-[180px]">AI blasts dormant clients automatically when gaps appear.</p>
+                            </div>
+                            <div class="relative inline-block w-10 shrink-0 align-middle select-none transition duration-200 ease-in">
+                                <input type="checkbox" id="toggle-auto" class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer z-10 border-gray-600"/>
+                                <label for="toggle-auto" class="toggle-label block overflow-hidden h-5 rounded-full bg-gray-600 cursor-pointer"></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="override-box" class="bg-oxblood/20 border border-crimson/50 rounded-lg p-4 transition-all">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-[9px] text-red-400 uppercase tracking-widest font-bold flex items-center gap-1"><span class="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></span> Action Required</span>
+                            <span class="text-[9px] bg-black px-2 py-0.5 rounded text-gray-300 font-mono border border-white/10">1 GAP: 2PM TMRW</span>
+                        </div>
+                        
+                        <div class="bg-black/60 p-3 rounded border border-white/5 mb-3">
+                            <p class="text-[8px] text-gray-500 uppercase tracking-widest mb-1">AI Drafted SMS (Target: 42 VIPs):</p>
+                            <p class="text-xs text-white italic font-mono leading-relaxed">"Yo, AI Tony here. The Gawd has a rare 2PM open up for tomorrow. 15% off if you grab it right now. [LINK]"</p>
+                        </div>
+
+                        <div class="flex gap-2">
+                            <button class="flex-1 bg-transparent border border-gray-600 text-gray-400 py-3 rounded text-[9px] font-bold uppercase tracking-widest hover:bg-white/5">Edit Copy</button>
+                            <button class="flex-1 bg-crimson hover:bg-red-800 text-white py-3 rounded text-[9px] font-bold uppercase tracking-widest shadow-[0_0_15px_rgba(139,26,26,0.4)] active:scale-95">Approve & Blast</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 mb-6">
+                    <div class="glass-panel p-4 rounded-xl text-center">
+                        <p class="text-2xl font-bold text-white font-mono">142</p>
+                        <p class="text-[9px] text-gray-400 uppercase tracking-widest mt-1">Active VIPs</p>
+                    </div>
+                    <div class="glass-panel p-4 rounded-xl text-center border-oxblood bg-oxblood/10">
+                        <p class="text-2xl font-bold text-red-400 font-mono">38</p>
+                        <p class="text-[9px] text-gray-400 uppercase tracking-widest mt-1">Dormant > 6 Wks</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-vip" class="tab-content px-5 pt-6">
+                <div class="text-center mb-6">
+                    <p class="text-[10px] text-gold font-mono uppercase tracking-widest mb-1">The Closed Loop</p>
+                    <h2 class="font-display font-bold text-3xl text-white">Client Portal.</h2>
+                </div>
+
+                <div class="bg-gradient-to-br from-gold/20 to-obsidian border border-gold/40 p-6 rounded-2xl mb-6 shadow-[0_0_40px_rgba(212,175,55,0.15)] relative overflow-hidden">
+                    <div class="absolute top-0 right-0 bg-gold text-black text-[7px] font-bold px-3 py-1 rounded-bl-lg uppercase tracking-widest">NFC Verified</div>
+                    
+                    <h3 class="font-mono text-[9px] text-gray-300 uppercase tracking-widest mb-4 flex items-center gap-2"><span class="text-xl">📱</span> Chair-Side Perk Unlocked</h3>
+                    
+                    <div class="bg-black/90 border border-gold/30 p-5 rounded-xl flex flex-col items-center text-center relative z-10">
+                        <p class="text-4xl font-display font-bold text-gold mb-1">15% OFF</p>
+                        <p class="text-[10px] text-white uppercase tracking-widest mb-4">Your Next Unit Maintenance</p>
+                        <button class="w-full bg-gold text-black text-[10px] font-bold uppercase tracking-widest px-4 py-3.5 rounded active:scale-95 transition-transform shadow-[0_0_15px_rgba(212,175,55,0.4)]">Book & Pay Now</button>
+                    </div>
+                    <p class="text-[8px] text-gray-400 mt-4 text-center italic">*Discount acquired via tap at Antonio's station. Expires when you leave the shop.</p>
+                </div>
+            </div>
+
+            <div id="tab-ledger" class="tab-content px-5 pt-6">
+                <div class="text-center mb-6">
+                    <h2 class="font-display font-bold text-3xl text-white mb-1">The Ledger.</h2>
+                    <p class="text-[9px] text-gray-400 uppercase tracking-widest">Architecture & Scaling</p>
+                </div>
+
+                <div class="glass-panel p-5 rounded-xl border-l-4 border-l-gold bg-black/80 mb-6">
+                    <p class="text-[8px] bg-gold text-black px-2 py-0.5 rounded uppercase tracking-widest font-bold inline-block mb-2">Secured Asset</p>
+                    <h3 class="font-mono text-xl font-bold text-white mb-1">thecoil.shop</h3>
+                    <p class="text-[10px] text-gray-400 leading-relaxed">I have procured and pre-paid this master domain for 3 years. It is the headquarters for the AI ecosystem. Your old traffic seamlessly forwards here.</p>
+                </div>
+
+                <div class="glass-panel p-5 rounded-xl bg-black/80 mb-6 border border-white/10">
+                    <h3 class="text-[10px] font-bold uppercase tracking-widest mb-4 text-white border-b border-white/10 pb-2">Phase 1: Build & Own</h3>
+                    <div class="space-y-3 text-[10px]">
+                        <div class="flex justify-between"><span class="text-gray-400">Domain Asset Transfer (3 Yrs)</span><span class="font-mono text-gold">$500</span></div>
+                        <div class="flex justify-between"><span class="text-gray-400">Headless Acuity Web UI</span><span class="font-mono text-gold">$2,500</span></div>
+                        <div class="flex justify-between"><span class="text-gray-400">AI Clone & Supabase CRM</span><span class="font-mono text-gold">$1,500</span></div>
+                        <div class="flex justify-between"><span class="text-gray-400">Push Autonomy Engine</span><span class="font-mono text-gold">$1,500</span></div>
+                        <div class="flex justify-between"><span class="text-gray-400">Phygital Biz Cards & Ad Copy</span><span class="font-mono text-gold">$1,000</span></div>
+                        <div class="flex justify-between items-end border-t border-white/10 pt-3 mt-2">
+                            <span class="text-[9px] uppercase tracking-widest text-white font-bold">Total Capital Required</span>
+                            <span class="text-xl font-bold text-white">$7,000</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center glass-panel p-4 rounded-xl mb-6 bg-black/60 border-l-2 border-l-white">
+                    <div>
+                        <p class="text-[10px] font-bold uppercase tracking-widest text-white mb-0.5">Operating Retainer</p>
+                        <p class="text-[8px] text-gray-400 max-w-[160px]">Covers AI Tokens, Twilio SMS, Hosting. You never see a tech bill.</p>
+                    </div>
+                    <p class="text-lg font-bold text-white">$250<span class="text-[9px] text-gray-500 font-normal">/mo</span></p>
+                </div>
+
+                <div class="border border-oxblood bg-gradient-to-br from-obsidian to-crimson/20 rounded-xl p-5 mb-8 shadow-[0_0_20px_rgba(139,26,26,0.15)]">
+                    <div class="text-center mb-3">
+                        <h3 class="font-display font-bold text-lg text-white uppercase tracking-wider">Vanguard Syndicate</h3>
+                        <p class="text-[8px] text-red-400 font-mono uppercase tracking-widest mt-1">Expansion Bounty Program</p>
+                    </div>
+                    <p class="text-[10px] text-gray-300 mb-4 leading-relaxed text-center">Refer other solo-operators in your building. When they see your setup, they will want it. For every $5k+ contract signed:</p>
+                    
+                    <div class="flex justify-center gap-3 mb-3">
+                        <div class="bg-black/60 p-2.5 rounded border border-white/5 text-center flex-1">
+                            <span class="text-green-400 font-bold text-sm font-mono block">+$500</span>
+                            <span class="text-[8px] text-gray-400 uppercase tracking-wider">Cash Payout</span>
+                        </div>
+                        <div class="bg-black/60 p-2.5 rounded border border-white/5 text-center flex-1">
+                            <span class="text-gold font-bold text-sm font-mono block">+2 MO</span>
+                            <span class="text-[8px] text-gray-400 uppercase tracking-wider">Retainer Waived</span>
+                        </div>
+                    </div>
+                    <p class="text-center text-[8px] text-gray-500 italic font-mono">10 Referrals = $5,000 cash to you + 20 months free tech.</p>
+                </div>
+
+                <button class="w-full bg-gold text-obsidian font-bold uppercase tracking-widest py-4 rounded-lg text-xs shadow-[0_0_20px_rgba(212,175,55,0.4)] active:scale-95 transition-transform">
+                    Authorize Contract
+                </button>
+            </div>
+
+        </div>
+
+        <nav class="bottom-nav">
+            <button id="nav-front" onclick="switchTab('tab-front', this)" class="nav-btn active">
+                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                <span>Store</span>
+            </button>
+            <button id="nav-chat" onclick="switchTab('tab-chat', this)" class="nav-btn">
+                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+                <span>Proxy</span>
+            </button>
+            <button id="nav-operator" onclick="switchTab('tab-operator', this)" class="nav-btn">
+                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+                <span>Operate</span>
+            </button>
+            <button id="nav-vip" onclick="switchTab('tab-vip', this)" class="nav-btn">
+                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4"></path></svg>
+                <span>VIP</span>
+            </button>
+            <button id="nav-pitch" onclick="switchTab('tab-ledger', this)" class="nav-btn">
+                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <span>Ledger</span>
+            </button>
+        </nav>
+    </div>
+
+    <script>
+        function switchTab(tabId, btn) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(el => {
+                el.classList.remove('active');
+            });
+            // Show target
+            document.getElementById(tabId).classList.add('active');
+            
+            // Reset buttons
+            document.querySelectorAll('.nav-btn').forEach(el => {
+                el.classList.remove('active');
+            });
+            // Activate button (if called directly from a button, else handle manual mapping)
+            if(btn) {
+                btn.classList.add('active');
+            } else {
+                if(tabId === 'tab-chat') document.getElementById('nav-chat').classList.add('active');
+            }
+
+            // Scroll top
+            document.getElementById('scroll-area').scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+        // Dummy logic for the toggle switches to look interactive
+        const toggleManual = document.getElementById('toggle-manual');
+        const toggleAuto = document.getElementById('toggle-auto');
+        const overrideBox = document.getElementById('override-box');
+
+        toggleAuto.addEventListener('change', (e) => {
+            if(e.target.checked) {
+                toggleManual.checked = false;
+                overrideBox.style.opacity = '0.3';
+                overrideBox.style.pointerEvents = 'none';
+            } else {
+                toggleManual.checked = true;
+                overrideBox.style.opacity = '1';
+                overrideBox.style.pointerEvents = 'auto';
+            }
+        });
+
+        toggleManual.addEventListener('change', (e) => {
+            if(e.target.checked) {
+                toggleAuto.checked = false;
+                overrideBox.style.opacity = '1';
+                overrideBox.style.pointerEvents = 'auto';
+            } else {
+                toggleAuto.checked = true;
+                overrideBox.style.opacity = '0.3';
+                overrideBox.style.pointerEvents = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

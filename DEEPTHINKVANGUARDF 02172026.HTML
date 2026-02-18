@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>The Coil OS | Vanguard Briefing</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Manrope:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        void: '#030303',
+                        gold: '#D4AF37',
+                        crimson: '#6b0f0f',
+                        glass: 'rgba(10, 10, 10, 0.65)'
+                    },
+                    fontFamily: {
+                        display: ['Cinzel', 'serif'],
+                        body: ['Manrope', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: var(--void);
+            color: #ffffff;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* Atmospheric Background */
+        .bg-presence {
+            position: fixed; inset: 0; z-index: -2;
+            background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDf60liNwwJ2wU4mqRQJ2aHSTOo7pQeASj3EiQQ65-NUfpBVCQbqenR8E5T0KqW5_zqc01hKxMba6frPzKyOvPIgvzMgxuCnAKFOQFuDd00P2WCbWRO2M4FImSyRbtlXqtQDmHrEfI9tljPriPvrES1f6u79HGxtJKOTHmAk3S-9MRo2rA8DjE7IC0_bTCcEp2v6GwH3uP0zH0-l0zroWPbWEKJyOoWuih0_xukNqHJH3oxo9GPdS0hi4vNjjFV3VcivmcU_jDZFNCJ');
+            background-size: cover; background-position: center 20%;
+            opacity: 0.15; mix-blend-mode: luminosity; filter: contrast(130%) brightness(40%);
+        }
+
+        .grain {
+            position: fixed; inset: 0; z-index: -1; pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity: 0.05; mix-blend-mode: overlay;
+        }
+
+        .vignette {
+            position: fixed; inset: 0; z-index: -1; pointer-events: none;
+            background: radial-gradient(circle at center, transparent 0%, var(--void) 90%);
+        }
+
+        /* Glass Panels */
+        .panel {
+            background: var(--glass);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.9);
+        }
+        .panel-gold { border-top: 1px solid rgba(212, 175, 55, 0.4); box-shadow: 0 0 30px rgba(212, 175, 55, 0.1); }
+        .panel-red { border-top: 1px solid rgba(107, 15, 15, 0.5); box-shadow: 0 0 30px rgba(107, 15, 15, 0.2); }
+
+        /* Sliders */
+        input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; }
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 24px; width: 24px; border-radius: 50%; background: var(--gold); cursor: pointer; margin-top: -10px; box-shadow: 0 0 15px var(--gold); }
+        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 4px; cursor: pointer; background: rgba(255,255,255,0.1); border-radius: 2px; }
+
+        /* Scroll Reveal */
+        .reveal { opacity: 0; transform: translateY(40px); transition: all 1s cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        
+        /* Chat Animations */
+        .msg { opacity: 0; transform: translateY(10px); animation: fadeUp 0.4s forwards; }
+        @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+        .typing span { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #888; margin: 0 2px; animation: bounce 1.4s infinite; }
+        .typing span:nth-child(2) { animation-delay: 0.2s; } .typing span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes bounce { 0%, 60%, 100% { transform: translateY(0); opacity: 0.4; } 30% { transform: translateY(-4px); opacity: 1; } }
+    </style>
+</head>
+<body class="font-body selection:bg-gold selection:text-void">
+
+    <div class="bg-presence"></div>
+    <div class="grain"></div>
+    <div class="vignette"></div>
+
+    <main class="max-w-[640px] mx-auto px-6 pb-32">
+        
+        <header class="py-8 flex justify-between items-center reveal active">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 border border-gold flex items-center justify-center bg-black shadow-[0_0_15px_rgba(212,175,55,0.3)]">
+                    <span class="font-display font-bold text-gold text-xl">W</span>
+                </div>
+                <div>
+                    <p class="font-display font-bold tracking-widest text-sm uppercase leading-none">The Coil <span class="text-gold">OS</span></p>
+                    <p class="font-mono text-[8px] text-gray-500 tracking-[0.2em] uppercase mt-1">Vanguard Briefing</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/5 backdrop-blur">
+                <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
+                <span class="font-mono text-[8px] text-gray-300 uppercase tracking-widest">Encrypted</span>
+            </div>
+        </header>
+
+        <section class="min-h-[85vh] flex flex-col justify-center relative reveal active pt-4">
+            <h1 class="font-display text-5xl md:text-6xl font-black leading-[1.05] mb-6">
+                Your Legacy,<br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-gold via-[#FFF2CD] to-gold">Weaponized.</span>
+            </h1>
+            <p class="text-lg text-gray-400 leading-relaxed mb-10 border-l-2 border-white/10 pl-5">
+                You are the asset. Technology should not be the friction between your reputation and your revenue. We are turning <strong class="text-white">thecoil.shop</strong> into an autonomous, self-marketing empire.
+            </p>
+            
+            <div class="grid grid-cols-2 gap-4 mb-16">
+                <div class="panel p-5 rounded-xl border-l-2 border-l-crimson">
+                    <p class="font-mono text-[9px] text-gray-500 uppercase tracking-widest mb-2 font-bold">The Vulnerability</p>
+                    <p class="text-xs text-gray-300 leading-relaxed">Manually answering DMs. Eating the cost of cancellations. Treating VIPs the same as strangers.</p>
+                </div>
+                <div class="panel p-5 rounded-xl border-l-2 border-l-gold">
+                    <p class="font-mono text-[9px] text-gold uppercase tracking-widest mb-2 font-bold">The Solution</p>
+                    <p class="text-xs text-gray-300 leading-relaxed">An operating system that intercepts DMs, calculates flight risk, and dynamically surges pricing.</p>
+                </div>
+            </div>
+
+            <div class="flex flex-col items-center opacity-40 animate-bounce absolute bottom-10 left-1/2 -translate-x-1/2">
+                <span class="font-mono text-[8px] uppercase tracking-widest mb-2">Scroll to Audit</span>
+                <div class="w-px h-10 bg-white"></div>
+            </div>
+        </section>
+
+        <section class="py-24 reveal">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="font-mono text-crimson font-bold text-xl">01</span>
+                <p class="font-mono text-[10px] text-gray-500 uppercase tracking-widest">Financial Audit</p>
+            </div>
+            <h2 class="font-display text-3xl md:text-4xl font-bold mb-8">The Cancellation Leak.</h2>
+            
+            <div class="panel panel-red p-6 md:p-8 rounded-2xl">
+                <p class="text-sm text-gray-400 mb-8 leading-relaxed">Every unfilled chair is a perishable asset. Calculate the exact amount of cash you are leaving on the table annually.</p>
+                
+                <div class="mb-8">
+                    <div class="flex justify-between items-center mb-3">
+                        <label class="text-[10px] font-mono uppercase tracking-widest text-gray-400">Unfilled Gaps / Week</label>
+                        <span id="calc-gaps" class="text-2xl font-bold text-white">4</span>
+                    </div>
+                    <input type="range" id="slider-gaps" min="1" max="15" value="4">
+                </div>
+
+                <div class="mb-10">
+                    <div class="flex justify-between items-center mb-3">
+                        <label class="text-[10px] font-mono uppercase tracking-widest text-gray-400">Avg Ticket Price</label>
+                        <span id="calc-price" class="text-2xl font-bold text-gold">$75</span>
+                    </div>
+                    <input type="range" id="slider-price" min="40" max="400" step="5" value="75">
+                </div>
+
+                <div class="bg-black/80 border border-crimson/30 rounded-xl p-6 text-center">
+                    <p class="text-[10px] font-mono uppercase tracking-widest text-red-500 mb-2">Lost Annual Revenue</p>
+                    <p id="calc-total" class="font-display text-5xl font-bold text-white mb-2">-$15,600</p>
+                    <p class="text-[10px] text-gray-500 italic">The Coil OS recovers an average of 80% of this figure autonomously.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-24 reveal">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="font-mono text-gold font-bold text-xl">02</span>
+                <p class="font-mono text-[10px] text-gray-500 uppercase tracking-widest">Autonomous Operations</p>
+            </div>
+            <h2 class="font-display text-3xl md:text-4xl font-bold mb-4">The Digital Proxy.</h2>
+            <p class="text-gray-400 text-sm md:text-base leading-relaxed mb-8">A Gemini-powered clone of your persona. It intercepts DMs, answers calls, evaluates the client's risk profile, and secures the booking directly into Acuity.</p>
+
+            <div class="panel p-1 rounded-2xl panel-gold relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-gold opacity-10 blur-[60px] rounded-full pointer-events-none"></div>
+                
+                <div class="bg-black/90 rounded-xl overflow-hidden relative z-10">
+                    <div class="p-4 border-b border-white/10 flex justify-between items-center">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full border border-gold bg-[url('https://lh3.googleusercontent.com/aida-public/AB6AXuDf60liNwwJ2wU4mqRQJ2aHSTOo7pQeASj3EiQQ65-NUfpBVCQbqenR8E5T0KqW5_zqc01hKxMba6frPzKyOvPIgvzMgxuCnAKFOQFuDd00P2WCbWRO2M4FImSyRbtlXqtQDmHrEfI9tljPriPvrES1f6u79HGxtJKOTHmAk3S-9MRo2rA8DjE7IC0_bTCcEp2v6GwH3uP0zH0-l0zroWPbWEKJyOoWuih0_xukNqHJH3oxo9GPdS0hi4vNjjFV3VcivmcU_jDZFNCJ')] bg-cover bg-center filter grayscale contrast-150"></div>
+                            <p class="font-display font-bold text-base text-white">AI_TONY</p>
+                        </div>
+                        <span class="text-[9px] font-mono text-green-400 border border-green-500/30 bg-green-500/10 px-2 py-1 rounded uppercase">Voice & Text Active</span>
+                    </div>
+                    
+                    <div class="p-5 md:p-6 space-y-4 bg-void min-h-[350px] flex flex-col justify-end" id="chat-feed">
+                        </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-24 reveal">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="font-mono text-white font-bold text-xl">03</span>
+                <p class="font-mono text-[10px] text-gray-500 uppercase tracking-widest">Enterprise Leverage</p>
+            </div>
+            <h2 class="font-display text-3xl md:text-4xl font-bold mb-8">God-Mode Yield.</h2>
+
+            <div class="space-y-6">
+                <div class="panel p-6 md:p-8 rounded-xl border-l-2 border-l-gold bg-black/60">
+                    <h3 class="font-bold text-white text-base uppercase tracking-widest mb-2">Surge Pricing Engine</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed mb-6">Uber does it. Airlines do it. When your schedule hits 85% capacity, the system automatically hikes the price of your remaining slots by 20%. You make more money without doing extra work.</p>
+                    <div class="flex justify-between items-center bg-white/5 p-4 rounded border border-white/10">
+                        <span class="font-mono text-xs text-gray-400">Friday 4:30 PM Slot</span>
+                        <div class="flex items-center gap-3">
+                            <span class="text-sm text-gray-600 line-through">$60</span>
+                            <span class="font-bold text-lg text-gold">$75 <span class="text-[9px] text-red-500 font-mono uppercase bg-red-900/30 px-1.5 py-0.5 rounded ml-2">+20% SURGE</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel p-6 md:p-8 rounded-xl border-l-2 border-l-crimson bg-black/60">
+                    <h3 class="font-bold text-white text-base uppercase tracking-widest mb-2">Predictive LTV Routing</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed mb-6">When a cancellation occurs, the system doesn't blast everyone. It scans your CRM, finds the dormant client with the highest Lifetime Value (LTV), and texts them first. We weaponize loyalty.</p>
+                    <div class="flex justify-between items-center bg-crimson/10 p-4 rounded border border-crimson/30">
+                        <span class="font-mono text-xs text-white">Sniper Target: Marcus T.</span>
+                        <span class="text-[10px] font-bold text-crimson bg-black px-3 py-1.5 rounded border border-crimson/50">LTV: $2,450</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-24 reveal">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="font-mono text-gold font-bold text-xl">04</span>
+                <p class="font-mono text-[10px] text-gray-500 uppercase tracking-widest">Phygital Integration</p>
+            </div>
+            <h2 class="font-display text-3xl md:text-4xl font-bold mb-6">The Arsenal.</h2>
+            <p class="text-gray-400 text-sm md:text-base leading-relaxed mb-8">
+                Never let a client walk out without securing their next cut.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="panel p-6 md:p-8 rounded-2xl text-center relative overflow-hidden group border-white/10">
+                    <div class="absolute -right-4 -bottom-4 text-8xl opacity-5 group-hover:scale-110 transition-transform">📱</div>
+                    <h3 class="font-display font-bold text-xl text-white mb-3">Chair-Side NFC</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed mb-6">Tap their phone to the mirror before they leave. Generates a dynamic 1-time-use token giving them 10% off their next cut *only* if they book before walking out.</p>
+                    <div class="bg-white/5 border border-white/10 rounded-lg p-3 text-[10px] font-mono text-gold">+ Shopify Headless Cart Upsells</div>
+                </div>
+                
+                <div class="panel p-6 md:p-8 rounded-2xl text-center bg-gradient-to-br from-[#1a1a1a] to-void border-white/20 shadow-2xl relative overflow-hidden">
+                    <div class="absolute top-0 right-0 bg-white text-black text-[9px] font-bold px-3 py-1 rounded-bl-lg uppercase tracking-wider">VIP Tier</div>
+                    <h3 class="font-display font-bold text-xl text-white mb-3 mt-2">Apple Wallet Passes</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed mb-8">Issue digital black cards to your top LTV clients. Send free lock-screen push notifications directly to their Apple Wallet when a premium slot opens.</p>
+                    <div class="mx-auto bg-white text-black text-[10px] font-bold uppercase tracking-widest px-6 py-3 rounded-full inline-flex items-center justify-center gap-2">
+                        Issue VIP Pass
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-24 reveal">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="font-mono text-white font-bold text-xl">05</span>
+                <p class="font-mono text-[10px] text-gray-500 uppercase tracking-widest">Acquisition</p>
+            </div>
+            <h2 class="font-display text-4xl md:text-5xl font-bold mb-10">The Ledger.</h2>
+
+            <div class="panel p-6 md:p-8 rounded-3xl mb-8 panel-gold">
+                <h3 class="text-xs font-mono font-bold uppercase tracking-widest text-gray-400 mb-6 border-b border-white/10 pb-3">Phase 1: Capital Setup</h3>
+                
+                <div class="space-y-5 text-sm font-mono">
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300">`thecoil.shop` Master Domain (3Yrs)</span><span class="text-white">$500</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300">Headless Acuity Web Architecture</span><span class="text-white">$2,500</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300">Gemini 2.0 Proxy & CRM Vault</span><span class="text-white">$1,500</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300">Yield Management & Push Engine</span><span class="text-white">$1,500</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300">Phygital Assets (NFC, Apple Wallet)</span><span class="text-white">$1,000</span>
+                    </div>
+                    
+                    <div class="flex justify-between items-end pt-6 mt-6 border-t border-white/10">
+                        <span class="text-xs uppercase tracking-widest text-white font-sans font-bold">Total Capital Required</span>
+                        <span class="text-4xl font-display font-black text-gold">$7,000</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center panel p-6 md:p-8 rounded-3xl mb-12 border-l-4 border-l-white bg-black/80">
+                <div>
+                    <h3 class="text-xs font-bold uppercase tracking-widest text-white mb-2">Operating Retainer</h3>
+                    <p class="text-[10px] md:text-xs text-gray-400 leading-relaxed max-w-[240px] md:max-w-sm">Covers AI API Tokens, Twilio SMS routing, Cloud DB, and active monitoring. Zero tech liability for you.</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-4xl font-bold text-white font-mono">$300</p>
+                    <p class="text-[10px] text-gray-500 font-mono uppercase mt-1">/ Month</p>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-br from-[#1a1405] to-void border border-gold/30 rounded-3xl p-6 md:p-8 mb-12 shadow-[0_0_50px_rgba(212,175,55,0.15)] relative overflow-hidden">
+                <div class="absolute top-0 right-0 bg-gold text-black text-[9px] font-bold px-4 py-1.5 rounded-bl-xl uppercase tracking-widest">Bounty Program</div>
+                <h3 class="font-display font-bold text-2xl text-white uppercase tracking-wider mb-3">The Syndicate</h3>
+                <p class="text-xs text-gray-300 mb-8 leading-relaxed max-w-md">
+                    Refer other solo-operators (Chiro, Tattoos, Massage) in your building. When they see your God Mode, they will want it. For every $7k setup you bring me:
+                </p>
+                
+                <div class="flex flex-col md:flex-row justify-center gap-4 mb-6">
+                    <div class="bg-black/80 p-5 rounded-xl border border-white/10 text-center flex-1">
+                        <span class="text-emerald-500 font-bold text-3xl font-mono block mb-2">+$500</span>
+                        <span class="text-[10px] text-gray-400 uppercase tracking-wider font-bold">Cash Payout</span>
+                    </div>
+                    <div class="bg-black/80 p-5 rounded-xl border border-gold/30 text-center flex-1 shadow-[0_0_20px_rgba(212,175,55,0.1)]">
+                        <span class="text-gold font-bold text-3xl font-mono block mb-2">+2 MO</span>
+                        <span class="text-[10px] text-gray-400 uppercase tracking-wider font-bold">Retainer Waived</span>
+                    </div>
+                </div>
+                <p class="text-center text-[10px] text-gray-500 italic font-mono border-t border-white/10 pt-4">10 Referrals = $5,000 cash to you + 20 months free tech.</p>
+            </div>
+
+            <a href="mailto:brihag8@gmail.com?subject=Authorize Vanguard Build - The Coil OS" class="block w-full text-center bg-white text-black font-bold uppercase tracking-[0.2em] py-6 rounded-2xl text-sm hover:bg-gold transition-colors duration-300 shadow-[0_0_40px_rgba(255,255,255,0.2)] active:scale-95">
+                Initialize Contract
+            </a>
+            <p class="text-center text-[9px] text-gray-600 font-mono uppercase tracking-widest mt-8">Powered by Y-IT Systems & Gemini MCP</p>
+        </section>
+
+    </main>
+
+    <script>
+        // Scroll Reveal Logic
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.15 });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // Calculator Logic
+        const sliderGaps = document.getElementById('slider-gaps');
+        const sliderPrice = document.getElementById('slider-price');
+        const calcGaps = document.getElementById('calc-gaps');
+        const calcPrice = document.getElementById('calc-price');
+        const calcTotal = document.getElementById('calc-total');
+
+        function updateCalc() {
+            const gaps = parseInt(sliderGaps.value);
+            const price = parseInt(sliderPrice.value);
+            calcGaps.innerText = gaps;
+            calcPrice.innerText = "$" + price;
+            const annualLoss = gaps * price * 52;
+            calcTotal.innerText = "-$" + annualLoss.toLocaleString();
+        }
+        sliderGaps.addEventListener('input', updateCalc);
+        sliderPrice.addEventListener('input', updateCalc);
+        updateCalc(); // Init
+
+        // Chat Simulator Logic
+        const chatFeed = document.getElementById('chat-feed');
+        const chatSequence = [
+            { t: 'client', m: "Yo I need a unit install Friday. I'm a new client." },
+            { t: 'typing' },
+            { t: 'ai', m: "I'm the Digital Proxy running the book today. Unit installs are $350. Since you're new, the system requires a 50% deposit to hold the slot." },
+            { t: 'typing' },
+            { t: 'ai', m: "I have a 2:00 PM available. Hit the link to lock it in.", btn: "SECURE 2:00 PM ($175 DEP)" }
+        ];
+
+        function playChat() {
+            chatFeed.innerHTML = '';
+            let delay = 500;
+            chatSequence.forEach((msg) => {
+                setTimeout(() => {
+                    const typing = chatFeed.querySelector('.typing');
+                    if (typing) typing.remove();
+
+                    const div = document.createElement('div');
+                    if (msg.t === 'typing') {
+                        div.className = 'typing flex gap-2 w-[90%]';
+                        div.innerHTML = `<div class="w-8 h-8 rounded-full border border-gold bg-black shrink-0 mt-1"></div><div class="bg-white/5 border border-white/10 p-4 rounded-xl rounded-tl-none w-fit flex items-center"><span></span><span></span><span></span></div>`;
+                    } else if (msg.t === 'client') {
+                        div.className = 'msg ml-auto w-[85%] text-right';
+                        div.innerHTML = `<div class="bg-white/10 p-4 rounded-xl rounded-tr-none text-xs md:text-sm text-gray-300 inline-block text-left font-mono">${msg.m}</div>`;
+                    } else {
+                        let btn = msg.btn ? `<button class="w-full mt-4 bg-white text-black py-3 rounded-lg font-bold tracking-widest uppercase text-[10px] shadow-[0_0_15px_rgba(255,255,255,0.3)]">${msg.btn}</button>` : '';
+                        div.className = 'msg flex gap-3 w-[95%]';
+                        div.innerHTML = `<div class="w-8 h-8 rounded-full border border-gold bg-black shrink-0 mt-1"></div><div class="bg-gradient-to-br from-[#1a1405] to-black border border-gold/30 p-4 rounded-xl rounded-tl-none text-xs md:text-sm text-white shadow-lg leading-relaxed"><span class="text-[8px] text-gold uppercase tracking-widest block mb-2 font-mono font-bold">AI_TONY</span>${msg.m}${btn}</div>`;
+                    }
+                    chatFeed.appendChild(div);
+                }, delay);
+                delay += msg.t === 'typing' ? 1400 : 1800;
+            });
+        }
+
+        // Trigger chat when scrolled into view
+        let chatRun = false;
+        const chatObserver = new IntersectionObserver((entries) => {
+            if(entries[0].isIntersecting && !chatRun) {
+                chatRun = true;
+                playChat();
+            }
+        }, { threshold: 0.5 });
+        chatObserver.observe(document.getElementById('chat-feed'));
+
+    </script>
+</body>
+</html>

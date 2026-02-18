@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>The Coil — AI Integration</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Manrope:wght@300;400;500;600;700;800&family=Oswald:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-void: #030303;
+            --bg-surface: #0a0a0a;
+            --bg-card: rgba(14, 14, 14, 0.9);
+            --bg-elevated: rgba(22, 22, 22, 0.95);
+            --border-subtle: rgba(40, 40, 40, 0.6);
+            --border-medium: rgba(60, 60, 60, 0.4);
+            --gold-50: #fdf8e8;
+            --gold-100: #fcf6ba;
+            --gold-300: #e8c547;
+            --gold-400: #d4af37;
+            --gold-500: #bf953f;
+            --gold-600: #b38728;
+            --gold-700: #aa771c;
+            --gold-900: rgba(212, 175, 55, 0.1);
+            --text-primary: #f0f0f0;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --text-dim: #52525b;
+            --emerald: #c9a96e;
+            --emerald-dim: rgba(16, 185, 129, 0.15);
+            --blue: #3b82f6;
+            --blue-dim: rgba(59, 130, 246, 0.12);
+            --pink: #ec4899;
+            --pink-dim: rgba(236, 72, 153, 0.12);
+            --font-display: 'Cinzel', serif;
+            --font-body: 'Manrope', sans-serif;
+            --font-condensed: 'Oswald', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --radius: 12px;
+            --radius-sm: 8px;
+            --radius-xs: 6px;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--bg-void);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* ═══════ GRAIN OVERLAY ═══════ */
+        body::after {
+            content: ''; position: fixed; inset: 0; z-index: 9999;
+            pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity: 0.025;
+            mix-blend-mode: overlay;
+        }
+
+        /* ═══════ AMBIENT ═══════ */
+        .ambient-bg {
+            position: fixed; inset: 0; z-index: 0; pointer-events: none;
+            background:
+                radial-gradient(ellipse 800px 600px at 20% 20%, rgba(212,175,55,0.03) 0%, transparent 70%),
+                radial-gradient(ellipse 600px 400px at 80% 80%, rgba(59,130,246,0.02) 0%, transparent 70%);
+        }
+
+        /* ═══════ LAYOUT ═══════ */
+        .container {
+            position: relative; z-index: 1;
+            max-width: 600px; margin: 0 auto;
+            padding: 24px 20px;
+        }
+
+        /* ═══════ HERO ═══════ */
+        .hero {
+            padding: 48px 0 40px;
+            text-align: center;
+        }
+        .hero-tag {
+            display: inline-block;
+            font-family: var(--font-condensed);
+            font-size: 10px; letter-spacing: 3px;
+            color: var(--gold-400);
+            border: 1px solid rgba(212,175,55,0.3);
+            padding: 4px 14px; border-radius: 4px;
+            margin-bottom: 20px;
+            opacity: 0; animation: heroStagger 0.8s cubic-bezier(0.16,1,0.3,1) 0.2s forwards;
+        }
+        .hero h1 { opacity: 0; animation: heroStagger 0.8s cubic-bezier(0.16,1,0.3,1) 0.45s forwards; }
+        .hero-copy { opacity: 0; animation: heroStagger 0.8s cubic-bezier(0.16,1,0.3,1) 0.7s forwards; }
+        @keyframes heroStagger {
+            from { opacity: 0; transform: translateY(18px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .hero h1 {
+            font-family: var(--font-display);
+            font-size: 28px; font-weight: 700;
+            line-height: 1.2; margin-bottom: 20px;
+        }
+        .hero h1 .gold {
+            background: linear-gradient(to right, #bf953f, #fcf6ba, #b38728);
+            -webkit-background-clip: text; background-clip: text;
+            color: transparent;
+        }
+        .hero-copy {
+            font-size: 15px; line-height: 1.8;
+            color: var(--text-secondary);
+            max-width: 520px; margin: 0 auto;
+        }
+        .hero-copy strong { color: var(--gold-400); font-weight: 600; }
+        .hero-copy .punchline {
+            display: block; margin-top: 16px;
+            font-size: 14px; color: var(--text-muted);
+            font-style: italic;
+        }
+
+        /* ═══════ STAT PILL ═══════ */
+        .stat-pill {
+            display: flex; justify-content: center;
+            gap: 32px; margin: 32px 0;
+            padding: 16px 0;
+            border-top: 1px solid var(--border-subtle);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        .stat-pill .sp-item { text-align: center; }
+        .stat-pill .sp-val {
+            font-family: var(--font-condensed);
+            font-size: 22px; color: var(--text-primary);
+        }
+        .stat-pill .sp-label {
+            font-size: 9px; text-transform: uppercase;
+            letter-spacing: 1.5px; color: var(--text-dim);
+            margin-top: 2px;
+        }
+
+        /* ═══════ SECTION TITLES ═══════ */
+        .section-title {
+            font-family: var(--font-condensed);
+            font-size: 12px; letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            display: flex; align-items: center; gap: 12px;
+        }
+        .section-title::after {
+            content: ''; flex: 1; height: 1px;
+            background: linear-gradient(to right, var(--border-subtle), transparent);
+        }
+
+        /* ═══════ CARD ═══════ */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius);
+            overflow: hidden; margin-bottom: 24px;
+            backdrop-filter: blur(20px);
+            transition: transform 0.2s ease, border-color 0.3s ease;
+        }
+        .card:active {
+            transform: scale(0.985);
+        }
+        @media (hover: hover) {
+            .card:hover { border-color: rgba(212,175,55,0.15); }
+        }
+        .card-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .card-header h3 {
+            font-family: var(--font-display);
+            font-size: 15px; font-weight: 600;
+            color: var(--gold-400);
+        }
+        .card-badge {
+            font-family: var(--font-mono);
+            font-size: 9px; padding: 3px 10px;
+            border-radius: 20px; letter-spacing: 1px;
+        }
+        .card-badge.live {
+            background: var(--emerald-dim); color: var(--emerald);
+            border: 1px solid rgba(16,185,129,0.2);
+        }
+        .card-badge.ai {
+            background: var(--blue-dim); color: var(--blue);
+            border: 1px solid rgba(59,130,246,0.2);
+        }
+        .card-body { padding: 20px; }
+
+        /* ═══════ DM SIMULATOR ═══════ */
+        .dm-thread {
+            display: flex; flex-direction: column; gap: 14px;
+            min-height: 300px; max-height: 380px;
+            overflow-y: auto; padding-right: 4px;
+            -webkit-overflow-scrolling: touch;
+        }
+        .dm-thread::-webkit-scrollbar { width: 2px; }
+        .dm-thread::-webkit-scrollbar-thumb { background: var(--border-medium); border-radius: 2px; }
+
+        .dm-msg {
+            display: flex; gap: 10px;
+            max-width: 90%; opacity: 0;
+            transform: translateY(12px);
+            animation: msgIn 0.4s ease forwards;
+        }
+        .dm-msg.client { align-self: flex-start; }
+        .dm-msg.ai { align-self: flex-end; flex-direction: row-reverse; }
+
+        .dm-avatar {
+            width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 10px; font-weight: 700;
+            border: 1px solid var(--border-subtle);
+        }
+        .dm-msg.client .dm-avatar {
+            background: linear-gradient(135deg, #333, #1a1a1a);
+            color: var(--text-secondary);
+        }
+        .dm-msg.ai .dm-avatar {
+            background: linear-gradient(135deg, var(--gold-600), var(--gold-700));
+            color: #000; font-size: 9px;
+        }
+        .dm-bubble {
+            padding: 11px 14px; border-radius: 16px;
+            font-size: 13px; line-height: 1.55;
+        }
+        .dm-msg.client .dm-bubble {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-subtle);
+            border-bottom-left-radius: 4px;
+        }
+        .dm-msg.ai .dm-bubble {
+            background: linear-gradient(135deg, rgba(212,175,55,0.08), rgba(212,175,55,0.03));
+            border: 1px solid rgba(212,175,55,0.15);
+            border-bottom-right-radius: 4px; color: var(--gold-50);
+        }
+        .dm-bubble .booking-btn {
+            display: inline-block; margin-top: 8px;
+            padding: 10px 18px;
+            background: var(--gold-500); color: #000;
+            font-family: var(--font-condensed);
+            font-size: 11px; letter-spacing: 2px;
+            text-transform: uppercase; border-radius: 6px;
+            text-decoration: none; font-weight: 600;
+            cursor: pointer; border: none;
+            -webkit-tap-highlight-color: transparent;
+            transition: all 0.2s;
+        }
+        .dm-bubble .booking-btn:active {
+            transform: scale(0.97);
+            background: var(--gold-300);
+        }
+        .dm-typing { display: flex; gap: 4px; padding: 12px 14px; align-items: center; }
+        .dm-typing span {
+            width: 6px; height: 6px; border-radius: 50%;
+            background: var(--gold-500);
+            animation: typingDot 1.2s ease-in-out infinite;
+        }
+        .dm-typing span:nth-child(2) { animation-delay: 0.2s; }
+        .dm-typing span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typingDot {
+            0%, 60%, 100% { opacity: 0.3; transform: scale(0.8); }
+            30% { opacity: 1; transform: scale(1.1); }
+        }
+        @keyframes msgIn { to { opacity: 1; transform: translateY(0); } }
+        @keyframes sentPulse {
+            0% { box-shadow: none; }
+            50% { box-shadow: 0 0 12px rgba(212,175,55,0.15); }
+            100% { box-shadow: none; }
+        }
+        .dm-msg.ai .dm-bubble { animation: sentPulse 0.6s ease 0.4s; }
+
+        /* DM Input */
+        .dm-input-bar {
+            display: flex; gap: 8px;
+            margin-top: 14px; padding-top: 14px;
+            border-top: 1px solid var(--border-subtle);
+        }
+        .dm-input-bar input {
+            flex: 1; background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            padding: 12px 14px; color: var(--text-primary);
+            font-family: var(--font-body); font-size: 14px;
+            outline: none; -webkit-appearance: none; appearance: none;
+        }
+        .dm-input-bar input:focus { border-color: rgba(212,175,55,0.3); }
+        .dm-input-bar input::placeholder { color: var(--text-dim); }
+        .dm-input-bar button {
+            background: var(--gold-500); color: #000;
+            border: none; border-radius: var(--radius-sm);
+            padding: 12px 18px;
+            font-family: var(--font-condensed);
+            font-size: 12px; letter-spacing: 2px;
+            cursor: pointer; font-weight: 600;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Scenario Tabs */
+        .scenario-tabs { display: flex; gap: 4px; margin-bottom: 14px; flex-wrap: wrap; }
+        .scenario-tab {
+            padding: 8px 14px;
+            font-family: var(--font-mono); font-size: 10px;
+            letter-spacing: 1px; background: transparent;
+            border: 1px solid var(--border-subtle);
+            color: var(--text-muted); border-radius: 6px;
+            cursor: pointer; -webkit-tap-highlight-color: transparent;
+        }
+        .scenario-tab.active {
+            background: var(--gold-900);
+            border-color: rgba(212,175,55,0.3);
+            color: var(--gold-400);
+        }
+
+        /* ═══════ SCHEDULE ═══════ */
+        .schedule-day {
+            font-family: var(--font-condensed);
+            font-size: 18px; margin-bottom: 4px;
+        }
+        .schedule-date {
+            font-family: var(--font-mono);
+            font-size: 11px; color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+        .time-slot {
+            display: flex; gap: 10px;
+            align-items: stretch; margin-bottom: 6px;
+            opacity: 0; animation: slotCascade 0.5s ease forwards;
+        }
+        .time-slot:nth-child(1) { animation-delay: 0.05s; }
+        .time-slot:nth-child(2) { animation-delay: 0.1s; }
+        .time-slot:nth-child(3) { animation-delay: 0.15s; }
+        .time-slot:nth-child(4) { animation-delay: 0.2s; }
+        .time-slot:nth-child(5) { animation-delay: 0.25s; }
+        .time-slot:nth-child(6) { animation-delay: 0.3s; }
+        .time-slot:nth-child(7) { animation-delay: 0.35s; }
+        .time-slot:nth-child(8) { animation-delay: 0.4s; }
+        @keyframes slotCascade {
+            from { opacity: 0; transform: translateX(-8px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .time-label {
+            width: 44px; text-align: right;
+            font-family: var(--font-mono);
+            font-size: 10px; color: var(--text-dim);
+            padding-top: 10px; flex-shrink: 0;
+        }
+        .slot-content {
+            flex: 1; padding: 10px 14px;
+            border-radius: var(--radius-xs);
+            position: relative;
+        }
+        .slot-content.booked {
+            background: var(--bg-elevated);
+            border-left: 3px solid var(--emerald);
+        }
+        .slot-content.vip {
+            background: rgba(212,175,55,0.04);
+            border-left: 3px solid var(--gold-400);
+        }
+        .slot-content.open {
+            border: 1px dashed var(--border-medium);
+            display: flex; align-items: center;
+            justify-content: center; opacity: 0.5;
+            min-height: 42px;
+        }
+        .slot-content.ai-filled {
+            background: linear-gradient(135deg, rgba(59,130,246,0.06), rgba(59,130,246,0.02));
+            border-left: 3px solid var(--blue); position: relative;
+        }
+        .slot-content.ai-filled::after {
+            content: 'AI BOOKED'; position: absolute;
+            top: 6px; right: 8px;
+            font-family: var(--font-mono);
+            font-size: 7px; letter-spacing: 1.5px;
+            color: var(--blue); background: var(--blue-dim);
+            padding: 2px 6px; border-radius: 10px;
+            border: 1px solid rgba(59,130,246,0.2);
+        }
+        .slot-name {
+            font-size: 12px; font-weight: 600;
+            margin-bottom: 1px;
+        }
+        .slot-service { font-size: 10px; color: var(--text-muted); }
+        .slot-service .source { color: var(--gold-400); }
+        .slot-badge {
+            display: inline-block;
+            font-family: var(--font-mono);
+            font-size: 8px; padding: 1px 6px;
+            border-radius: 10px; margin-left: 6px;
+        }
+        .slot-badge.paid { background: var(--emerald-dim); color: var(--emerald); }
+        .slot-badge.vip-tag { background: var(--gold-900); color: var(--gold-400); border: 1px solid rgba(212,175,55,0.2); }
+        .slot-badge.unpaid { background: rgba(60,60,60,0.3); color: var(--text-dim); }
+        .open-label {
+            font-family: var(--font-condensed);
+            font-size: 10px; letter-spacing: 2px; color: var(--text-dim);
+        }
+
+        /* ═══════ PUSH ENGINE ═══════ */
+        .push-preview { margin-bottom: 24px; }
+        .push-text {
+            margin-bottom: 20px;
+        }
+        .push-text h3 {
+            font-family: var(--font-display);
+            font-size: 18px; color: var(--gold-400);
+            margin-bottom: 8px;
+        }
+        .push-text p {
+            font-size: 13px; color: var(--text-secondary);
+            line-height: 1.7;
+        }
+        .push-text p strong { color: var(--gold-400); }
+        .push-stats {
+            display: flex; gap: 20px;
+            margin-top: 16px; flex-wrap: wrap;
+        }
+        .push-stats .ps-item .ps-val {
+            font-family: var(--font-condensed);
+            font-size: 22px;
+        }
+        .push-stats .ps-item .ps-label {
+            font-size: 9px; text-transform: uppercase;
+            letter-spacing: 1px; color: var(--text-muted);
+        }
+        .phone-mockup {
+            max-width: 300px; margin: 0 auto;
+            background: #111; border-radius: 24px;
+            padding: 16px; border: 2px solid #222;
+        }
+        .phone-notch {
+            width: 80px; height: 5px;
+            background: #222; border-radius: 4px;
+            margin: 0 auto 14px;
+        }
+        .phone-notification {
+            background: rgba(30,30,30,0.95);
+            border: 1px solid var(--border-subtle);
+            border-radius: 14px; padding: 12px;
+            margin-bottom: 8px;
+            animation: slideDown 0.6s ease forwards;
+            opacity: 0; transform: translateY(-20px);
+        }
+        .phone-notification:nth-child(3) { animation-delay: 1.5s; }
+        @keyframes slideDown { to { opacity: 1; transform: translateY(0); } }
+        .notif-header {
+            display: flex; justify-content: space-between;
+            align-items: center; margin-bottom: 4px;
+        }
+        .notif-app {
+            font-size: 9px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 1px;
+            color: var(--gold-400);
+        }
+        .notif-time {
+            font-size: 9px; color: var(--text-dim);
+            font-family: var(--font-mono);
+        }
+        .notif-title {
+            font-size: 12px; font-weight: 700;
+            margin-bottom: 3px;
+        }
+        .notif-body {
+            font-size: 11px; color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        /* ═══════ HOW IT WORKS ═══════ */
+        .flow-steps { display: flex; flex-direction: column; gap: 12px; }
+        .flow-step {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius);
+            padding: 18px 20px;
+            display: flex; align-items: center; gap: 16px;
+        }
+        .flow-step .step-icon { font-size: 24px; flex-shrink: 0; }
+        .flow-step .step-num {
+            font-family: var(--font-display);
+            font-size: 18px; color: var(--gold-400);
+            opacity: 0.5; flex-shrink: 0; width: 28px;
+        }
+        .flow-step .step-text h4 {
+            font-family: var(--font-condensed);
+            font-size: 13px; letter-spacing: 2px;
+            text-transform: uppercase; margin-bottom: 2px;
+        }
+        .flow-step .step-text p {
+            font-size: 11px; color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* ═══════ PRICING TIERS ═══════ */
+        .tiers { margin-bottom: 32px; }
+        .tier-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius);
+            padding: 24px 20px;
+            margin-bottom: 12px;
+            position: relative; overflow: hidden;
+            transition: transform 0.25s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .tier-card:active {
+            transform: scale(0.98);
+        }
+        @media (hover: hover) {
+            .tier-card:hover {
+                border-color: rgba(212,175,55,0.2);
+                box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+                transform: translateY(-2px);
+            }
+        }
+        .tier-card::before {
+            content: ''; position: absolute;
+            top: 0; left: 0; right: 0; height: 2px;
+        }
+        .tier-card.t1::before { background: linear-gradient(to right, var(--gold-400), var(--gold-700), transparent); }
+        .tier-card.t2::before { background: linear-gradient(to right, var(--blue), rgba(59,130,246,0.3), transparent); }
+        .tier-card.t3::before { background: linear-gradient(to right, var(--emerald), rgba(16,185,129,0.3), transparent); }
+
+        .tier-header {
+            display: flex; justify-content: space-between;
+            align-items: center; margin-bottom: 12px;
+        }
+        .tier-roman {
+            font-family: var(--font-display);
+            font-size: 14px; color: var(--gold-400);
+            opacity: 0.6;
+        }
+        .tier-name {
+            font-family: var(--font-display);
+            font-size: 18px; font-weight: 600;
+        }
+        .tier-card.t1 .tier-name { color: var(--gold-400); }
+        .tier-card.t2 .tier-name { color: var(--blue); }
+        .tier-card.t3 .tier-name { color: var(--emerald); }
+        .tier-tag {
+            font-family: var(--font-mono);
+            font-size: 9px; letter-spacing: 1px;
+            padding: 3px 10px; border-radius: 20px;
+        }
+        .tier-card.t1 .tier-tag { background: var(--gold-900); color: var(--gold-400); border: 1px solid rgba(212,175,55,0.2); }
+        .tier-card.t2 .tier-tag { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(59,130,246,0.2); }
+        .tier-card.t3 .tier-tag { background: var(--emerald-dim); color: var(--emerald); border: 1px solid rgba(16,185,129,0.2); }
+
+        .tier-desc {
+            font-size: 13px; color: var(--text-secondary);
+            line-height: 1.7; margin-bottom: 14px;
+        }
+        .tier-features {
+            display: flex; flex-direction: column; gap: 6px;
+        }
+        .tier-features .tf {
+            font-size: 12px; color: var(--text-muted);
+            display: flex; align-items: center; gap: 8px;
+        }
+        .tier-features .tf::before {
+            content: '→'; color: var(--text-dim); font-size: 10px;
+        }
+
+        .tier-note {
+            text-align: center; margin-top: 12px;
+            font-size: 12px; color: var(--text-dim);
+            font-style: italic;
+        }
+        .tier-note strong { color: var(--text-muted); font-style: normal; }
+
+        /* ═══════ CTA ═══════ */
+        .footer-cta {
+            text-align: center;
+            padding: 48px 0 60px;
+            border-top: 1px solid var(--border-subtle);
+        }
+        .footer-cta h2 {
+            font-family: var(--font-display);
+            font-size: 24px; margin-bottom: 12px;
+            line-height: 1.3;
+        }
+        .footer-cta h2 .gold {
+            background: linear-gradient(to right, #bf953f, #fcf6ba, #b38728);
+            -webkit-background-clip: text; background-clip: text;
+            color: transparent;
+        }
+        .footer-cta p {
+            color: var(--text-muted); font-size: 13px;
+            max-width: 440px; margin: 0 auto 24px;
+            line-height: 1.6;
+        }
+        .cta-btn {
+            display: inline-block;
+            padding: 16px 36px;
+            background: linear-gradient(135deg, var(--gold-500), var(--gold-600));
+            color: #000;
+            font-family: var(--font-condensed);
+            font-size: 14px; letter-spacing: 3px;
+            text-transform: uppercase; border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer; font-weight: 600;
+            text-decoration: none;
+            box-shadow: 0 4px 24px rgba(212,175,55,0.15);
+            -webkit-tap-highlight-color: transparent;
+            transition: all 0.3s;
+            animation: ctaGlow 3s ease-in-out infinite;
+        }
+        @keyframes ctaGlow {
+            0%, 100% { box-shadow: 0 4px 24px rgba(212,175,55,0.15); }
+            50% { box-shadow: 0 4px 40px rgba(212,175,55,0.3), 0 0 60px rgba(212,175,55,0.08); }
+        }
+        .cta-btn:active {
+            transform: scale(0.97);
+            box-shadow: 0 2px 12px rgba(212,175,55,0.2);
+            animation: none;
+        }
+        .cta-email {
+            display: block; margin-top: 16px;
+            font-family: var(--font-mono);
+            font-size: 12px; color: var(--text-dim);
+            letter-spacing: 0.5px;
+        }
+
+        /* ═══════ SECTION SPACER ═══════ */
+        .spacer { height: 40px; }
+
+        /* ═══════ FADE-IN ANIMATION ═══════ */
+        .fade-up {
+            opacity: 0; transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+        /* ═══════ SITE NAV ═══════ */
+        .site-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 10000; padding: 0 24px; height: 64px; display: flex; align-items: center; justify-content: space-between; background: rgba(3,3,3,0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid rgba(40,40,40,0.3); transition: background 0.4s; }
+        .site-nav.scrolled { background: rgba(3,3,3,0.97); }
+        .site-nav .nav-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .site-nav .nav-logo { height: 36px; width: auto; filter: brightness(1.1); }
+        .site-nav .nav-name { font-family: var(--font-display); font-size: 13px; letter-spacing: 3px; color: var(--text-primary); text-transform: uppercase; }
+        .site-nav .nav-name em { font-style: italic; color: var(--gold-400); }
+        .site-nav .nav-links { display: flex; gap: 32px; list-style: none; }
+        .site-nav .nav-links a { font-family: var(--font-condensed); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); text-decoration: none; position: relative; padding-bottom: 4px; transition: color 0.3s; }
+        .site-nav .nav-links a:hover, .site-nav .nav-links a.active { color: var(--gold-400); }
+        .site-nav .nav-links a.active::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: var(--gold-400); }
+        .site-nav .nav-cta { font-family: var(--font-condensed); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; background: var(--gold-400); color: #000; padding: 8px 20px; border: none; border-radius: 4px; cursor: pointer; text-decoration: none; font-weight: 600; transition: background 0.3s; }
+        .site-nav .nav-cta:hover { background: var(--gold-300); }
+        .site-nav .nav-burger { display: none; background: none; border: none; cursor: pointer; padding: 8px; }
+        .site-nav .nav-burger span { display: block; width: 22px; height: 1.5px; background: var(--text-secondary); margin: 5px 0; }
+        .nav-drawer { display: none; position: fixed; top: 64px; left: 0; right: 0; bottom: 0; background: rgba(3,3,3,0.98); backdrop-filter: blur(30px); padding: 40px 32px; z-index: 10001; }
+        .nav-drawer.open { display: flex; flex-direction: column; gap: 24px; }
+        .nav-drawer a { font-family: var(--font-display); font-size: 28px; color: var(--text-secondary); text-decoration: none; letter-spacing: 3px; padding: 12px 0; border-bottom: 1px solid rgba(40,40,40,0.3); transition: color 0.3s; }
+        .nav-drawer a:hover { color: var(--gold-400); }
+        @media (max-width: 768px) { .site-nav .nav-links, .site-nav .nav-cta-wrap { display: none !important; } .site-nav .nav-burger { display: block; } }
+    </style>
+</head>
+<body>
+
+<!-- ═══ SITE NAV ═══ -->
+<nav class="site-nav" id="siteNav">
+    <a href="index.html" class="nav-brand">
+        <img src="https://thecoilgrooming.com/cdn/shop/files/Site_logo.png?v=1715055751" alt="The Coil" class="nav-logo">
+        <span class="nav-name">THE <em>COIL</em></span>
+    </a>
+    <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="booking.html">Book</a></li>
+    </ul>
+    <div class="nav-cta-wrap" style="display:flex">
+        <a href="booking.html" class="nav-cta">Book Now</a>
+    </div>
+    <button class="nav-burger" onclick="toggleDrawer()" aria-label="Menu">
+        <span></span><span></span><span></span>
+    </button>
+</nav>
+<div class="nav-drawer" id="navDrawer">
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="gallery.html">Gallery</a>
+    <a href="booking.html">Book Now</a>
+</div>
+
+<div class="ambient-bg"></div>
+
+<div class="container" style="padding-top: 88px;">
+
+    <!-- ═══════ HERO ═══════ -->
+    <section class="hero fade-up">
+        <div class="hero-tag">BUILT FOR THE COIL</div>
+        <h1>Stop Typing.<br>Start <span class="gold">Booking</span>.</h1>
+        <div class="hero-copy">
+            You already did the hard part — built the brand, grew the audience, filmed the content that makes people want to sit in your chair. But right now,
+            <strong>every DM is a manual conversation</strong>. Every booking request is you thumbing out the same reply between clients.
+            <br><br>
+            Most barbers stay stuck there. Posting and texting. Posting and texting. Running a text chain and calling it a business.
+            <br><br>
+            This is different. An AI that handles your DMs <strong>in your voice</strong>, checks your actual Acuity schedule, and books the client — before you even put the clippers down.
+            <span class="punchline">While they're still texting back, your chair is already full.</span>
+        </div>
+    </section>
+
+    <!-- ═══════ KEY METRIC ═══════ -->
+    <div class="stat-pill fade-up">
+        <div class="sp-item">
+            <div class="sp-val">$3,840</div>
+            <div class="sp-label">Revenue / Day</div>
+        </div>
+        <div class="sp-item">
+            <div class="sp-val">247</div>
+            <div class="sp-label">DMs Handled</div>
+        </div>
+        <div class="sp-item">
+            <div class="sp-val">0</div>
+            <div class="sp-label">Missed</div>
+        </div>
+    </div>
+
+    <div class="spacer"></div>
+
+    <!-- ═══════ HOW IT WORKS ═══════ -->
+    <div class="fade-up">
+        <div class="section-title">How It Works</div>
+        <div class="flow-steps">
+            <div class="flow-step">
+                <div class="step-icon">💬</div>
+                <div class="step-num">01</div>
+                <div class="step-text">
+                    <h4>Client DMs You</h4>
+                    <p>"You free Saturday? I need a unit install"</p>
+                </div>
+            </div>
+            <div class="flow-step">
+                <div class="step-icon">🧠</div>
+                <div class="step-num">02</div>
+                <div class="step-text">
+                    <h4>AI Reads Intent</h4>
+                    <p>Understands the service, the date, the urgency</p>
+                </div>
+            </div>
+            <div class="flow-step">
+                <div class="step-icon">📅</div>
+                <div class="step-num">03</div>
+                <div class="step-text">
+                    <h4>Checks Your Book</h4>
+                    <p>Real-time Acuity lookup — finds the best open slot</p>
+                </div>
+            </div>
+            <div class="flow-step">
+                <div class="step-icon">⚡</div>
+                <div class="step-num">04</div>
+                <div class="step-text">
+                    <h4>Books & Confirms</h4>
+                    <p>Sends the link, collects the deposit, done</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="spacer"></div>
+
+    <!-- ═══════ DM SIMULATOR ═══════ -->
+    <div class="fade-up">
+        <div class="section-title">Live Preview</div>
+        <div class="card">
+            <div class="card-header">
+                <h3>DM Simulator</h3>
+                <span class="card-badge ai">GEMINI 3 FLASH</span>
+            </div>
+            <div class="card-body">
+                <div class="scenario-tabs">
+                    <button class="scenario-tab active" onclick="runScenario('booking', this)">New Booking</button>
+                    <button class="scenario-tab" onclick="runScenario('reschedule', this)">Reschedule</button>
+                    <button class="scenario-tab" onclick="runScenario('pricing', this)">Pricing Ask</button>
+                </div>
+                <div class="dm-thread" id="dmThread"></div>
+                <div class="dm-input-bar">
+                    <input type="text" id="dmInput" placeholder="Type a DM to test..." onkeydown="if(event.key==='Enter')sendCustomDM()">
+                    <button onclick="sendCustomDM()">SEND</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════ ACUITY SCHEDULE ═══════ -->
+    <div class="fade-up">
+        <div class="card">
+            <div class="card-header">
+                <h3>The Book</h3>
+                <span class="card-badge live">ACUITY LIVE</span>
+            </div>
+            <div class="card-body">
+                <div class="schedule-day">SATURDAY</div>
+                <div class="schedule-date">February 15, 2026</div>
+                <div id="scheduleView"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="spacer"></div>
+
+    <!-- ═══════ PUSH ENGINE ═══════ -->
+    <div class="fade-up">
+        <div class="section-title">Push Engine</div>
+        <div class="push-preview">
+            <div class="push-text">
+                <h3>Empty Chair? Not Anymore.</h3>
+                <p>AI detects gaps in tomorrow's schedule and fires targeted notifications to fill them. Every message auto-generated <strong>in your voice</strong> — no templates, no copy-paste.</p>
+                <div class="push-stats">
+                    <div class="ps-item">
+                        <div class="ps-val">$1,680</div>
+                        <div class="ps-label">Recovered / Week</div>
+                    </div>
+                    <div class="ps-item">
+                        <div class="ps-val">94%</div>
+                        <div class="ps-label">Open Rate</div>
+                    </div>
+                    <div class="ps-item">
+                        <div class="ps-val">&lt; 30s</div>
+                        <div class="ps-label">Response Time</div>
+                    </div>
+                </div>
+            </div>
+            <div class="phone-mockup">
+                <div class="phone-notch"></div>
+                <div class="phone-notification">
+                    <div class="notif-header">
+                        <span class="notif-app">The Coil</span>
+                        <span class="notif-time">Just now</span>
+                    </div>
+                    <div class="notif-title">Opening just dropped 🔥</div>
+                    <div class="notif-body">Last-minute 3:30 PM slot tomorrow. Hair unit install + lineup. First to book gets it → tap to claim</div>
+                </div>
+                <div class="phone-notification">
+                    <div class="notif-header">
+                        <span class="notif-app">The Coil</span>
+                        <span class="notif-time">2h ago</span>
+                    </div>
+                    <div class="notif-title">Your monthly is due ✂️</div>
+                    <div class="notif-body">Been 4 weeks since your last unit maintenance. I saved your usual Saturday 11 AM — confirm?</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="spacer"></div>
+
+    <!-- ═══════ PRICING TIERS ═══════ -->
+    <div class="fade-up">
+        <div class="section-title">What You Get</div>
+        <div class="tiers">
+            <div class="tier-card t1">
+                <div class="tier-header">
+                    <div>
+                        <div class="tier-roman">I</div>
+                        <div class="tier-name">The Concierge</div>
+                    </div>
+                    <span class="tier-tag">CORE</span>
+                </div>
+                <div class="tier-desc">
+                    Your AI-powered front desk. Handles every DM — booking requests, reschedules, pricing questions — in your voice, 24/7. Reads your Acuity schedule in real time and books clients directly. No more thumb-typing between cuts.
+                </div>
+                <div class="tier-features">
+                    <div class="tf">AI DM handling across Instagram</div>
+                    <div class="tf">Live Acuity availability + auto-booking</div>
+                    <div class="tf">Deposit collection via booking link</div>
+                    <div class="tf">Your tone, your language, your brand</div>
+                </div>
+            </div>
+
+            <div class="tier-card t2">
+                <div class="tier-header">
+                    <div>
+                        <div class="tier-roman">II</div>
+                        <div class="tier-name">The Signal</div>
+                    </div>
+                    <span class="tier-tag">GROWTH</span>
+                </div>
+                <div class="tier-desc">
+                    Turns tomorrow's empty slots into booked revenue. AI scans your Acuity schedule nightly, identifies gaps, and fires laser-targeted push notifications to clients who are due — all written in your voice.
+                </div>
+                <div class="tier-features">
+                    <div class="tf">Automated gap detection + fill alerts</div>
+                    <div class="tf">SMS push notifications via your number</div>
+                    <div class="tf">Monthly maintenance reminders for regulars</div>
+                    <div class="tf">No-show recovery follow-ups</div>
+                </div>
+            </div>
+
+            <div class="tier-card t3">
+                <div class="tier-header">
+                    <div>
+                        <div class="tier-roman">III</div>
+                        <div class="tier-name">The Lens</div>
+                    </div>
+                    <span class="tier-tag">INTEL</span>
+                </div>
+                <div class="tier-desc">
+                    Know exactly which reel filled which chair. Tracks content performance to Acuity bookings, showing you what's working and what's just getting likes. AI-generated suggestions for your next post based on what actually converts.
+                </div>
+                <div class="tier-features">
+                    <div class="tf">Content-to-booking attribution</div>
+                    <div class="tf">Revenue per post / story / reel analytics</div>
+                    <div class="tf">AI posting recommendations</div>
+                    <div class="tf">Weekly performance digest</div>
+                </div>
+            </div>
+
+            <div class="tier-note">
+                Each tier builds on the last. Custom setup + <strong>monthly managed service</strong> included.
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════ LIVE BOOKING ═══════ -->
+    <div class="fade-up" style="padding:60px 20px 40px;max-width:600px;margin:0 auto;">
+        <div style="text-align:center;margin-bottom:32px;">
+            <div style="width:60px;height:1px;background:linear-gradient(90deg,transparent,var(--gold-400),transparent);margin:0 auto 20px;"></div>
+            <div style="font-family:var(--font-display);font-size:clamp(22px,6vw,32px);font-weight:700;letter-spacing:1px;color:var(--text-primary);margin-bottom:10px;">BOOK YOUR <span class="gold">SEAT</span></div>
+            <div style="font-size:14px;color:var(--text-muted);line-height:1.6;max-width:340px;margin:0 auto;">Real availability. Real booking. Select your service below and lock in your slot.</div>
+        </div>
+        <div style="border-radius:var(--radius);overflow:hidden;border:1px solid var(--border-subtle);background:var(--bg-card);">
+            <iframe src="https://thecoilgrooming.as.me/schedule/97ecbd23/?calendarIds=5426664" 
+                    title="Book Appointment — The Coil" 
+                    width="100%" 
+                    height="800" 
+                    frameBorder="0"
+                    style="display:block;background:#111;"></iframe>
+        </div>
+        <div style="text-align:center;margin-top:16px;font-size:11px;color:var(--text-dim);font-family:var(--font-mono);letter-spacing:1px;">POWERED BY ACUITY × THE COIL</div>
+    </div>
+
+    <!-- ═══════ CTA ═══════ -->
+    <footer class="footer-cta fade-up">
+        <h2>Your Content Creates the <span class="gold">Demand</span>.<br>This System <span class="gold">Converts</span> It.</h2>
+        <p>Every open slot filled. Every DM answered. Every booking tracked back to the content that drove it.</p>
+        <a href="mailto:brihag8@gmail.com?subject=AI%20Integration%20—%20The%20Coil" class="cta-btn">LET'S BUILD THIS</a>
+        <span class="cta-email">brihag8@gmail.com</span>
+    </footer>
+
+</div>
+
+<script>
+// ═══════ SCHEDULE DATA ═══════
+const schedule = [
+    { time: "10:00", name: "Marcus Thompson", service: "Hair Unit Install — Full", status: "booked", badge: "paid", source: "IG Story" },
+    { time: "11:30", name: "DeAndre Williams", service: "Beard Shape & Line Up", status: "booked", badge: "paid", source: "Returning Client" },
+    { time: "12:30", status: "open" },
+    { time: "13:00", name: "Jaylen Carter", service: "Hair Unit Maintenance", status: "vip", badge: "vip-tag", source: "Monthly VIP" },
+    { time: "14:15", status: "open" },
+    { time: "15:00", name: "Chris Reynolds", service: "Unit Install + Beard", status: "ai-filled", badge: "paid", source: "IG DM → AI Booked" },
+    { time: "16:00", name: "Anthony Brooks", service: "Fade + Line Up", status: "booked", badge: "unpaid", source: "Walk-in Converted" },
+    { time: "17:00", name: "Kevin Davis", service: "Hair Unit Consultation", status: "ai-filled", badge: "paid", source: "DM → AI Booked" },
+];
+
+function renderSchedule() {
+    const view = document.getElementById('scheduleView');
+    view.innerHTML = schedule.map(slot => {
+        if (slot.status === 'open') {
+            return `<div class="time-slot">
+                <div class="time-label">${slot.time}</div>
+                <div class="slot-content open"><span class="open-label">OPEN SLOT</span></div>
+            </div>`;
+        }
+        const badgeLabel = slot.badge === 'paid' ? 'PAID' : slot.badge === 'vip-tag' ? 'VIP' : slot.badge === 'unpaid' ? 'UNPAID' : '';
+        return `<div class="time-slot">
+            <div class="time-label">${slot.time}</div>
+            <div class="slot-content ${slot.status}">
+                <div class="slot-name">${slot.name}<span class="slot-badge ${slot.badge}">${badgeLabel}</span></div>
+                <div class="slot-service">${slot.service} · <span class="source">${slot.source}</span></div>
+            </div>
+        </div>`;
+    }).join('');
+}
+renderSchedule();
+
+// ═══════ DM SIMULATOR ═══════
+const scenarios = {
+    booking: [
+        { type: 'client', text: "Hey bro you free this Saturday? Need a unit install 🔥", delay: 0 },
+        { type: 'typing', delay: 1200 },
+        { type: 'ai', text: "What's good! 💪 Saturday's filling up fast but I got a 3:00 PM slot open — perfect for a full unit install.\n\nThat work for you? Takes about 90 min.", delay: 2200 },
+        { type: 'client', text: "3 works perfect. How much?", delay: 4000 },
+        { type: 'typing', delay: 5000 },
+        { type: 'ai', text: "Full unit install is $350. $75 deposit locks it in.\n\nHere's your booking link — it's got your slot held for the next 15 min 👇", delay: 6000, hasBtn: true },
+    ],
+    reschedule: [
+        { type: 'client', text: "Yo I gotta move my Saturday appointment, something came up 😬", delay: 0 },
+        { type: 'typing', delay: 1200 },
+        { type: 'ai', text: "No stress! I see your 1 PM unit maintenance on Saturday.\n\nI've got openings:\n• Sunday 11 AM\n• Monday 2 PM\n• Next Saturday same time\n\nWhich one works?", delay: 2400 },
+        { type: 'client', text: "Sunday 11 works 🙏", delay: 4200 },
+        { type: 'typing', delay: 5200 },
+        { type: 'ai', text: "Done ✅ Moved you to Sunday Feb 16 at 11 AM.\n\nYou'll get a confirmation text in a sec. See you then 💈", delay: 6200 },
+    ],
+    pricing: [
+        { type: 'client', text: "What's the price for a hair unit? Never had one before", delay: 0 },
+        { type: 'typing', delay: 1200 },
+        { type: 'ai', text: "Great question! Here's the breakdown:\n\n✂️ First-time unit install — $400\n(includes consultation, custom fitting, cut & style)\n\n🔄 Monthly maintenance — $150\n(re-bonding, cleanup, style refresh)\n\nFirst visit takes about 2 hours. I'll make sure you leave looking crazy 🔥", delay: 2800 },
+        { type: 'client', text: "That's fire. Can I come in this week?", delay: 5000 },
+        { type: 'typing', delay: 6000 },
+        { type: 'ai', text: "Let me check... I've got:\n• Wednesday 1 PM\n• Thursday 10 AM\n• Friday 3 PM\n\nFor a first-timer I'd recommend the Thursday morning slot — more time, no rush.\n\nWant me to lock it in? 👇", delay: 7200, hasBtn: true },
+    ]
+};
+
+let dmTimeouts = [];
+
+function clearDMs() {
+    dmTimeouts.forEach(t => clearTimeout(t));
+    dmTimeouts = [];
+    document.getElementById('dmThread').innerHTML = '';
+}
+
+function addDM(msg) {
+    const thread = document.getElementById('dmThread');
+    const existing = thread.querySelector('.typing-indicator');
+    if (existing) existing.remove();
+
+    if (msg.type === 'typing') {
+        const el = document.createElement('div');
+        el.className = 'dm-msg ai typing-indicator';
+        el.innerHTML = `<div class="dm-avatar">AI</div>
+            <div class="dm-bubble"><div class="dm-typing"><span></span><span></span><span></span></div></div>`;
+        el.style.animation = 'msgIn 0.3s ease forwards';
+        thread.appendChild(el);
+    } else {
+        const el = document.createElement('div');
+        el.className = `dm-msg ${msg.type}`;
+        let btnHtml = msg.hasBtn ? `<br><button class="booking-btn" onclick="fillSlot()">📅 BOOK SATURDAY 3:00 PM</button>` : '';
+        el.innerHTML = `<div class="dm-avatar">${msg.type === 'ai' ? 'AI' : 'MC'}</div>
+            <div class="dm-bubble">${msg.text.replace(/\n/g, '<br>')}${btnHtml}</div>`;
+        thread.appendChild(el);
+    }
+    thread.scrollTop = thread.scrollHeight;
+}
+
+function runScenario(name, el) {
+    clearDMs();
+    document.querySelectorAll('.scenario-tab').forEach(t => t.classList.remove('active'));
+    if (el) el.classList.add('active');
+    const msgs = scenarios[name];
+    if (!msgs) return;
+    msgs.forEach(msg => {
+        dmTimeouts.push(setTimeout(() => addDM(msg), msg.delay));
+    });
+}
+
+function sendCustomDM() {
+    const input = document.getElementById('dmInput');
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = '';
+    addDM({ type: 'client', text });
+    const t1 = setTimeout(() => addDM({ type: 'typing' }), 800);
+    const t2 = setTimeout(() => {
+        const responses = [
+            `Got you! Let me check the book... I've got a 2:30 PM slot open this Saturday. Want me to lock it in? 💈`,
+            `Appreciate you reaching out! Saturday's filling up but I held a 4 PM slot for you. Tap here to book 👇`,
+            `What's good! For that service I'd recommend coming in Thursday morning — more time, better results. I'll send you the booking link 🔥`,
+        ];
+        addDM({ type: 'ai', text: responses[Math.floor(Math.random() * responses.length)], hasBtn: true });
+    }, 2200);
+    dmTimeouts.push(t1, t2);
+}
+
+function fillSlot() {
+    const openIdx = schedule.findIndex(s => s.status === 'open');
+    if (openIdx >= 0) {
+        schedule[openIdx] = {
+            ...schedule[openIdx],
+            name: "NEW — Marco C.",
+            service: "Hair Unit Install",
+            status: "ai-filled",
+            badge: "paid",
+            source: "IG DM → AI Booked"
+        };
+        renderSchedule();
+    }
+}
+
+// Auto-run first scenario
+setTimeout(() => runScenario('booking', document.querySelector('.scenario-tab.active')), 600);
+
+// ═══════ NAV ═══════
+const siteNav = document.getElementById('siteNav');
+window.addEventListener('scroll', () => siteNav.classList.toggle('scrolled', window.scrollY > 50));
+function toggleDrawer() { document.getElementById('navDrawer').classList.toggle('open'); }
+
+// ═══════ SCROLL REVEAL ═══════
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+        if (e.isIntersecting) {
+            e.target.classList.add('visible');
+            observer.unobserve(e.target);
+        }
+    });
+}, { threshold: 0.15 });
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>

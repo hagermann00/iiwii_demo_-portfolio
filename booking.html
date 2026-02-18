@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Services & Booking — The Coil by Antonio Willis</title>
+<meta name="description" content="Book your appointment at The Coil. Precision haircuts, hair units, classic shaves, beard sculpting by Antonio 'BarberGawd' Willis. South Loop, Chicago.">
+<meta name="theme-color" content="#0A0A0A">
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;0,6..72,800;1,6..72,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        brand: { black: "#0A0A0A", gold: "#D4AF37", "gold-light": "#E8C96A", crimson: "#8B1A1A", "crimson-light": "#A91D1D", muted: "#999999", surface: "#141414", "surface-light": "#1E1E1E" },
+      },
+      fontFamily: { display: ["Newsreader", "Georgia", "serif"], body: ["Inter", "system-ui", "sans-serif"] },
+    },
+  },
+};
+</script>
+<style>
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Inter', system-ui, sans-serif; background: #0A0A0A; color: #F5F5F5; }
+  .font-display { font-family: 'Newsreader', Georgia, serif; }
+  .gold-divider { height: 1px; background: linear-gradient(90deg, transparent, #D4AF37, transparent); }
+  .nav-link { position: relative; }
+  .nav-link::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 1px; background: #D4AF37; transition: width 0.3s ease; }
+  .nav-link:hover::after { width: 100%; }
+  .btn-gold { background: #D4AF37; color: #0A0A0A; font-weight: 600; letter-spacing: 0.05em; transition: all 0.3s ease; }
+  .btn-gold:hover { background: #E8C96A; transform: translateY(-1px); box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3); }
+  .btn-outline-gold { border: 1px solid #D4AF37; color: #D4AF37; transition: all 0.3s ease; }
+  .btn-outline-gold:hover { background: rgba(212, 175, 55, 0.1); }
+  .service-card { border: 1px solid rgba(212, 175, 55, 0.12); background: #141414; transition: all 0.3s ease; }
+  .service-card:hover { border-color: rgba(212, 175, 55, 0.4); }
+  .time-btn { border: 1px solid rgba(212, 175, 55, 0.3); color: #D4AF37; background: transparent; padding: 16px 24px; text-align: center; transition: all 0.3s ease; text-decoration: none; display: block; }
+  .time-btn:hover { background: rgba(212, 175, 55, 0.1); border-color: #D4AF37; transform: translateY(-2px); box-shadow: 0 4px 20px rgba(212, 175, 55, 0.15); }
+  .vip-banner { background: linear-gradient(135deg, #8B1A1A 0%, #5D1111 100%); border: 1px solid rgba(212, 175, 55, 0.2); }
+</style>
+</head>
+<body class="antialiased min-h-screen overflow-x-hidden">
+
+<!-- Navigation -->
+<nav class="fixed top-0 left-0 right-0 z-50 bg-brand-black/90 backdrop-blur-md border-b border-white/5">
+  <div class="max-w-[1440px] mx-auto px-8 h-20 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-3 text-white no-underline">
+      <div class="w-10 h-10 border border-brand-gold flex items-center justify-center">
+        <span class="font-display font-bold text-brand-gold text-xl leading-none">W</span>
+      </div>
+      <span class="font-display text-xl font-semibold tracking-tight">THE COIL</span>
+    </a>
+    <div class="hidden md:flex items-center gap-8">
+      <a href="booking.html" class="nav-link text-sm font-medium text-white tracking-wide uppercase border-b border-brand-gold pb-0.5">Services</a>
+      <a href="gallery.html" class="nav-link text-sm font-medium text-white/70 hover:text-white tracking-wide uppercase">Gallery</a>
+      <a href="about.html" class="nav-link text-sm font-medium text-white/70 hover:text-white tracking-wide uppercase">About</a>
+      <a href="https://thecoilgrooming.com/collections/all" target="_blank" class="nav-link text-sm font-medium text-white/70 hover:text-white tracking-wide uppercase">Shop</a>
+      <a href="https://app.acuityscheduling.com/schedule/97ecbd23/?calendarIds=5426664" target="_blank" class="btn-gold px-6 py-2.5 text-sm uppercase tracking-widest">Book Now</a>
+    </div>
+    <button class="md:hidden text-white" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+  </div>
+  <div id="mobile-menu" class="hidden md:hidden bg-brand-black border-t border-white/5 px-8 py-6 space-y-4">
+    <a href="booking.html" class="block text-white text-sm uppercase tracking-wide font-semibold">Services</a>
+    <a href="gallery.html" class="block text-white/70 hover:text-white text-sm uppercase tracking-wide">Gallery</a>
+    <a href="about.html" class="block text-white/70 hover:text-white text-sm uppercase tracking-wide">About</a>
+    <a href="https://thecoilgrooming.com/collections/all" target="_blank" class="block text-white/70 hover:text-white text-sm uppercase tracking-wide">Shop</a>
+    <a href="https://app.acuityscheduling.com/schedule/97ecbd23/?calendarIds=5426664" target="_blank" class="btn-gold block text-center px-6 py-3 text-sm uppercase tracking-widest mt-4">Book Now</a>
+  </div>
+</nav>
+
+<!-- Services Header -->
+<section class="pt-32 pb-16">
+  <div class="max-w-[1440px] mx-auto px-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-16 items-end">
+      <div class="lg:col-span-2 space-y-4">
+        <p class="text-brand-gold text-sm uppercase tracking-[0.3em]">Services & Booking</p>
+        <h1 class="font-display text-5xl md:text-6xl font-bold text-white">The Services</h1>
+        <p class="font-display text-xl text-white/40 italic">Craftsmanship has no shortcuts</p>
+        <p class="text-white/50 max-w-lg leading-relaxed">Experience precision, tailored specifically to your profile. Every service at The Coil is delivered with the expertise of a master craftsman.</p>
+      </div>
+      <!-- Antonio Portrait Sidebar -->
+      <div class="hidden lg:block relative">
+        <div class="aspect-[3/4] overflow-hidden">
+          <img
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDf60liNwwJ2wU4mqRQJ2aHSTOo7pQeASj3EiQQ65-NUfpBVCQbqenR8E5T0KqW5_zqc01hKxMba6frPzKyOvPIgvzMgxuCnAKFOQFuDd00P2WCbWRO2M4FImSyRbtlXqtQDmHrEfI9tljPriPvrES1f6u79HGxtJKOTHmAk3S-9MRo2rA8DjE7IC0_bTCcEp2v6GwH3uP0zH0-l0zroWPbWEKJyOoWuih0_xukNqHJH3oxo9GPdS0hi4vNjjFV3VcivmcU_jDZFNCJ"
+            alt="Antonio BarberGawd Willis"
+            class="w-full h-full object-cover"
+          />
+        </div>
+        <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-brand-black via-brand-black/80 to-transparent">
+          <p class="font-display text-lg italic text-white/80">"Precision is my signature."</p>
+          <p class="text-brand-gold text-xs uppercase tracking-wider mt-1">— Antonio Willis</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Service Grid -->
+<section class="pb-24">
+  <div class="max-w-[1440px] mx-auto px-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-white/5">
+
+      <!-- Precision Haircut -->
+      <div class="service-card p-10 space-y-4">
+        <div class="flex items-start justify-between">
+          <div class="w-12 h-0.5 bg-brand-gold"></div>
+          <span class="font-display text-2xl font-bold text-brand-gold">$60+</span>
+        </div>
+        <h3 class="font-display text-xl font-semibold text-white">Precision Haircut</h3>
+        <p class="text-white/45 text-sm leading-relaxed">A tailored cut designed to fit your head shape and style. Includes razor line up and hot towel finish.</p>
+        <a href="https://app.acuityscheduling.com/schedule/97ecbd23/?calendarIds=5426664" target="_blank" class="btn-outline-gold px-5 py-2.5 text-xs uppercase tracking-[0.15em] inline-block">Book</a>
+      </div>
+
+      <!-- Hair Units -->
+      <div class="service-card p-10 space-y-4">
+        <div class="flex items-start justify-between">
+          <div class="w-12 h-0.5 bg-brand-crimson"></div>
+          <span class="font-display text-2xl font-bold text-brand-gold">Consult</span>
+        </div>
+        <h3 class="font-display text-xl font-semibold text-white">Hair Units</h3>
+        <p class="text-white/45 text-sm leading-relaxed">Custom unit installation for a fuller look. Includes consultation, customization, and styling for a seamless, natural blend.</p>
+        <a href="https://thecoilgrooming.com/pages/the-coil-hair-units" target="_blank" class="btn-outline-gold px-5 py-2.5 text-xs uppercase tracking-[0.15em] inline-block">Learn More</a>
+      </div>
+
+      <!-- Classic Shave -->
+      <div class="service-card p-10 space-y-4">
+        <div class="flex items-start justify-between">
+          <div class="w-12 h-0.5 bg-brand-gold"></div>
+          <span class="font-display text-2xl font-bold text-brand-gold">$45+</span>
+        </div>
+        <h3 class="font-display text-xl font-semibold text-white">Classic Shave</h3>
+        <p class="text-white/45 text-sm leading-relaxed">Traditional hot towel shave with straight razor precision. Relaxing and smooth — the closest shave of your life.</p>
+        <a href="https://app.acuityscheduling.com/schedule/97ecbd23/?calendarIds=5426664" target="_blank" class="btn-outline-gold px-5 py-2.5 text-xs uppercase tracking-[0.15em] inline-block">Book</a>
+      </div>
+
+      <!-- Beard Sculpting -->
+      <div class="service-card p-10 space-y-4">
+        <div class="flex items-start justify-between">
+          <div class="w-12 h-0.5 bg-brand-crimson"></div>
+          <span class="font-display text-2xl font-bold text-brand-gold">$40+</span>
+        </div>
+        <h3 class="font-display text-xl font-semibold text-white">Beard Sculpting</h3>
+        <p class="text-white/45 text-sm leading-relaxed">Detailed beard shaping with razor lining, oil treatment, and hot towel. Architecture for your jawline.</p>
+        <a href="https://app.acuityscheduling.com/schedule/97ecbd23/?calendarIds=5426664" target="_blank" class="btn-outline-gold px-5 py-2.5 text-xs uppercase tracking-[0.15em] inline-block">Book</a>
+      </div>
+
+      <!-- The Coil Special -->
+      <div class="service-card p-10 space-y-4">
+        <div class="flex items-start justify-between">
+          <div class="w-12 h-0.5 bg-brand-gold"></div>
+          <span class="font-display text-2xl font-bold text-brand-gold">$120+</span>
+        </div>
+        <h3 class="font-display text-xl font-semibold text-white">The Coil Special</h3>
+        <p class="text-white/45 text-sm leading-relaxed">The full experience. Haircut, beard sculpting, facial treatment, and black mask. The ultimate reset.</p>
+        <a href="https://app.acuityscheduling.com/schedule/97ecbd23/?calendarIds=5426664" target="_blank" class="btn-outline-gold px-5 py-2.5 text-xs uppercase tracking-[0.15em] inline-block">Book</a>
+      </div>
+
+      <!-- Kids Cut -->
+      <div class="service-card p-10 space-y-4">
+        <div class="flex items-start justify-between">
+          <div class="w-12 h-0.5 bg-brand-gold"></div>
+          <span class="font-display text-2xl font-bold text-brand-gold">$35+</span>
+        </div>
+        <h3 class="font-display text-xl font-semibold text-white">Kids Cut</h3>
+        <p class="text-white/45 text-sm leading-relaxed">Premium cut for the young gentlemen (under 12). Patience and precision included.</p>
+        <a href="https://app.acuityscheduling.com/schedule/97ecbd23/?calendarIds=5426664" target="_blank" class="btn-outline-gold px-5 py-2.5 text-xs uppercase tracking-[0.15em] inline-block">Book</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Choose Your Time -->
+<section class="py-24 border-y border-white/5">
+  <div class="max-w-[1440px] mx-auto px-8">
+    <div class="text-center mb-16 space-y-4">
+      <p class="text-brand-gold text-sm uppercase tracking-[0.3em]">Schedule</p>
+      <h2 class="font-display text-4xl md:text-5xl font-bold text-white">Choose Your Time</h2>
+      <p class="text-white/40">Select your preferred day to view available appointments.</p>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl mx-auto">
+      <a href="https://app.acuityscheduling.com/schedule/97ecbd23/?calendarIds=4089028" target="_blank" class="time-btn">
+        <p class="font-display text-lg font-semibold text-white mb-1">Tues – Thurs</p>
+        <p class="text-white/30 text-xs uppercase tracking-wider">Regular Hours</p>
+      </a>
+      <a href="https://app.acuityscheduling.com/schedule/97ecbd23/?calendarIds=5426664" target="_blank" class="time-btn">
+        <p class="font-display text-lg font-semibold text-white mb-1">Friday</p>
+        <p class="text-white/30 text-xs uppercase tracking-wider">End of Week</p>
+      </a>
+      <a href="https://app.acuityscheduling.com/schedule/97ecbd23/?calendarIds=6100074" target="_blank" class="time-btn">
+        <p class="font-display text-lg font-semibold text-white mb-1">Saturday</p>
+        <p class="text-white/30 text-xs uppercase tracking-wider">Weekend</p>
+      </a>
+      <a href="https://app.acuityscheduling.com/schedule/97ecbd23/?calendarIds=7322622" target="_blank" class="time-btn">
+        <p class="font-display text-lg font-semibold text-white mb-1">Late Night</p>
+        <p class="text-white/30 text-xs uppercase tracking-wider">After Hours</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- VIP Section -->
+<section class="py-20">
+  <div class="max-w-[900px] mx-auto px-8">
+    <div class="vip-banner p-12 md:p-16 flex flex-col md:flex-row items-center gap-8">
+      <div class="flex-1 space-y-4">
+        <p class="text-brand-gold text-xs uppercase tracking-[0.3em] font-semibold">Exclusive Access</p>
+        <h3 class="font-display text-3xl font-bold text-white">VIP Appointments</h3>
+        <p class="text-white/60 leading-relaxed">Skip the line. Download The Coil App for exclusive access to priority scheduling and VIP-only time slots.</p>
+        <a href="https://efexxapps.com/var/apps/browser/index-prod.html#/5ee0ed3431a1c/cms/mobile_page_view/index/value_id/15699" target="_blank" class="btn-gold px-8 py-3 text-sm uppercase tracking-[0.15em] inline-block">Download The App</a>
+      </div>
+      <div class="w-24 h-24 border-2 border-brand-gold flex items-center justify-center flex-shrink-0">
+        <span class="font-display font-bold text-brand-gold text-4xl leading-none">W</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="border-t border-white/5 bg-brand-black">
+  <div class="max-w-[1440px] mx-auto px-8 py-16">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+      <div class="space-y-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 border border-brand-gold flex items-center justify-center">
+            <span class="font-display font-bold text-brand-gold text-xl leading-none">W</span>
+          </div>
+          <span class="font-display text-xl font-semibold text-white">THE COIL</span>
+        </div>
+        <p class="text-white/40 text-sm leading-relaxed">Premium grooming by Antonio "BarberGawd" Willis. South Loop, Chicago.</p>
+      </div>
+      <div class="space-y-4">
+        <h4 class="text-brand-gold text-xs uppercase tracking-[0.25em] font-semibold">Location</h4>
+        <p class="text-white/40 text-sm">South Loop, Chicago, IL</p>
+        <p class="text-white/40 text-sm">Tues – Sat: 10am – 8pm<br/>Sun – Mon: Closed</p>
+      </div>
+      <div class="space-y-4">
+        <h4 class="text-brand-gold text-xs uppercase tracking-[0.25em] font-semibold">Connect</h4>
+        <div class="space-y-2">
+          <a href="https://www.instagram.com/barbergawd/" target="_blank" class="block text-white/40 hover:text-brand-gold text-sm transition-colors">Instagram — @barbergawd</a>
+          <a href="https://thecoilgrooming.com" target="_blank" class="block text-white/40 hover:text-brand-gold text-sm transition-colors">thecoilgrooming.com</a>
+          <a href="https://thecoilgrooming.com/collections/all" target="_blank" class="block text-white/40 hover:text-brand-gold text-sm transition-colors">Shop Products</a>
+        </div>
+      </div>
+    </div>
+    <div class="gold-divider mt-12 mb-8"></div>
+    <div class="flex flex-wrap items-center justify-between text-xs text-white/20 uppercase tracking-wider">
+      <span>© 2024 Antonio Willis. All rights reserved.</span>
+      <span>The Coil — South Loop, Chicago</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

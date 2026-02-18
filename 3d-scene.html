@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Coil — Barber Pole</title>
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 100%; height: 100%; overflow: hidden; background: #060608; }
+  canvas { display: block; }
+
+  /* ── Loading Screen ── */
+  #loading-screen {
+    position: fixed; inset: 0; z-index: 1000;
+    background: #060608;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    transition: opacity 0.8s ease, visibility 0.8s;
+  }
+  #loading-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+  #loading-screen h1 {
+    font-family: 'Georgia', serif;
+    font-size: clamp(1.6rem, 4vw, 2.8rem);
+    color: #d4af37; letter-spacing: 0.15em;
+    text-transform: uppercase; margin-bottom: 1.2rem;
+  }
+  .loader-bar {
+    width: clamp(180px, 30vw, 320px); height: 2px;
+    background: rgba(212,175,55,0.15); border-radius: 2px; overflow: hidden;
+  }
+  .loader-bar-inner {
+    width: 0; height: 100%; background: #d4af37;
+    transition: width 0.3s ease;
+  }
+  .loader-label {
+    margin-top: 0.6rem; font-family: monospace;
+    font-size: 0.7rem; color: rgba(212,175,55,0.5);
+    letter-spacing: 0.2em;
+  }
+
+  /* ── Overlays ── */
+  .vignette {
+    position: fixed; inset: 0; z-index: 10; pointer-events: none;
+    background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.65) 100%);
+  }
+  .grain {
+    position: fixed; inset: 0; z-index: 11; pointer-events: none;
+    opacity: 0.03; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* ── HUD ── */
+  #hud {
+    position: fixed; bottom: 1.2rem; left: 1.4rem; z-index: 20;
+    font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.65rem;
+    color: rgba(212,175,55,0.45); line-height: 1.65;
+    letter-spacing: 0.06em; pointer-events: none;
+  }
+  #hud .title {
+    font-family: 'Georgia', serif; font-size: 0.8rem;
+    color: rgba(212,175,55,0.7); letter-spacing: 0.18em;
+    text-transform: uppercase; margin-bottom: 0.5rem;
+  }
+  #hud .sep { opacity: 0.2; margin: 0.35rem 0; }
+
+  /* ── Controls hint ── */
+  #controls-hint {
+    position: fixed; bottom: 1.2rem; right: 1.4rem; z-index: 20;
+    font-family: monospace; font-size: 0.6rem;
+    color: rgba(212,175,55,0.3); text-align: right;
+    line-height: 1.6; letter-spacing: 0.05em; pointer-events: none;
+  }
+</style>
+</head>
+<body>
+
+<!-- Loading -->
+<div id="loading-screen">
+  <h1>The Coil</h1>
+  <div class="loader-bar"><div class="loader-bar-inner" id="loader-fill"></div></div>
+  <div class="loader-label" id="loader-label">INITIALIZING</div>
+</div>
+
+<!-- Overlays -->
+<div class="vignette"></div>
+<div class="grain"></div>
+
+<!-- HUD -->
+<div id="hud">
+  <div class="title">The Coil — Barber Pole</div>
+  <div class="sep">────────────────────</div>
+  <div id="hud-fps">FPS ── 0</div>
+  <div id="hud-tris">TRIS ── 0</div>
+  <div id="hud-draws">DRAW ── 0</div>
+  <div class="sep">────────────────────</div>
+  <div>SHADOW ── PCFSoft 2048</div>
+  <div>BLOOM ── Unreal 0.35</div>
+  <div>TONE ── ACESFilmic</div>
+</div>
+
+<div id="controls-hint">
+  DRAG ── orbit<br>
+  SCROLL ── zoom<br>
+  RIGHT-DRAG ── pan
+</div>
+
+<!-- Three.js Import Map -->
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+
+/* ═══════════════════════════════════════════════
+   LOADING PROGRESS
+   ═══════════════════════════════════════════════ */
+const fill = document.getElementById('loader-fill');
+const label = document.getElementById('loader-label');
+function progress(pct, msg) {
+  fill.style.width = pct + '%';
+  label.textContent = msg;
+}
+progress(5, 'BUILDING RENDERER');
+
+/* ═══════════════════════════════════════════════
+   RENDERER
+   ═══════════════════════════════════════════════ */
+const renderer = new THREE.WebGLRenderer({
+  antialias: true,
+  powerPreference: 'high-performance',
+  alpha: false
+});
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.15;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x06060a);
+scene.fog = new THREE.FogExp2(0x06060a, 0.06);
+
+const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 100);
+camera.position.set(4.5, 2.5, 4.5);
+camera.lookAt(0, 0.5, 0);
+
+progress(15, 'FORGING MATERIALS');
+
+/* ═══════════════════════════════════════════════
+   TEXTURE: BARBER POLE STRIPES
+   ═══════════════════════════════════════════════ */
+function createBarberStripeTexture() {
+  const w = 512, h = 1024;
+  const canvas = document.createElement('canvas');
+  canvas.width = w; canvas.height = h;
+  const ctx = canvas.getContext('2d');
+
+  // Colors: red, cream, blue, cream
+  const colors = [
+    [194, 30, 46],   // barbershop red
+    [240, 234, 222], // warm cream
+    [28, 63, 122],   // deep navy
+    [240, 234, 222]  // warm cream
+  ];
+  const turns = 5; // helical wraps
+
+  const imgData = ctx.createImageData(w, h);
+  const d = imgData.data;
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      const u = x / w;
+      const v = y / h;
+      // Diagonal mapping → helical on cylinder
+      const t = ((u * turns + v * turns) % 1 + 1) % 1;
+      const ci = Math.floor(t * colors.length);
+      const c = colors[ci];
+      const i = (y * w + x) * 4;
+      d[i] = c[0]; d[i+1] = c[1]; d[i+2] = c[2]; d[i+3] = 255;
+    }
+  }
+  ctx.putImageData(imgData, 0, 0);
+  return canvas;
+}
+
+const stripeCanvas = createBarberStripeTexture();
+const stripeTex = new THREE.CanvasTexture(stripeCanvas);
+stripeTex.wrapS = THREE.RepeatWrapping;
+stripeTex.wrapT = THREE.RepeatWrapping;
+stripeTex.magFilter = THREE.LinearFilter;
+stripeTex.minFilter = THREE.LinearMipmapLinearFilter;
+
+progress(25, 'CASTING GEOMETRY');
+
+/* ═══════════════════════════════════════════════
+   GOLD MATERIAL (shared)
+   ═══════════════════════════════════════════════ */
+const goldMat = new THREE.MeshPhysicalMaterial({
+  color: 0xd4af37,
+  metalness: 1.0,
+  roughness: 0.18,
+  clearcoat: 0.5,
+  clearcoatRoughness: 0.08,
+  reflectivity: 1.0,
+  emissive: 0x3a2800,
+  emissiveIntensity: 0.15
+});
+
+/* ═══════════════════════════════════════════════
+   BARBER POLE ASSEMBLY
+   ═══════════════════════════════════════════════ */
+const poleGroup = new THREE.Group();
+
+// ── Pole body ──
+const POLE_H = 5.0;
+const POLE_R = 0.28;
+const poleMat = new THREE.MeshPhysicalMaterial({
+  map: stripeTex,
+  roughness: 0.25,
+  metalness: 0.05,
+  clearcoat: 0.9,
+  clearcoatRoughness: 0.05,
+});
+const poleGeo = new THREE.CylinderGeometry(POLE_R, POLE_R, POLE_H, 64, 1, false);
+const poleMesh = new THREE.Mesh(poleGeo, poleMat);
+poleMesh.castShadow = true;
+poleMesh.receiveShadow = true;
+poleGroup.add(poleMesh);
+
+progress(35, 'GILDING CAPS');
+
+// ── Gold Cap: Bottom ──
+const capBaseGeo = new THREE.CylinderGeometry(POLE_R * 1.45, POLE_R * 1.6, 0.25, 32);
+const capBase = new THREE.Mesh(capBaseGeo, goldMat);
+capBase.position.y = -POLE_H / 2 - 0.125;
+capBase.castShadow = true;
+poleGroup.add(capBase);
+
+const capBallBottomGeo = new THREE.SphereGeometry(POLE_R * 1.25, 32, 16);
+const capBallBottom = new THREE.Mesh(capBallBottomGeo, goldMat);
+capBallBottom.position.y = -POLE_H / 2 - 0.32;
+capBallBottom.scale.y = 0.6;
+capBallBottom.castShadow = true;
+poleGroup.add(capBallBottom);
+
+// ── Gold Cap: Top ──
+const capTopGeo = new THREE.CylinderGeometry(POLE_R * 1.45, POLE_R * 1.45, 0.2, 32);
+const capTop = new THREE.Mesh(capTopGeo, goldMat);
+capTop.position.y = POLE_H / 2 + 0.1;
+capTop.castShadow = true;
+poleGroup.add(capTop);
+
+const capBallTopGeo = new THREE.SphereGeometry(POLE_R * 1.3, 32, 24);
+const capBallTop = new THREE.Mesh(capBallTopGeo, goldMat);
+capBallTop.position.y = POLE_H / 2 + 0.35;
+capBallTop.castShadow = true;
+poleGroup.add(capBallTop);
+
+// Finial spike on top
+const finialGeo = new THREE.ConeGeometry(0.06, 0.35, 12);
+const finial = new THREE.Mesh(finialGeo, goldMat);
+finial.position.y = POLE_H / 2 + 0.7;
+finial.castShadow = true;
+poleGroup.add(finial);
+
+// Gold ring accent at top base
+const ringGeo = new THREE.TorusGeometry(POLE_R * 1.35, 0.03, 12, 48);
+const ringTop = new THREE.Mesh(ringGeo, goldMat);
+ringTop.rotation.x = Math.PI / 2;
+ringTop.position.y = POLE_H / 2 + 0.01;
+poleGroup.add(ringTop);
+
+// Gold ring accent at bottom
+const ringBottom = ringTop.clone();
+ringBottom.position.y = -POLE_H / 2 - 0.01;
+poleGroup.add(ringBottom);
+
+progress(45, 'GROWING BAMBOO');
+
+/* ═══════════════════════════════════════════════
+   BAMBOO COIL (helix wrapping the pole)
+   ═══════════════════════════════════════════════ */
+class HelixCurve extends THREE.Curve {
+  constructor(radius, height, turns, startY) {
+    super();
+    this.radius = radius;
+    this.height = height;
+    this.turns = turns;
+    this.startY = startY;
+  }
+  getPoint(t) {
+    const angle = t * Math.PI * 2 * this.turns;
+    return new THREE.Vector3(
+      Math.cos(angle) * this.radius,
+      this.startY + t * this.height,
+      Math.sin(angle) * this.radius
+    );
+  }
+}
+
+const BAMBOO_TURNS = 6;
+const BAMBOO_R = POLE_R + 0.16;
+const BAMBOO_TUBE_R = 0.055;
+const bambooStartY = -POLE_H / 2 + 0.3;
+const bambooHeight = POLE_H - 0.2;
+
+const helixCurve = new HelixCurve(BAMBOO_R, bambooHeight, BAMBOO_TURNS, bambooStartY);
+const bambooGeo = new THREE.TubeGeometry(helixCurve, 300, BAMBOO_TUBE_R, 10, false);
+
+const bambooMat = new THREE.MeshPhysicalMaterial({
+  color: 0x3d6b2e,
+  roughness: 0.55,
+  metalness: 0.0,
+  clearcoat: 0.35,
+  clearcoatRoughness: 0.2,
+  emissive: 0x0a1a05,
+  emissiveIntensity: 0.1
+});
+const bambooMesh = new THREE.Mesh(bambooGeo, bambooMat);
+bambooMesh.castShadow = true;
+bambooMesh.receiveShadow = true;
+poleGroup.add(bambooMesh);
+
+// ── Bamboo nodes / joints ──
+const nodeGeo = new THREE.TorusGeometry(BAMBOO_TUBE_R + 0.015, 0.012, 8, 24);
+const nodeMat = new THREE.MeshPhysicalMaterial({
+  color: 0x578a42,
+  roughness: 0.4,
+  metalness: 0.0,
+  clearcoat: 0.3
+});
+const NUM_JOINTS = BAMBOO_TURNS * 3; // 3 joints per turn
+for (let i = 1; i < NUM_JOINTS; i++) {
+  const t = i / NUM_JOINTS;
+  const pos = helixCurve.getPoint(t);
+  const tangent = helixCurve.getTangent(t);
+
+  const node = new THREE.Mesh(nodeGeo, nodeMat);
+  node.position.copy(pos);
+  // Align torus to be perpendicular to the helix tangent
+  const up = new THREE.Vector3(0, 1, 0);
+  const quat = new THREE.Quaternion().setFromUnitVectors(up, tangent.normalize());
+  node.quaternion.copy(quat);
+  node.castShadow = true;
+  poleGroup.add(node);
+}
+
+progress(60, 'BLOSSOMING LEAVES');
+
+/* ═══════════════════════════════════════════════
+   LEAVES AT THE TOP
+   ═══════════════════════════════════════════════ */
+function createLeafShape(scale = 1) {
+  const shape = new THREE.Shape();
+  shape.moveTo(0, 0);
+  shape.bezierCurveTo(0.12 * scale, 0.15 * scale, 0.18 * scale, 0.45 * scale, 0.1 * scale, 0.7 * scale);
+  shape.bezierCurveTo(0.05 * scale, 0.85 * scale, 0.02 * scale, 0.95 * scale, 0, 1.0 * scale);
+  shape.bezierCurveTo(-0.02 * scale, 0.95 * scale, -0.05 * scale, 0.85 * scale, -0.1 * scale, 0.7 * scale);
+  shape.bezierCurveTo(-0.18 * scale, 0.45 * scale, -0.12 * scale, 0.15 * scale, 0, 0);
+  return shape;
+}
+
+const leafMat = new THREE.MeshPhysicalMaterial({
+  color: 0x4a8b35,
+  roughness: 0.5,
+  metalness: 0.0,
+  clearcoat: 0.2,
+  side: THREE.DoubleSide,
+  emissive: 0x0d2a08,
+  emissiveIntensity: 0.15,
+  transparent: true,
+  opacity: 0.92
+});
+
+// Leaf midrib line material
+const ribMat = new THREE.MeshPhysicalMaterial({
+  color: 0x2d5a1f,
+  roughness: 0.4,
+  metalness: 0.0,
+  side: THREE.DoubleSide
+});
+
+const leaves = [];
+// Get top of the bamboo helix
+const bambooTopPos = helixCurve.getPoint(1.0);
+const bambooTopDir = helixCurve.getTangent(1.0).normalize();
+
+// Leaf 1 — large, unfurled, arching outward
+const leaf1Shape = createLeafShape(0.6);
+const leaf1Geo = new THREE.ShapeGeometry(leaf1Shape, 12);
+const leaf1 = new THREE.Mesh(leaf1Geo, leafMat);
+leaf1.position.copy(bambooTopPos);
+leaf1.position.y += 0.05;
+leaf1.rotation.set(-0.3, 0.8, 0.5);
+leaf1.scale.set(1.0, 1.0, 1.0);
+leaf1.castShadow = true;
+poleGroup.add(leaf1);
+leaves.push(leaf1);
+
+// Leaf 2 — smaller, partially unfurled, opposite side
+const leaf2Shape = createLeafShape(0.45);
+const leaf2Geo = new THREE.ShapeGeometry(leaf2Shape, 12);
+const leaf2 = new THREE.Mesh(leaf2Geo, leafMat.clone());
+leaf2.material.color.set(0x5a9b45);
+leaf2.position.copy(bambooTopPos);
+leaf2.position.y += 0.12;
+leaf2.position.x -= 0.08;
+leaf2.rotation.set(-0.6, -1.2, -0.3);
+leaf2.scale.set(0.8, 0.85, 1.0);
+leaf2.castShadow = true;
+poleGroup.add(leaf2);
+leaves.push(leaf2);
+
+// Tiny emerging leaf bud
+const leaf3Shape = createLeafShape(0.2);
+const leaf3Geo = new THREE.ShapeGeometry(leaf3Shape, 8);
+const leaf3 = new THREE.Mesh(leaf3Geo, leafMat.clone());
+leaf3.material.color.set(0x6aab55);
+leaf3.position.copy(bambooTopPos);
+leaf3.position.y += 0.2;
+leaf3.rotation.set(-1.0, 0.3, 0.1);
+leaf3.scale.set(0.6, 0.7, 1.0);
+poleGroup.add(leaf3);
+leaves.push(leaf3);
+
+progress(68, 'BLOSSOMING');
+
+/* ═══════════════════════════════════════════════
+   CHERRY BLOSSOM AT THE TOP
+   ═══════════════════════════════════════════════ */
+function createPetalShape() {
+  const shape = new THREE.Shape();
+  shape.moveTo(0, 0);
+  shape.bezierCurveTo(0.04, 0.03, 0.07, 0.1, 0.05, 0.16);
+  shape.bezierCurveTo(0.03, 0.19, 0.01, 0.2, 0, 0.2);
+  shape.bezierCurveTo(-0.01, 0.2, -0.03, 0.19, -0.05, 0.16);
+  shape.bezierCurveTo(-0.07, 0.1, -0.04, 0.03, 0, 0);
+  return shape;
+}
+
+const petalMat = new THREE.MeshPhysicalMaterial({
+  color: 0xf5c0cc,
+  roughness: 0.6,
+  metalness: 0.0,
+  clearcoat: 0.15,
+  side: THREE.DoubleSide,
+  emissive: 0x4a1520,
+  emissiveIntensity: 0.12,
+  transparent: true,
+  opacity: 0.88
+});
+
+const blossomGroup = new THREE.Group();
+const petalGeo = new THREE.ShapeGeometry(createPetalShape(), 8);
+const NUM_PETALS = 5;
+for (let i = 0; i < NUM_PETALS; i++) {
+  const petal = new THREE.Mesh(petalGeo, petalMat);
+  const angle = (i / NUM_PETALS) * Math.PI * 2;
+  petal.rotation.z = angle;
+  petal.rotation.x = -0.3;  // tilt outward
+  petal.position.set(
+    Math.cos(angle) * 0.02,
+    Math.sin(angle) * 0.02,
+    0
+  );
+  blossomGroup.add(petal);
+}
+
+// Center pistil
+const pistilGeo = new THREE.SphereGeometry(0.025, 12, 8);
+const pistilMat = new THREE.MeshPhysicalMaterial({
+  color: 0xf0d060,
+  roughness: 0.5,
+  metalness: 0.2,
+  emissive: 0x605020,
+  emissiveIntensity: 0.3
+});
+blossomGroup.add(new THREE.Mesh(pistilGeo, pistilMat));
+
+blossomGroup.position.copy(bambooTopPos);
+blossomGroup.position.y += 0.35;
+blossomGroup.position.x += 0.1;
+blossomGroup.rotation.set(-0.5, 0, 0.3);
+blossomGroup.scale.setScalar(1.3);
+poleGroup.add(blossomGroup);
+
+progress(72, 'SETTING GROUND');
+
+/* ═══════════════════════════════════════════════
+   GROUND PLATFORM
+   ═══════════════════════════════════════════════ */
+const groundGeo = new THREE.CircleGeometry(3.5, 64);
+const groundMat = new THREE.MeshPhysicalMaterial({
+  color: 0x0a0a10,
+  roughness: 0.85,
+  metalness: 0.3,
+  clearcoat: 0.2
+});
+const ground = new THREE.Mesh(groundGeo, groundMat);
+ground.rotation.x = -Math.PI / 2;
+ground.position.y = -POLE_H / 2 - 0.55;
+ground.receiveShadow = true;
+poleGroup.add(ground);
+
+// Position the whole assembly
+scene.add(poleGroup);
+
+progress(78, 'LIGHTING RIG');
+
+/* ═══════════════════════════════════════════════
+   PREMIUM 6-LIGHT RIG
+   ═══════════════════════════════════════════════ */
+// Ambient — deep warm fill
+const ambient = new THREE.AmbientLight(0x1a1410, 0.55);
+scene.add(ambient);
+
+// Key light — warm directional with shadows
+const keyLight = new THREE.DirectionalLight(0xffd07a, 2.8);
+keyLight.position.set(4, 6, 3);
+keyLight.castShadow = true;
+keyLight.shadow.mapSize.set(2048, 2048);
+keyLight.shadow.camera.near = 0.5;
+keyLight.shadow.camera.far = 20;
+keyLight.shadow.camera.left = -5;
+keyLight.shadow.camera.right = 5;
+keyLight.shadow.camera.top = 5;
+keyLight.shadow.camera.bottom = -5;
+keyLight.shadow.bias = -0.0004;
+keyLight.shadow.normalBias = 0.02;
+scene.add(keyLight);
+
+// Fill light — cool blue opposite
+const fillLight = new THREE.DirectionalLight(0x5588cc, 0.6);
+fillLight.position.set(-3, 2, -3);
+scene.add(fillLight);
+
+// Rim light — gold edge from behind
+const rimLight = new THREE.DirectionalLight(0xd4af37, 1.5);
+rimLight.position.set(-1, 3, -5);
+scene.add(rimLight);
+
+// Under glow — warm accent from below
+const underGlow = new THREE.PointLight(0xd4af37, 0.7, 8);
+underGlow.position.set(0, -3, 1);
+scene.add(underGlow);
+
+// Top kicker — subtle white from above
+const topKick = new THREE.PointLight(0xffffff, 0.4, 10);
+topKick.position.set(0, 6, 0);
+scene.add(topKick);
+
+progress(82, 'ENVIRONMENT MAP');
+
+/* ═══════════════════════════════════════════════
+   CUBE ENVIRONMENT MAP (for gold reflections)
+   ═══════════════════════════════════════════════ */
+const cubeRT = new THREE.WebGLCubeRenderTarget(256, {
+  format: THREE.RGBAFormat,
+  generateMipmaps: true,
+  minFilter: THREE.LinearMipmapLinearFilter
+});
+const cubeCamera = new THREE.CubeCamera(0.1, 50, cubeRT);
+scene.add(cubeCamera);
+
+// Apply env map to gold material
+goldMat.envMap = cubeRT.texture;
+goldMat.envMapIntensity = 0.85;
+
+// Pre-render env map
+cubeCamera.update(renderer, scene);
+
+progress(88, 'POST-PROCESSING');
+
+/* ═══════════════════════════════════════════════
+   POST-PROCESSING: BLOOM
+   ═══════════════════════════════════════════════ */
+const composer = new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene, camera));
+const bloom = new UnrealBloomPass(
+  new THREE.Vector2(window.innerWidth, window.innerHeight),
+  0.35,  // strength
+  0.8,   // radius
+  0.72   // threshold
+);
+composer.addPass(bloom);
+composer.addPass(new OutputPass());
+
+progress(92, 'SCATTERING PARTICLES');
+
+/* ═══════════════════════════════════════════════
+   GOLD DUST PARTICLES
+   ═══════════════════════════════════════════════ */
+const PARTICLE_COUNT = 500;
+const pPositions = new Float32Array(PARTICLE_COUNT * 3);
+const pSizes = new Float32Array(PARTICLE_COUNT);
+for (let i = 0; i < PARTICLE_COUNT; i++) {
+  // Distribute in a vertical column around the pole
+  const angle = Math.random() * Math.PI * 2;
+  const radius = 0.6 + Math.random() * 3.5;
+  pPositions[i * 3]     = Math.cos(angle) * radius;
+  pPositions[i * 3 + 1] = (Math.random() - 0.4) * POLE_H * 1.4;
+  pPositions[i * 3 + 2] = Math.sin(angle) * radius;
+  pSizes[i] = 1.2 + Math.random() * 2.5;
+}
+const pGeo = new THREE.BufferGeometry();
+pGeo.setAttribute('position', new THREE.BufferAttribute(pPositions, 3));
+pGeo.setAttribute('size', new THREE.BufferAttribute(pSizes, 1));
+
+const pMat = new THREE.PointsMaterial({
+  color: 0xd4af37,
+  size: 0.02,
+  transparent: true,
+  opacity: 0.4,
+  blending: THREE.AdditiveBlending,
+  depthWrite: false,
+  sizeAttenuation: true
+});
+const particles = new THREE.Points(pGeo, pMat);
+scene.add(particles);
+
+progress(96, 'ORBIT CONTROLS');
+
+/* ═══════════════════════════════════════════════
+   CONTROLS
+   ═══════════════════════════════════════════════ */
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.04;
+controls.autoRotate = true;
+controls.autoRotateSpeed = 0.6;
+controls.minDistance = 3;
+controls.maxDistance = 14;
+controls.maxPolarAngle = Math.PI * 0.85;
+controls.minPolarAngle = Math.PI * 0.1;
+controls.target.set(0, 0.5, 0);
+controls.update();
+
+// Pause auto-rotate on interaction
+let interactionTimeout;
+function pauseAutoRotate() {
+  controls.autoRotate = false;
+  clearTimeout(interactionTimeout);
+  interactionTimeout = setTimeout(() => { controls.autoRotate = true; }, 5000);
+}
+renderer.domElement.addEventListener('pointerdown', pauseAutoRotate);
+renderer.domElement.addEventListener('wheel', pauseAutoRotate);
+
+progress(100, 'RENDERING');
+
+/* ═══════════════════════════════════════════════
+   ANIMATION
+   ═══════════════════════════════════════════════ */
+const clock = new THREE.Clock();
+let frameCount = 0;
+let lastFpsTime = 0;
+let fps = 0;
+
+function animate() {
+  requestAnimationFrame(animate);
+  const t = clock.getElapsedTime();
+  const dt = clock.getDelta();
+
+  // ── Barber pole stripe animation (scroll texture) ──
+  stripeTex.offset.y -= 0.002;
+
+  // ── Gentle leaf sway ──
+  leaves.forEach((leaf, i) => {
+    const phase = i * 1.3;
+    leaf.rotation.z += Math.sin(t * 0.8 + phase) * 0.0008;
+    leaf.rotation.x += Math.cos(t * 0.6 + phase) * 0.0004;
+  });
+
+  // ── Blossom gentle pulse ──
+  const blossomScale = 1.3 + Math.sin(t * 1.2) * 0.05;
+  blossomGroup.scale.setScalar(blossomScale);
+  blossomGroup.rotation.z = 0.3 + Math.sin(t * 0.5) * 0.08;
+
+  // ── Particle drift ──
+  const pos = particles.geometry.attributes.position.array;
+  for (let i = 0; i < PARTICLE_COUNT; i++) {
+    pos[i * 3 + 1] += Math.sin(t * 0.3 + i) * 0.001;
+    pos[i * 3]     += Math.cos(t * 0.2 + i * 0.5) * 0.0004;
+    pos[i * 3 + 2] += Math.sin(t * 0.25 + i * 0.7) * 0.0004;
+  }
+  particles.geometry.attributes.position.needsUpdate = true;
+  particles.rotation.y = t * 0.015;
+
+  // ── Controls ──
+  controls.update();
+
+  // ── Render ──
+  composer.render();
+
+  // ── HUD ──
+  frameCount++;
+  if (t - lastFpsTime >= 1) {
+    fps = Math.round(frameCount / (t - lastFpsTime));
+    lastFpsTime = t;
+    frameCount = 0;
+  }
+  const info = renderer.info;
+  document.getElementById('hud-fps').textContent   = `FPS  ── ${fps}`;
+  document.getElementById('hud-tris').textContent  = `TRIS ── ${info.render.triangles}`;
+  document.getElementById('hud-draws').textContent = `DRAW ── ${info.render.calls}`;
+}
+
+// Re-render env map once everything is in scene, then start loop
+cubeCamera.update(renderer, scene);
+animate();
+
+/* ═══════════════════════════════════════════════
+   RESIZE
+   ═══════════════════════════════════════════════ */
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  composer.setSize(window.innerWidth, window.innerHeight);
+});
+
+/* ═══════════════════════════════════════════════
+   DISMISS LOADING SCREEN
+   ═══════════════════════════════════════════════ */
+setTimeout(() => {
+  document.getElementById('loading-screen').classList.add('hidden');
+}, 1200);
+
+</script>
+</body>
+</html>

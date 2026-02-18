@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#FAF7F2">
+<title>The Coil — Editorial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--cream:#FAF7F2;--ink:#1A1A1A;--red:#C23616;--red-m:rgba(194,54,22,.08);--gray:#8C8577;--rule:#E8E3DB;--paper:#F2EDE5;--fd:'Playfair Display',Georgia,serif;--fm:'Space Mono',monospace;--fb:'DM Sans',sans-serif;--st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px)}
+html{scroll-snap-type:y mandatory;scroll-behavior:smooth;overflow-x:hidden}
+body{font-family:var(--fb);background:var(--cream);color:var(--ink);-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;z-index:9998;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");opacity:.04}
+
+/* LAYOUT */
+.s{scroll-snap-align:start;min-height:100dvh;display:flex;flex-direction:column;justify-content:center;padding:32px 28px calc(32px + var(--sb));padding-top:calc(32px + var(--st));position:relative}
+.si{max-width:480px;margin:0 auto;width:100%}
+
+/* MASTHEAD */
+.mh{text-align:center;border-bottom:3px double var(--ink);padding-bottom:16px;margin-bottom:48px}
+.mh-t{font-family:var(--fd);font-size:11px;letter-spacing:8px;text-transform:uppercase;color:var(--gray);margin-bottom:8px}
+.mh-d{font-family:var(--fm);font-size:9px;letter-spacing:2px;color:var(--gray)}
+
+/* HERO */
+.hero{justify-content:flex-end;padding-bottom:calc(80px + var(--sb))}
+.hk{font-family:var(--fm);font-size:10px;letter-spacing:3px;color:var(--red);text-transform:uppercase;margin-bottom:20px;opacity:0;animation:ef .8s ease .3s forwards}
+.hh{font-family:var(--fd);font-size:clamp(38px,11vw,56px);font-weight:900;line-height:1;letter-spacing:-1px;opacity:0;animation:ef .8s ease .5s forwards}
+.hh em{font-style:italic;color:var(--red)}
+.hd{font-family:var(--fd);font-size:17px;font-style:italic;line-height:1.6;color:var(--gray);margin-top:24px;border-left:3px solid var(--red);padding-left:16px;opacity:0;animation:ef .8s ease .8s forwards}
+.hd strong{color:var(--ink);font-style:normal}
+.sc{position:absolute;bottom:calc(24px + var(--sb));left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;opacity:0;animation:ef 1s ease 1.6s forwards}
+.sc span{font-family:var(--fm);font-size:8px;letter-spacing:4px;color:var(--gray)}
+.sl{width:1px;height:28px;background:var(--gray);margin-top:6px;animation:sp 2s ease-in-out infinite}
+@keyframes sp{0%,100%{transform:scaleY(1);opacity:.3}50%{transform:scaleY(1.5);opacity:.7}}
+@keyframes ef{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+/* PULL QUOTE */
+.pq{font-family:var(--fd);font-size:clamp(24px,6.5vw,34px);font-weight:700;line-height:1.25;text-align:center;position:relative;padding:0 8px}
+.pq::before{content:'\201C';font-family:var(--fd);font-size:120px;color:var(--red-m);position:absolute;top:-50px;left:-4px;line-height:1}
+.pq em{color:var(--red);font-style:italic}
+.ps{text-align:center;margin-top:20px;font-size:14px;color:var(--gray);line-height:1.65}
+
+/* STAT TICKER */
+.tk{display:flex;border-top:1px solid var(--ink);border-bottom:1px solid var(--ink);margin-top:36px}
+.ti{flex:1;padding:18px 8px;text-align:center}
+.ti+.ti{border-left:1px solid var(--rule)}
+.tv{font-family:var(--fd);font-size:30px;font-weight:900;line-height:1}
+.tv.r{color:var(--red)}
+.tl{font-family:var(--fm);font-size:8px;letter-spacing:2px;color:var(--gray);margin-top:6px;text-transform:uppercase}
+
+/* SECTION HEADERS */
+.sr{width:40px;height:3px;background:var(--red);margin-bottom:16px}
+.sk{font-family:var(--fm);font-size:10px;letter-spacing:3px;color:var(--red);text-transform:uppercase;margin-bottom:8px}
+.st{font-family:var(--fd);font-size:clamp(24px,7vw,32px);font-weight:900;margin-bottom:28px;line-height:1.1}
+
+/* HOW IT WORKS */
+.stp{display:flex;gap:16px;padding:20px 0;border-bottom:1px solid var(--rule);align-items:flex-start}
+.stp:last-child{border-bottom:none}
+.sn{font-family:var(--fd);font-size:36px;font-weight:900;color:var(--red);line-height:1;min-width:40px}
+.stt{font-family:var(--fd);font-weight:700;font-size:16px;margin-bottom:4px}
+.sd{font-size:13px;color:var(--gray);line-height:1.55}
+
+/* DM SIMULATOR */
+.df{background:#fff;border:1px solid var(--rule);border-radius:3px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.06)}
+.db{padding:12px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--rule);background:var(--paper)}
+.db h3{font-family:var(--fd);font-size:13px;font-weight:700}
+.de{font-family:var(--fm);font-size:9px;letter-spacing:1px;padding:3px 8px;border-radius:2px;background:var(--red-m);color:var(--red)}
+.tabs{display:flex;border-bottom:1px solid var(--rule);background:var(--paper)}
+.tab{flex:1;padding:10px 0;border:none;background:none;color:var(--gray);font-family:var(--fm);font-size:10px;letter-spacing:1.5px;cursor:pointer;position:relative;transition:color .2s}
+.tab.on{color:var(--red);font-weight:700}
+.tab.on::after{content:'';position:absolute;bottom:0;left:20%;right:20%;height:2px;background:var(--red)}
+.dt{height:260px;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;scroll-behavior:smooth;background:#fff}
+.dt::-webkit-scrollbar{width:0}
+.dm{display:flex;gap:8px;align-items:flex-end;opacity:0;transform:translateY(8px);animation:mi .3s ease forwards}
+.dm.cl{flex-direction:row-reverse}
+.da{width:26px;height:26px;min-width:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;font-family:var(--fm)}
+.dm.ai .da{background:var(--ink);color:#fff}
+.dm.cl .da{background:var(--red-m);color:var(--red)}
+.dbb{max-width:78%;padding:10px 14px;font-size:13px;line-height:1.5}
+.dm.ai .dbb{background:var(--paper);border-radius:2px 12px 12px 12px;border-left:2px solid var(--ink)}
+.dm.cl .dbb{background:var(--red-m);border-radius:12px 2px 12px 12px;border-right:2px solid var(--red)}
+.bb{display:inline-block;margin-top:8px;padding:8px 16px;border:none;background:var(--ink);color:#fff;font-family:var(--fm);font-size:10px;letter-spacing:1px;border-radius:2px;cursor:pointer}
+.bb:active{opacity:.8}
+@keyframes mi{to{opacity:1;transform:translateY(0)}}
+.tp span{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--gray);margin:0 2px;animation:td 1.4s infinite}
+.tp span:nth-child(2){animation-delay:.2s}
+.tp span:nth-child(3){animation-delay:.4s}
+@keyframes td{0%,60%,100%{opacity:.3;transform:scale(.8)}30%{opacity:1;transform:scale(1.15)}}
+.dib{display:flex;border-top:1px solid var(--rule);background:var(--paper)}
+.dib input{flex:1;padding:14px 16px;background:none;border:none;color:var(--ink);font-size:14px;font-family:var(--fb);outline:none}
+.dib input::placeholder{color:var(--gray)}
+.dib button{padding:14px 20px;border:none;background:none;color:var(--red);font-family:var(--fm);font-size:11px;letter-spacing:2px;cursor:pointer;font-weight:700}
+
+/* SCHEDULE */
+.sf{background:#fff;border:1px solid var(--rule);border-radius:3px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.06)}
+.sh{padding:12px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--rule);background:var(--paper)}
+.sh h3{font-family:var(--fd);font-size:13px;font-weight:700}
+.lv{font-family:var(--fm);font-size:9px;letter-spacing:1px;padding:3px 8px;border-radius:2px;background:rgba(16,185,129,.08);color:#c9a96e}
+.sb{padding:12px 16px}
+.sdy{font-family:var(--fm);font-size:11px;letter-spacing:3px;color:var(--gray);margin-bottom:2px}
+.sdt{font-size:12px;color:var(--gray);margin-bottom:14px}
+.slot{display:flex;gap:10px;align-items:stretch;margin-bottom:4px;opacity:0;animation:si .4s ease forwards}
+.slot:nth-child(1){animation-delay:.05s}.slot:nth-child(2){animation-delay:.1s}.slot:nth-child(3){animation-delay:.15s}.slot:nth-child(4){animation-delay:.2s}.slot:nth-child(5){animation-delay:.25s}.slot:nth-child(6){animation-delay:.3s}.slot:nth-child(7){animation-delay:.35s}.slot:nth-child(8){animation-delay:.4s}
+@keyframes si{from{opacity:0;transform:translateX(-4px)}to{opacity:1;transform:translateX(0)}}
+.stm{width:42px;text-align:right;font-family:var(--fm);font-size:11px;color:var(--gray);padding-top:8px;flex-shrink:0}
+.sbr{flex:1;padding:8px 12px;border-radius:3px;min-height:40px;position:relative}
+.sbr.bk{background:#f8f8f6;border-left:3px solid var(--ink)}
+.sbr.af{background:var(--red-m);border-left:3px solid var(--red)}
+.sbr.op{background:rgba(0,0,0,.01);border:1px dashed var(--rule)}
+.snm{font-size:12px;font-weight:600}
+.ssv{font-size:10px;color:var(--gray)}
+.ssr{font-family:var(--fm);font-size:8px;letter-spacing:.5px;color:var(--red);margin-top:2px}
+.sbg{position:absolute;top:8px;right:10px;font-family:var(--fm);font-size:8px;letter-spacing:1px;padding:2px 6px;border-radius:2px}
+.sbg.pd{background:rgba(16,185,129,.08);color:#c9a96e}
+.sbg.dp{background:rgba(59,130,246,.08);color:#3b82f6}
+.sbg.ot{background:rgba(0,0,0,.03);color:var(--gray)}
+
+/* PUSH */
+.pe{width:240px;margin:0 auto 28px;background:var(--ink);border-radius:28px;padding:12px;box-shadow:0 20px 60px rgba(0,0,0,.15)}
+.pn{width:80px;height:20px;margin:0 auto 10px;background:#000;border-radius:10px}
+.pnf{background:rgba(255,255,255,.08);border-radius:12px;padding:12px;margin-bottom:6px;text-align:left;color:#fff}
+.pnt{display:flex;justify-content:space-between;font-size:9px;color:rgba(255,255,255,.5);margin-bottom:4px}
+.pnt .ap{font-weight:700;color:var(--red)}
+.pnh{font-size:12px;font-weight:700;margin-bottom:2px}
+.pnb{font-size:11px;color:rgba(255,255,255,.7);line-height:1.4}
+.pss{display:flex;border-top:1px solid var(--ink);border-bottom:1px solid var(--ink)}
+.psi{flex:1;padding:14px 8px;text-align:center}
+.psi+.psi{border-left:1px solid var(--rule)}
+.psi .v{font-family:var(--fd);font-size:22px;font-weight:900}
+.psi .v.r{color:var(--red)}
+.psi .l{font-size:8px;color:var(--gray);letter-spacing:2px;margin-top:3px;font-family:var(--fm);text-transform:uppercase}
+
+/* TIERS */
+.tier{background:#fff;border:1px solid var(--rule);border-radius:3px;padding:24px;margin-bottom:14px;position:relative;overflow:hidden;transition:transform .2s}
+.tier:active{transform:scale(.98)}
+.tier::before{content:'';position:absolute;top:0;left:0;bottom:0;width:4px}
+.tier.t1::before{background:var(--red)}.tier.t2::before{background:var(--ink)}
+.ttop{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px}
+.tro{font-family:var(--fd);font-size:32px;font-weight:900;line-height:1}
+.t1 .tro{color:var(--red)}.t2 .tro{color:var(--ink)}
+.tnm{font-family:var(--fd);font-size:16px;font-weight:700}
+.ttg{font-family:var(--fm);font-size:9px;letter-spacing:2px;padding:3px 8px;border-radius:2px;margin-top:4px}
+.t1 .ttg{background:var(--red-m);color:var(--red)}.t2 .ttg{background:rgba(0,0,0,.04);color:var(--ink)}
+.tds{font-size:13px;color:var(--gray);line-height:1.6;margin-bottom:16px}
+.tf{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--gray);padding:5px 0}
+.tf::before{content:'\2192';font-weight:700;min-width:16px}
+.t1 .tf::before{color:var(--red)}.t2 .tf::before{color:var(--ink)}
+
+/* CTA */
+.cta{text-align:center}
+.ch{font-family:var(--fd);font-size:clamp(28px,8vw,38px);font-weight:900;margin-bottom:12px;line-height:1.1}
+.cd{font-size:14px;color:var(--gray);margin-bottom:32px;line-height:1.65;font-family:var(--fd);font-style:italic}
+.cb{display:inline-block;padding:16px 44px;background:var(--ink);color:#fff;font-family:var(--fm);font-size:12px;letter-spacing:3px;border:none;border-radius:2px;text-decoration:none;transition:background .2s}
+.cb:active{background:var(--red)}
+.ce{display:block;margin-top:20px;font-family:var(--fm);font-size:11px;color:var(--gray)}
+.co{margin-top:48px;padding-top:20px;border-top:1px solid var(--rule);font-family:var(--fm);font-size:8px;letter-spacing:2px;color:var(--gray);text-transform:uppercase}
+
+/* PROGRESS */
+.pr{position:fixed;left:0;top:0;bottom:0;width:3px;z-index:9000;background:var(--rule)}
+.pf{width:100%;background:var(--red);transition:height .3s ease}
+
+/* REVEALS */
+.rv{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s cubic-bezier(.16,1,.3,1)}
+.rv.vis{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+<div class="pr"><div class="pf" id="pf"></div></div>
+
+<!-- HERO -->
+<section class="s hero">
+<div class="si">
+<div class="mh"><div class="mh-t">The Coil &bull; AI Integration</div><div class="mh-d">VOL. I &mdash; FEBRUARY 2026</div></div>
+<div class="hk">Exclusive Preview</div>
+<h1 class="hh">Stop Typing.<br>Start <em>Booking.</em></h1>
+<p class="hd">You built the brand. Grew the audience. But right now, <strong>every DM is a manual conversation</strong> &mdash; you thumbing out the same reply between clients.</p>
+</div>
+<div class="sc"><span>SCROLL</span><div class="sl"></div></div>
+</section>
+
+<!-- PUNCH -->
+<section class="s" id="punch">
+<div class="si">
+<div class="rv"><p class="pq">While they&rsquo;re still texting&nbsp;back, your chair is already&nbsp;<em>full.</em></p><p class="ps">An AI that handles your DMs <strong>in your voice</strong>, checks your Acuity schedule, and books the client &mdash; before you put the clippers down.</p></div>
+<div class="tk rv">
+<div class="ti"><div class="tv r">$3,840</div><div class="tl">Revenue / Day</div></div>
+<div class="ti"><div class="tv">247</div><div class="tl">DMs Handled</div></div>
+<div class="ti"><div class="tv" style="color:#c9a96e">0</div><div class="tl">Missed</div></div>
+</div>
+</div>
+</section>
+
+<!-- HOW -->
+<section class="s" id="how">
+<div class="si">
+<div class="sr rv"></div><div class="sk rv">The System</div><div class="st rv">How It Works</div>
+<ol style="list-style:none">
+<li class="stp rv"><div class="sn">1</div><div><div class="stt">Client DMs You</div><div class="sd">"You free Saturday? I need a unit install"</div></div></li>
+<li class="stp rv"><div class="sn">2</div><div><div class="stt">AI Reads Intent</div><div class="sd">Understands the service, the date, the urgency</div></div></li>
+<li class="stp rv"><div class="sn">3</div><div><div class="stt">Checks Your Book</div><div class="sd">Real-time Acuity lookup &mdash; finds the best open slot</div></div></li>
+<li class="stp rv"><div class="sn">4</div><div><div class="stt">Books &amp; Confirms</div><div class="sd">Sends the link, collects the deposit, done</div></div></li>
+</ol>
+</div>
+</section>
+
+<!-- DM SIMULATOR -->
+<section class="s" id="dm-sec">
+<div class="si">
+<div class="sr rv"></div><div class="sk rv">Live Preview</div><div class="st rv">Try It</div>
+<div class="df rv">
+<div class="db"><h3>DM Simulator</h3><span class="de">GEMINI 3</span></div>
+<div class="tabs">
+<button class="tab on" onclick="run('booking',this)">BOOKING</button>
+<button class="tab" onclick="run('reschedule',this)">RESCHEDULE</button>
+<button class="tab" onclick="run('pricing',this)">PRICING</button>
+</div>
+<div class="dt" id="thrd"></div>
+<div class="dib"><input id="inp" placeholder="Type a DM to test..." onkeydown="if(event.key==='Enter')send()"><button onclick="send()">SEND</button></div>
+</div>
+</div>
+</section>
+
+<!-- SCHEDULE -->
+<section class="s" id="sched-sec">
+<div class="si">
+<div class="sr rv"></div><div class="sk rv">Your Book</div><div class="st rv">Saturday at a Glance</div>
+<div class="sf rv">
+<div class="sh"><h3>Acuity Schedule</h3><span class="lv">&#9679; LIVE</span></div>
+<div class="sb"><div class="sdy">SATURDAY</div><div class="sdt">February 15, 2026</div><div id="slots"></div></div>
+</div>
+</div>
+</section>
+
+<!-- PUSH -->
+<section class="s" id="push-sec" style="text-align:center">
+<div class="si">
+<div class="sr rv" style="margin:0 auto 16px"></div><div class="sk rv" style="text-align:center">Push Engine</div><div class="st rv" style="text-align:center">Fill Cancellations<br>Instantly</div>
+<div class="pe rv">
+<div class="pn"></div>
+<div class="pnf"><div class="pnt"><span class="ap">THE COIL</span><span>now</span></div><div class="pnh">&#128293; Opening just dropped</div><div class="pnb">Saturday 2:30 PM opened up. Unit install + lineup &mdash; first to reply gets it.</div></div>
+<div class="pnf" style="opacity:.6"><div class="pnt"><span class="ap">THE COIL</span><span>2h ago</span></div><div class="pnh">&#128197; Reminder</div><div class="pnb">Your appointment tomorrow at 11:00 AM. Reply C to cancel.</div></div>
+</div>
+<div class="pss rv">
+<div class="psi"><div class="v r">94%</div><div class="l">Open Rate</div></div>
+<div class="psi"><div class="v">12min</div><div class="l">Avg Response</div></div>
+<div class="psi"><div class="v" style="color:#c9a96e">$0</div><div class="l">Wasted Slots</div></div>
+</div>
+</div>
+</section>
+
+<!-- TIERS -->
+<section class="s" id="tiers-sec">
+<div class="si">
+<div class="sr rv"></div><div class="sk rv">Investment</div><div class="st rv">Two Paths</div>
+<div class="tier t1 rv">
+<div class="ttop"><div><div class="tnm">The Concierge</div><div class="ttg">$500 / MONTH</div></div><div class="tro">I</div></div>
+<div class="tds">Flat monthly. You own the system. I build, maintain, and optimize.</div>
+<div class="tf">AI DM engine + Acuity integration</div><div class="tf">Push notification system</div><div class="tf">Monthly optimization reports</div><div class="tf">Priority support</div>
+</div>
+<div class="tier t2 rv">
+<div class="ttop"><div><div class="tnm">The Autopilot</div><div class="ttg">15% COMMISSION</div></div><div class="tro">II</div></div>
+<div class="tds">Zero upfront. I eat only when you eat. 15% of AI-booked revenue.</div>
+<div class="tf">Everything in Concierge</div><div class="tf">Revenue-aligned incentives</div><div class="tf">No monthly commitment</div>
+</div>
+</div>
+</section>
+
+<!-- CTA -->
+<section class="s cta" id="cta-sec">
+<div class="si"><div class="rv">
+<h2 class="ch">Let&rsquo;s Talk.</h2>
+<p class="cd">DM me, reply to this, or just say &ldquo;I&rsquo;m in.&rdquo;</p>
+<a href="https://instagram.com/direct/t/" class="cb">OPEN DM &rarr;</a>
+<span class="ce">b.hagemann@y-it.shop</span>
+<div class="co">The Coil &times; Y-IT Systems &mdash; 2026</div>
+</div></div>
+</section>
+
+<script>
+const SC={booking:[{t:'cl',m:'Yo bro you free Saturday? Need a unit install \uD83D\uDD25'},{t:'ai',m:'What\'s good fam! Let me check the book for you real quick... \uD83D\uDCC5'},{t:'ai',m:'Got a 3:00 PM slot wide open \u2014 unit install + lineup. 2.5 hours. Want me to lock it in?',b:'\uD83D\uDCC5 BOOK SAT 3 PM'}],reschedule:[{t:'cl',m:'Hey man I gotta push my Thursday back \uD83D\uDE24'},{t:'ai',m:'No stress bro, let me see what else is open...'},{t:'ai',m:'Friday 1 PM or Saturday 11 AM \u2014 both open. Which works?',b:'\uD83D\uDD04 FRIDAY 1 PM'}],pricing:[{t:'cl',m:'What you charging for a full unit install?'},{t:'ai',m:'Unit install \u2014 $350\nUnit + lineup \u2014 $400\nMaintenance \u2014 $150\n\nAll include consultation.'},{t:'ai',m:'I can grab you a slot this week \uD83D\uDC47',b:'\uD83D\uDCC5 CHECK THIS WEEK'}]};
+const SD=[{t:'9:00',n:'Darius W.',s:'Lineup + Beard',r:'AI-BOOKED',c:'af',b:'PAID',bc:'pd'},{t:'10:00',n:'Marcus T.',s:'Unit Install',r:'',c:'bk',b:'PAID',bc:'pd'},{t:'11:30',n:'Chris B.',s:'Unit Maintenance',r:'AI-BOOKED',c:'af',b:'$75 DEP',bc:'dp'},{t:'1:00',n:'',s:'',r:'',c:'op',b:'OPEN',bc:'ot'},{t:'2:00',n:'Jamal P.',s:'Lineup + Design',r:'',c:'bk',b:'PAID',bc:'pd'},{t:'3:00',n:'Terrance M.',s:'Unit Install + Lineup',r:'AI-BOOKED',c:'af',b:'$75 DEP',bc:'dp'},{t:'5:30',n:'Devon R.',s:'Beard Sculpt',r:'AI-BOOKED',c:'af',b:'PAID',bc:'pd'},{t:'7:00',n:'',s:'',r:'',c:'op',b:'OPEN',bc:'ot'}];
+const th=document.getElementById('thrd');let tmr;
+function msg(o){const d=document.createElement('div');d.className='dm '+(o.t==='ai'?'ai':'cl');d.innerHTML=`<div class="da">${o.t==='ai'?'AI':'MC'}</div><div class="dbb">${o.m.replace(/\n/g,'<br>')}${o.b?'<br><button class="bb">'+o.b+'</button>':''}</div>`;th.appendChild(d);th.scrollTop=1e5}
+function typ(){const d=document.createElement('div');d.className='dm ai';d.id='typ';d.innerHTML='<div class="da">AI</div><div class="dbb tp"><span></span><span></span><span></span></div>';th.appendChild(d);th.scrollTop=1e5}
+function run(k,btn){clearTimeout(tmr);document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));btn.classList.add('on');th.innerHTML='';const ms=SC[k];let i=0;(function nx(){if(i>=ms.length)return;const m=ms[i++];if(m.t==='ai'){typ();tmr=setTimeout(()=>{document.getElementById('typ')?.remove();msg(m);tmr=setTimeout(nx,600)},1200)}else{msg(m);tmr=setTimeout(nx,800)}})()}
+function send(){const inp=document.getElementById('inp'),v=inp.value.trim();if(!v)return;inp.value='';msg({t:'cl',m:v});typ();tmr=setTimeout(()=>{document.getElementById('typ')?.remove();msg({t:'ai',m:'Let me check the book\u2026 Got openings Thursday 2 PM and Saturday 11 AM. Lock one in? \uD83D\uDCC5',b:'\uD83D\uDCC5 BOOK THU 2 PM'})},1500)}
+const sl=document.getElementById('slots');SD.forEach(s=>{const o=s.c==='op';sl.innerHTML+=`<div class="slot"><div class="stm">${s.t}</div><div class="sbr ${s.c}">${o?'<div class="snm" style="color:var(--gray);font-style:italic">Available</div>':`<div class="snm">${s.n}</div><div class="ssv">${s.s}</div>${s.r?'<div class="ssr">'+s.r+'</div>':''}`}<div class="sbg ${s.bc}">${s.b}</div></div></div>`});
+const pf=document.getElementById('pf');window.addEventListener('scroll',()=>{pf.style.height=(scrollY/(document.body.scrollHeight-innerHeight)*100)+'%'});
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('vis')})},{threshold:.15});document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+let ds=false;const dmo=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting&&!ds){ds=true;run('booking',document.querySelector('.tab'))}})},{threshold:.5});document.getElementById('dm-sec')&&dmo.observe(document.getElementById('dm-sec'));
+</script>
+</body>
+</html>

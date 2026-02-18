@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AI DM Simulator - The Coil</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Rounded" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#d4a853",
+              "background-light": "#f7f5f8",
+              "background-dark": "#191022",
+              "glass-dark": "rgba(25, 16, 34, 0.6)",
+              "glass-light": "rgba(255, 255, 255, 0.1)",
+            },
+            fontFamily: {
+              "display": ["Manrope", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+            backgroundImage: {
+              'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        /* Custom scrollbar hiding for clean UI */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        /* Frosted glass utility */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .glass-bubble-ai {
+            background: linear-gradient(135deg, rgba(127, 13, 242, 0.7) 0%, rgba(127, 13, 242, 0.4) 100%);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(127, 13, 242, 0.3);
+            box-shadow: 0 4px 30px rgba(127, 13, 242, 0.2);
+        }
+
+        .glass-bubble-user {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white antialiased h-screen overflow-hidden flex justify-center items-center">
+<!-- Phone Container -->
+<div class="relative w-full h-full max-w-md mx-auto bg-background-dark overflow-hidden flex flex-col shadow-2xl border-x border-white/5">
+<!-- Background Ambient Glow -->
+<div class="absolute top-[-10%] right-[-20%] w-[300px] h-[300px] bg-primary rounded-full mix-blend-screen filter blur-[100px] opacity-20 pointer-events-none"></div>
+<div class="absolute bottom-[-10%] left-[-20%] w-[250px] h-[250px] bg-primary rounded-full mix-blend-screen filter blur-[120px] opacity-10 pointer-events-none"></div>
+<!-- Sticky Header & Tab Switcher -->
+<header class="pt-6 pb-2 px-4 z-20 bg-background-dark/80 backdrop-blur-xl border-b border-white/5 sticky top-0">
+<!-- Top Bar -->
+<div class="flex items-center justify-between mb-6 pt-2">
+<button class="p-2 rounded-full hover:bg-white/5 text-white/60 transition-colors">
+<span class="material-symbols-rounded text-2xl">arrow_back_ios_new</span>
+</button>
+<div class="flex flex-col items-center">
+<div class="flex items-center gap-1">
+<span class="text-lg font-bold tracking-tight">The Coil</span>
+<span class="material-icons text-[16px] text-primary">verified</span>
+</div>
+<span class="text-xs text-white/40 font-medium">Active now</span>
+</div>
+<button class="p-2 rounded-full hover:bg-white/5 text-white/60 transition-colors">
+<span class="material-symbols-rounded text-2xl">info</span>
+</button>
+</div>
+<!-- Tab Switcher -->
+<div class="bg-white/5 p-1 rounded-full flex relative">
+<button class="flex-1 py-2 px-4 rounded-full text-sm font-semibold text-white bg-primary shadow-lg shadow-primary/30 transition-all duration-300">
+                    Booking
+                </button>
+<button class="flex-1 py-2 px-4 rounded-full text-sm font-medium text-white/40 hover:text-white transition-colors">
+                    Reschedule
+                </button>
+<button class="flex-1 py-2 px-4 rounded-full text-sm font-medium text-white/40 hover:text-white transition-colors">
+                    Pricing
+                </button>
+</div>
+</header>
+<!-- Chat Stream Area -->
+<main class="flex-1 overflow-y-auto p-4 space-y-6 relative z-10 no-scrollbar">
+<!-- Timestamp -->
+<div class="flex justify-center">
+<span class="text-[10px] font-bold text-white/20 uppercase tracking-widest">Today 10:42 AM</span>
+</div>
+<!-- User Message -->
+<div class="flex items-end justify-end gap-2 group">
+<div class="glass-bubble-user text-white py-3 px-5 rounded-2xl rounded-tr-sm max-w-[85%] shadow-sm">
+<p class="text-sm leading-relaxed">Yo, you free this Saturday around 2? Need a cut bad.</p>
+</div>
+</div>
+<!-- AI Response (Typing Indicator - Hidden for completed state but implied) -->
+<!-- AI Message 1: Text -->
+<div class="flex items-end justify-start gap-3">
+<div class="flex-shrink-0 w-8 h-8 rounded-full overflow-hidden border border-white/10 shadow-lg">
+<img alt="Minimalist barber logo" class="w-full h-full object-cover" data-alt="Minimalist abstract logo for barbershop in black and white" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBeNvPrstc4Sq4QNMshlsyAXUe9slrFMXsKxVVqN-wR8WtyhEbXgQNsz_pfX-ukOB6vQOa2KCkyKdwBV5Q96LqAdvzr51gXwnyVX2cE4YgzOqhfmf2tYzloMOy1gU4qr56I4CzNZQZXM-82SVlGC8Wm2DIppPHgxdJKFUzWevXgsg_rfC8gOGVUVOK5n8sP36wd154RV4vRbSj61SMR5ZsH9_yFbdNfMKbJ3NDy4kLlAkAk4L-YsdsOpa5fXjHavJx-BzoO4Cr4scX9"/>
+</div>
+<div class="flex flex-col gap-1 max-w-[85%]">
+<span class="text-[10px] text-white/30 ml-1">The Coil AI</span>
+<div class="glass-bubble-ai text-white py-3 px-5 rounded-2xl rounded-tl-sm shadow-lg shadow-primary/10">
+<p class="text-sm leading-relaxed font-light">I can check that for you. Saturday, Oct 14th is pretty busy, but we have these openings with <span class="font-bold text-white">Marcus</span>:</p>
+</div>
+</div>
+</div>
+<!-- AI Message 2: Rich Media Action Card -->
+<div class="flex items-end justify-start gap-3">
+<!-- Spacer for avatar alignment -->
+<div class="w-8 flex-shrink-0"></div>
+<div class="w-full max-w-[85%] bg-white/5 border border-white/10 rounded-2xl p-4 backdrop-blur-md shadow-xl">
+<div class="flex justify-between items-center mb-4">
+<h3 class="text-sm font-bold text-white">Select a Time</h3>
+<span class="text-xs text-primary font-medium">Sat, Oct 14</span>
+</div>
+<!-- Time Slots Grid -->
+<div class="grid grid-cols-3 gap-2 mb-5">
+<button class="py-2 px-1 rounded-lg bg-white/5 hover:bg-primary/20 hover:border-primary/50 border border-white/5 text-xs font-medium text-white transition-all text-center">
+                            1:45 PM
+                        </button>
+<button class="py-2 px-1 rounded-lg bg-primary text-white border border-primary shadow-lg shadow-primary/30 text-xs font-bold text-center ring-2 ring-primary/20 ring-offset-1 ring-offset-[#191022]">
+                            2:30 PM
+                        </button>
+<button class="py-2 px-1 rounded-lg bg-white/5 hover:bg-primary/20 hover:border-primary/50 border border-white/5 text-xs font-medium text-white transition-all text-center">
+                            4:00 PM
+                        </button>
+</div>
+<!-- Selected Detail -->
+<div class="flex items-center gap-3 mb-5 p-3 rounded-xl bg-black/20 border border-white/5">
+<img alt="Barber portrait" class="w-10 h-10 rounded-full object-cover ring-2 ring-white/10" data-alt="Close up portrait of a barber with tattoos" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAnBZ3RTzll9hPnrwow7yeNAQf1UuCIIp_CiECqQXh6l1hzJj2A7PLt3p5sq24uNgDKLGTHL6VJ9q0ZJRHuOy--h7W3g_GoNNXQ0zRmcNTYOW5guIq143yAONCoGn-LUNZQbJb84z-xITo2pJAmiZ8srSkeKCClbLqC1FVT5al5DLSSd8IBpJdnBa4ea4NtOrAQVSi_79zee5_IVbIQuYa5wNL_R_Mfa2TOooaNSyrSliwwNAsAu_SkcVoUA8Jcqp5e9aG8zrBHswG0"/>
+<div>
+<p class="text-xs text-white/50">Barber</p>
+<p class="text-sm font-semibold text-white">Marcus 'Fade' T.</p>
+</div>
+<div class="ml-auto">
+<p class="text-xs text-white/50 text-right">Price</p>
+<p class="text-sm font-semibold text-white">$65.00</p>
+</div>
+</div>
+<!-- Primary Action Button -->
+<button class="w-full py-3 rounded-xl bg-white text-background-dark font-extrabold text-xs uppercase tracking-widest hover:bg-gray-100 active:scale-95 transition-all shadow-lg shadow-white/10 flex items-center justify-center gap-2">
+<span>Confirm Booking</span>
+<span class="material-symbols-rounded text-base">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- User Response Simulation -->
+<div class="flex items-end justify-end gap-2 group opacity-40">
+<div class="border border-dashed border-white/20 text-white/40 py-2 px-4 rounded-2xl rounded-tr-sm max-w-[85%]">
+<p class="text-xs italic">Tap to simulate user confirmation...</p>
+</div>
+</div>
+<!-- Spacer for scroll -->
+<div class="h-4"></div>
+</main>
+<!-- Input Area Footer -->
+<footer class="p-4 bg-background-dark/80 backdrop-blur-xl border-t border-white/5 z-20">
+<div class="flex items-center gap-3">
+<button class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-primary hover:bg-white/10 transition-colors">
+<span class="material-symbols-rounded">add_a_photo</span>
+</button>
+<div class="flex-1 relative">
+<input class="w-full bg-white/5 border border-white/5 rounded-full py-3 pl-4 pr-10 text-sm text-white focus:outline-none focus:ring-1 focus:ring-primary/50 placeholder-white/30" disabled="" placeholder="Message..." type="text"/>
+<button class="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 text-white/30 hover:text-primary transition-colors">
+<span class="material-symbols-rounded text-lg">sentiment_satisfied</span>
+</button>
+</div>
+<button class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all duration-300">
+<span class="material-symbols-rounded">mic</span>
+</button>
+</div>
+<!-- Home Indicator -->
+<div class="flex justify-center mt-5 mb-1">
+<div class="w-1/3 h-1.5 bg-white/20 rounded-full"></div>
+</div>
+</footer>
+</div>
+</body></html>

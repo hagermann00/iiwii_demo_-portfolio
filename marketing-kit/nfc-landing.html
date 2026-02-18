@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5">
+    <meta name="theme-color" content="#030303">
+    <meta name="description" content="The Coil — Exclusive promo. Tap to book with BarberGawd. South Loop, Chicago.">
+    <title>The Coil — Exclusive Offer</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Manrope:wght@300;400;500;600;700;800&family=Oswald:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --void: #030303;
+            --surface: #0a0a0a;
+            --card: rgba(14, 14, 14, 0.92);
+            --border: rgba(40, 40, 40, 0.6);
+            --gold-50: #fdf8e8;
+            --gold-100: #fcf6ba;
+            --gold-300: #e8c547;
+            --gold-400: #d4af37;
+            --gold-500: #bf953f;
+            --gold-600: #b38728;
+            --crimson: #8b1a1a;
+            --crimson-bright: #c62828;
+            --text-1: #f0f0f0;
+            --text-2: #a1a1aa;
+            --text-3: #71717a;
+            --text-4: #52525b;
+            --fd: 'Cinzel', serif;
+            --fb: 'Manrope', sans-serif;
+            --fc: 'Oswald', sans-serif;
+            --radius: 12px;
+        }
+
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: var(--fb);
+            background: var(--void);
+            color: var(--text-1);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+            display: flex; flex-direction: column;
+            align-items: center;
+        }
+
+        /* ─── PROMO CONTAINER ─── */
+        .promo {
+            width: 100%; max-width: 480px;
+            padding: 0 20px;
+            display: flex; flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* ─── HEADER ─── */
+        .promo-header {
+            width: 100%; text-align: center;
+            padding: 48px 0 24px;
+        }
+        .promo-logo {
+            height: 56px; width: auto;
+            margin-bottom: 12px;
+            filter: brightness(1.1);
+        }
+        .promo-tagline {
+            font-family: var(--fc); font-size: 10px;
+            letter-spacing: 4px; text-transform: uppercase;
+            color: var(--text-3);
+        }
+
+        /* ─── HERO CARD ─── */
+        .hero-card {
+            width: 100%; border-radius: 16px;
+            overflow: hidden; position: relative;
+            margin-bottom: 20px;
+        }
+        .hero-card img {
+            width: 100%; height: 280px;
+            object-fit: cover;
+        }
+        .hero-card-overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(0deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 40%, transparent 70%);
+            display: flex; flex-direction: column;
+            justify-content: flex-end; padding: 24px;
+        }
+        .hero-card-badge {
+            display: inline-flex; align-self: flex-start;
+            font-family: var(--fc); font-size: 10px;
+            letter-spacing: 2px; text-transform: uppercase;
+            background: var(--crimson-bright); color: #fff;
+            padding: 4px 12px; border-radius: 4px;
+            margin-bottom: 12px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .hero-card h1 {
+            font-family: var(--fd); font-size: 28px;
+            letter-spacing: 2px; line-height: 1.2;
+            margin-bottom: 4px;
+        }
+        .hero-card h1 em {
+            font-style: italic;
+            color: var(--gold-400);
+        }
+        .hero-card p {
+            color: var(--text-2); font-size: 13px;
+        }
+
+        /* ─── OFFER CARDS ─── */
+        .offer-stack {
+            display: flex; flex-direction: column;
+            gap: 12px; width: 100%;
+            margin-bottom: 24px;
+        }
+        .offer-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 20px;
+            display: flex; align-items: center; gap: 16px;
+            cursor: pointer; text-decoration: none;
+            transition: all 0.3s;
+            position: relative; overflow: hidden;
+        }
+        .offer-card:hover {
+            border-color: rgba(212,175,55,0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+        }
+        .offer-card.featured {
+            border-color: rgba(212,175,55,0.3);
+            background: linear-gradient(135deg, rgba(14,14,14,0.95), rgba(212,175,55,0.05));
+        }
+        .offer-card.featured::before {
+            content: ''; position: absolute;
+            top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold-400), transparent);
+        }
+        .offer-disc {
+            width: 56px; height: 56px; flex-shrink: 0;
+            border-radius: 50%; display: flex;
+            flex-direction: column; align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--gold-600), var(--gold-400));
+            color: #000;
+        }
+        .offer-disc .pct {
+            font-family: var(--fd); font-size: 20px;
+            font-weight: 700; line-height: 1;
+        }
+        .offer-disc .off {
+            font-family: var(--fc); font-size: 8px;
+            letter-spacing: 1px; text-transform: uppercase;
+        }
+        .offer-info { flex: 1; }
+        .offer-info h3 {
+            font-family: var(--fd); font-size: 16px;
+            letter-spacing: 1px; margin-bottom: 4px;
+            color: var(--text-1);
+        }
+        .offer-info p {
+            color: var(--text-3); font-size: 12px;
+            line-height: 1.4;
+        }
+        .offer-arrow {
+            color: var(--gold-400); font-size: 18px;
+            transition: transform 0.3s;
+        }
+        .offer-card:hover .offer-arrow { transform: translateX(4px); }
+
+        /* ─── COUNTDOWN ─── */
+        .countdown-wrap {
+            width: 100%; text-align: center;
+            padding: 20px; margin-bottom: 20px;
+            background: var(--card);
+            border: 1px solid rgba(198,40,40,0.3);
+            border-radius: var(--radius);
+        }
+        .countdown-label {
+            font-family: var(--fc); font-size: 10px;
+            letter-spacing: 3px; text-transform: uppercase;
+            color: var(--crimson-bright); margin-bottom: 12px;
+        }
+        .countdown {
+            display: flex; justify-content: center; gap: 16px;
+        }
+        .cd-unit {
+            display: flex; flex-direction: column;
+            align-items: center; min-width: 48px;
+        }
+        .cd-num {
+            font-family: var(--fd); font-size: 28px;
+            color: var(--text-1); line-height: 1;
+        }
+        .cd-lbl {
+            font-family: var(--fc); font-size: 9px;
+            letter-spacing: 2px; text-transform: uppercase;
+            color: var(--text-4); margin-top: 4px;
+        }
+        .cd-sep {
+            font-family: var(--fd); font-size: 24px;
+            color: var(--text-4); line-height: 1;
+            padding-top: 2px;
+        }
+
+        /* ─── CTA BUTTON ─── */
+        .promo-cta {
+            width: 100%; display: flex;
+            font-family: var(--fc); font-size: 14px;
+            letter-spacing: 3px; text-transform: uppercase;
+            background: linear-gradient(135deg, var(--gold-500), var(--gold-400));
+            color: #000; padding: 18px 32px;
+            border: none; border-radius: 8px;
+            cursor: pointer; text-decoration: none;
+            font-weight: 600; justify-content: center;
+            align-items: center; gap: 8px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 24px rgba(212,175,55,0.2);
+            margin-bottom: 16px;
+        }
+        .promo-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(212,175,55,0.4);
+        }
+
+        /* ─── SOCIAL / HANDLE ─── */
+        .promo-social {
+            display: flex; align-items: center;
+            gap: 8px; margin-bottom: 12px;
+        }
+        .promo-social a {
+            display: flex; align-items: center; gap: 6px;
+            text-decoration: none; color: var(--text-3);
+            font-family: var(--fc); font-size: 11px;
+            letter-spacing: 2px; text-transform: uppercase;
+            transition: color 0.3s;
+        }
+        .promo-social a:hover { color: var(--gold-400); }
+        .promo-social svg { width: 16px; height: 16px; }
+
+        /* ─── LOCATION BAR ─── */
+        .location-bar {
+            width: 100%; text-align: center;
+            padding: 16px; margin-bottom: 20px;
+            border-top: 1px solid rgba(40,40,40,0.3);
+        }
+        .location-bar p {
+            font-family: var(--fc); font-size: 10px;
+            letter-spacing: 3px; text-transform: uppercase;
+            color: var(--text-4);
+        }
+        .location-bar a {
+            color: var(--gold-500); text-decoration: none;
+        }
+
+        /* ─── FOOTER ─── */
+        .promo-foot {
+            text-align: center; padding: 20px 0 40px;
+            font-family: var(--fc); font-size: 9px;
+            letter-spacing: 3px; color: var(--text-4);
+        }
+
+        /* ─── ANIMATIONS ─── */
+        .fade-up {
+            opacity: 0; transform: translateY(20px);
+            animation: fadeUp 0.6s ease forwards;
+        }
+        .fade-up:nth-child(2) { animation-delay: 0.1s; }
+        .fade-up:nth-child(3) { animation-delay: 0.2s; }
+        .fade-up:nth-child(4) { animation-delay: 0.3s; }
+        .fade-up:nth-child(5) { animation-delay: 0.4s; }
+        @keyframes fadeUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="promo">
+
+    <!-- ─── HEADER ─── -->
+    <header class="promo-header fade-up">
+        <img src="https://thecoilgrooming.com/cdn/shop/files/Site_logo.png?v=1715055751" alt="The Coil" class="promo-logo">
+        <p class="promo-tagline">Exclusive Offer · South Loop Chicago</p>
+    </header>
+
+    <!-- ─── HERO CARD ─── -->
+    <div class="hero-card fade-up">
+        <img src="https://thecoilgrooming.com/cdn/shop/files/TC_MAIN_86fdcec9-96e3-471c-b016-44f84fa498e3.jpg?v=1715147715" alt="BarberGawd at work">
+        <div class="hero-card-overlay">
+            <span class="hero-card-badge" id="promoBadge">🔥 Limited Time</span>
+            <h1>You Just <em>Unlocked</em> This</h1>
+            <p>An exclusive deal from Antonio "BarberGawd" Willis</p>
+        </div>
+    </div>
+
+    <!-- ─── OFFERS ─── -->
+    <div class="offer-stack">
+
+        <a href="https://app.acuityscheduling.com/schedule/97ecbd23/?calendarIds=5426664" target="_blank" rel="noopener" class="offer-card fade-up">
+            <div class="offer-disc">
+                <span class="pct" id="disc1">10</span>
+                <span class="off">% OFF</span>
+            </div>
+            <div class="offer-info">
+                <h3>Book Your Cut</h3>
+                <p>First-time or returning — book online and save</p>
+            </div>
+            <span class="offer-arrow">→</span>
+        </a>
+
+        <a href="https://app.acuityscheduling.com/schedule/97ecbd23/?calendarIds=5426664" target="_blank" rel="noopener" class="offer-card featured fade-up">
+            <div class="offer-disc">
+                <span class="pct" id="disc2">20</span>
+                <span class="off">% OFF</span>
+            </div>
+            <div class="offer-info">
+                <h3>Prepay & Lock In</h3>
+                <p>Pay deposit now, secure the best rate</p>
+            </div>
+            <span class="offer-arrow">→</span>
+        </a>
+
+        <a href="https://thecoilgrooming.com/pages/the-coil-hair-units" target="_blank" rel="noopener" class="offer-card fade-up">
+            <div class="offer-disc" style="background: linear-gradient(135deg, var(--crimson), var(--crimson-bright)); color: #fff;">
+                <span class="pct">FREE</span>
+                <span class="off">CONSULT</span>
+            </div>
+            <div class="offer-info">
+                <h3>Hair Unit Consultation</h3>
+                <p>Non-surgical replacement · Premium materials · Natural look</p>
+            </div>
+            <span class="offer-arrow">→</span>
+        </a>
+
+    </div>
+
+    <!-- ─── COUNTDOWN ─── -->
+    <div class="countdown-wrap fade-up" id="countdownWrap">
+        <p class="countdown-label">⚡ Flash Deal Expires In</p>
+        <div class="countdown" id="countdown">
+            <div class="cd-unit"><span class="cd-num" id="cdH">00</span><span class="cd-lbl">Hours</span></div>
+            <span class="cd-sep">:</span>
+            <div class="cd-unit"><span class="cd-num" id="cdM">00</span><span class="cd-lbl">Min</span></div>
+            <span class="cd-sep">:</span>
+            <div class="cd-unit"><span class="cd-num" id="cdS">00</span><span class="cd-lbl">Sec</span></div>
+        </div>
+    </div>
+
+    <!-- ─── CTA ─── -->
+    <a href="https://app.acuityscheduling.com/schedule/97ecbd23/?calendarIds=5426664" target="_blank" rel="noopener" class="promo-cta fade-up">
+        Book Now →
+    </a>
+
+    <!-- ─── SOCIAL ─── -->
+    <div class="promo-social fade-up">
+        <a href="https://instagram.com/barbergawd" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="2" y="2" width="20" height="20" rx="5"/>
+                <circle cx="12" cy="12" r="5"/>
+                <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/>
+            </svg>
+            @barbergawd
+        </a>
+    </div>
+
+    <!-- ─── LOCATION ─── -->
+    <div class="location-bar">
+        <p>558 W Roosevelt · South Loop · Chicago IL 60605</p>
+        <p style="margin-top:4px"><a href="https://thecoilgrooming.com" target="_blank">thecoilgrooming.com</a> · 4.9★ on Google (83+ reviews)</p>
+    </div>
+
+    <div class="promo-foot">THE COIL × BARBERGAWD — CHICAGO</div>
+
+</div>
+
+<script>
+// ─── URL Params ───
+const params = new URLSearchParams(window.location.search);
+const disc1 = params.get('d1') || '10';
+const disc2 = params.get('d2') || '20';
+const badge = params.get('badge') || '🔥 Limited Time';
+const hours = parseInt(params.get('hours') || '24', 10);
+
+// Apply params
+document.getElementById('disc1').textContent = disc1;
+document.getElementById('disc2').textContent = disc2;
+document.getElementById('promoBadge').textContent = badge;
+
+// ─── Countdown Timer ───
+const endTime = new Date().getTime() + (hours * 60 * 60 * 1000);
+
+function updateCountdown() {
+    const now = new Date().getTime();
+    const diff = endTime - now;
+
+    if (diff <= 0) {
+        document.getElementById('countdownWrap').style.display = 'none';
+        return;
+    }
+
+    const h = Math.floor(diff / (1000 * 60 * 60));
+    const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+    document.getElementById('cdH').textContent = String(h).padStart(2, '0');
+    document.getElementById('cdM').textContent = String(m).padStart(2, '0');
+    document.getElementById('cdS').textContent = String(s).padStart(2, '0');
+}
+
+updateCountdown();
+setInterval(updateCountdown, 1000);
+
+// ─── Persistent countdown using localStorage ───
+const storedEnd = localStorage.getItem('coil_promo_end');
+if (storedEnd) {
+    const stored = parseInt(storedEnd, 10);
+    if (stored > new Date().getTime()) {
+        // Use stored end time instead
+        const realEnd = stored;
+        setInterval(() => {
+            const now = new Date().getTime();
+            const diff = realEnd - now;
+            if (diff <= 0) {
+                document.getElementById('countdownWrap').style.display = 'none';
+                localStorage.removeItem('coil_promo_end');
+                return;
+            }
+            const h = Math.floor(diff / (1000 * 60 * 60));
+            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((diff % (1000 * 60)) / 1000);
+            document.getElementById('cdH').textContent = String(h).padStart(2, '0');
+            document.getElementById('cdM').textContent = String(m).padStart(2, '0');
+            document.getElementById('cdS').textContent = String(s).padStart(2, '0');
+        }, 1000);
+    }
+} else {
+    localStorage.setItem('coil_promo_end', String(endTime));
+}
+</script>
+
+</body>
+</html>
