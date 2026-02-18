@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>The Coil — Smart Schedule</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script>
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        brand: { black: "#0A0A0A", surface: "#111111", gold: "#C9A96E", crimson: "#8B1A1A" },
+      },
+      fontFamily: { display: ["Newsreader", "Georgia", "serif"], body: ["Inter", "system-ui", "sans-serif"] },
+    },
+  },
+};
+</script>
+<style>
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Inter', system-ui, sans-serif; background: #0A0A0A; color: #F5F5F5; }
+  .font-display { font-family: 'Newsreader', Georgia, serif; }
+  .btn-gold { background: linear-gradient(135deg, #C9A96E, #A8884D); color: #000; font-weight: 600; border-radius: 4px; transition: all 0.3s; text-decoration: none; display: inline-block; }
+  .btn-gold:hover { background: linear-gradient(135deg, #D4B87A, #C9A96E); transform: translateY(-1px); }
+
+  /* Schedule Styles */
+  .schedule-grid { display: flex; flex-direction: column; gap: 4px; }
+  .time-row { display: flex; gap: 12px; align-items: stretch; min-height: 64px; }
+  .time-label { width: 56px; flex-shrink: 0; text-align: right; padding-top: 12px; font-family: 'Inter', monospace; font-size: 11px; color: #52525b; font-variant-numeric: tabular-nums; }
+  .slot-card { flex: 1; border-radius: 10px; padding: 12px 16px; position: relative; transition: all 0.3s; }
+  .slot-card:hover { transform: translateX(4px); }
+
+  .slot-booked { background: #161616; border-left: 3px solid #C9A96E; }
+  .slot-vip { background: rgba(201, 169, 110, 0.06); border-left: 3px solid #C9A96E; }
+  .slot-ai { background: linear-gradient(135deg, rgba(59,130,246,0.06), rgba(59,130,246,0.02)); border-left: 3px solid #3b82f6; }
+  .slot-open { border: 1px dashed #333; display: flex; align-items: center; justify-content: center; opacity: 0.5; }
+  .slot-ai::after { content: 'AI BOOKED'; position: absolute; top: 8px; right: 10px; font-size: 9px; letter-spacing: 1.5px; color: #3b82f6; background: rgba(59,130,246,0.12); padding: 2px 8px; border-radius: 10px; font-weight: 600; }
+
+  .badge { font-size: 9px; padding: 2px 8px; border-radius: 10px; font-weight: 600; letter-spacing: 0.5px; display: inline-block; margin-left: 6px; }
+  .badge-paid { background: rgba(201,169,110,0.15); color: #C9A96E; }
+  .badge-vip { background: rgba(201,169,110,0.1); color: #C9A96E; border: 1px solid rgba(201,169,110,0.2); }
+  .badge-unpaid { background: rgba(60,60,60,0.3); color: #71717a; }
+
+  .glass-card { background: rgba(17, 17, 17, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; }
+
+  /* Day Navigation */
+  .day-nav { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; padding: 4px 0; }
+  .day-nav::-webkit-scrollbar { display: none; }
+  .day-btn { padding: 10px 16px; border-radius: 10px; background: transparent; border: 1px solid #222; color: #71717a; cursor: pointer; text-align: center; min-width: 72px; transition: all 0.3s; flex-shrink: 0; }
+  .day-btn:hover { border-color: #C9A96E40; color: #a1a1aa; }
+  .day-btn.active { background: rgba(201,169,110,0.1); border-color: rgba(201,169,110,0.3); color: #C9A96E; }
+  .day-btn .day-name { font-size: 10px; letter-spacing: 1px; text-transform: uppercase; font-weight: 600; }
+  .day-btn .day-num { font-size: 20px; font-weight: 700; margin-top: 2px; font-family: 'Newsreader', serif; }
+
+  /* Stats Strip */
+  .stats-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .stat-box { text-align: center; padding: 14px 8px; border-radius: 10px; background: #111; border: 1px solid #1a1a1a; }
+  .stat-val { font-size: 22px; font-weight: 700; font-family: 'Newsreader', serif; }
+  .stat-label { font-size: 9px; letter-spacing: 1px; text-transform: uppercase; color: #52525b; margin-top: 2px; }
+
+  /* Pulse dot for live */
+  .live-dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; display: inline-block; animation: pulse-dot 2s ease infinite; }
+  @keyframes pulse-dot { 0%, 100% { box-shadow: 0 0 0 0 rgba(34,197,94,0.4); } 50% { box-shadow: 0 0 0 6px rgba(34,197,94,0); } }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .fade-in { animation: fadeIn 0.4s ease forwards; }
+</style>
+</head>
+<body class="antialiased min-h-screen overflow-x-hidden">
+
+<!-- Navigation -->
+<nav class="fixed top-0 left-0 right-0 z-50 bg-brand-black/90 backdrop-blur-md border-b border-white/5">
+  <div class="max-w-[1440px] mx-auto px-8 h-20 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-3 text-white no-underline">
+      <div class="w-10 h-10 border border-brand-gold flex items-center justify-center">
+        <span class="font-display font-bold text-brand-gold text-lg">W</span>
+      </div>
+      <span class="font-display text-xl tracking-wide">THE COIL</span>
+    </a>
+    <div class="hidden md:flex items-center gap-8">
+      <a href="index.html" class="text-white/50 hover:text-brand-gold text-sm tracking-wider uppercase transition-colors no-underline">Home</a>
+      <a href="about.html" class="text-white/50 hover:text-brand-gold text-sm tracking-wider uppercase transition-colors no-underline">About</a>
+      <a href="gallery.html" class="text-white/50 hover:text-brand-gold text-sm tracking-wider uppercase transition-colors no-underline">Gallery</a>
+      <a href="schedule.html" class="text-brand-gold text-sm tracking-wider uppercase transition-colors no-underline border-b border-brand-gold pb-1">Schedule</a>
+      <a href="booking.html" class="btn-gold px-6 py-2.5 text-sm uppercase tracking-widest">Book Now</a>
+    </div>
+    <button class="md:hidden text-white" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+  </div>
+  <div id="mobile-menu" class="hidden md:hidden bg-brand-black border-t border-white/5 px-8 py-6 space-y-4">
+    <a href="index.html" class="block text-white/50 hover:text-brand-gold text-sm tracking-wider uppercase no-underline">Home</a>
+    <a href="schedule.html" class="block text-brand-gold text-sm tracking-wider uppercase no-underline">Schedule</a>
+    <a href="booking.html" class="btn-gold block text-center px-6 py-3 text-sm uppercase tracking-widest mt-4">Book Now</a>
+  </div>
+</nav>
+
+<!-- Main Content -->
+<main class="max-w-3xl mx-auto px-6 pt-28 pb-20">
+
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-6">
+    <div>
+      <p class="text-brand-gold text-xs font-medium uppercase tracking-[0.25em] mb-1">Today's Schedule</p>
+      <h1 class="font-display text-3xl md:text-4xl font-bold text-white" id="headerDate">Loading...</h1>
+    </div>
+    <div class="flex items-center gap-3">
+      <span class="live-dot"></span>
+      <span class="text-xs text-white/40 uppercase tracking-wider font-semibold" id="modeIndicator">Connecting...</span>
+    </div>
+  </div>
+
+  <!-- Day Navigation -->
+  <div class="day-nav mb-6" id="dayNav"></div>
+
+  <!-- Stats Strip -->
+  <div class="stats-strip mb-8" id="statsStrip">
+    <div class="stat-box">
+      <div class="stat-val text-white" id="statBooked">—</div>
+      <div class="stat-label">Booked</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-val text-brand-gold" id="statRevenue">—</div>
+      <div class="stat-label">Revenue</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-val text-blue-400" id="statAI">—</div>
+      <div class="stat-label">AI Filled</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-val text-green-400" id="statOpen">—</div>
+      <div class="stat-label">Open</div>
+    </div>
+  </div>
+
+  <!-- Schedule Grid -->
+  <div class="glass-card p-6">
+    <div class="flex items-center justify-between mb-5">
+      <h2 class="font-display text-lg font-semibold text-brand-gold">The Book</h2>
+      <span class="text-xs text-green-400/80 uppercase tracking-wider font-semibold px-3 py-1 bg-green-400/10 rounded-full border border-green-400/20" id="schedBadge">● ACUITY LIVE</span>
+    </div>
+    <div class="schedule-grid" id="scheduleGrid">
+      <div class="text-center py-12 text-white/30">
+        <div class="animate-pulse">Loading schedule...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Open Slots CTA -->
+  <div class="mt-8 glass-card p-6 text-center" id="openSlotsCTA" style="display:none;">
+    <p class="text-white/60 text-sm mb-4">See open slots? Book one before they fill up.</p>
+    <a href="booking.html" class="btn-gold px-8 py-3 text-sm uppercase tracking-widest">Book a Slot</a>
+  </div>
+</main>
+
+<!-- Footer -->
+<footer class="border-t border-white/5 py-8 text-center">
+  <p class="text-white/20 text-xs uppercase tracking-widest">The Coil — South Loop, Chicago</p>
+</footer>
+
+<script>
+// ═══════ STATE ═══════
+let selectedDate = new Date().toISOString().split('T')[0];
+let appointments = [];
+
+// ═══════ DAY NAVIGATION ═══════
+function buildDayNav() {
+  const nav = document.getElementById('dayNav');
+  const days = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+  const today = new Date();
+  let html = '';
+
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(today);
+    d.setDate(today.getDate() + i);
+    const iso = d.toISOString().split('T')[0];
+    const isActive = iso === selectedDate;
+    html += `<button class="day-btn ${isActive ? 'active' : ''}" onclick="selectDay('${iso}', this)">
+      <div class="day-name">${i === 0 ? 'TODAY' : days[d.getDay()]}</div>
+      <div class="day-num">${d.getDate()}</div>
+    </button>`;
+  }
+  nav.innerHTML = html;
+}
+
+function selectDay(iso, btn) {
+  selectedDate = iso;
+  document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  loadSchedule();
+}
+
+// ═══════ FORMAT HELPERS ═══════
+function formatTime(datetime) {
+  const d = new Date(datetime);
+  let h = d.getHours(); const m = d.getMinutes();
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  h = h > 12 ? h - 12 : h === 0 ? 12 : h;
+  return `${h}:${String(m).padStart(2,'0')} ${ampm}`;
+}
+
+function formatDate(iso) {
+  const d = new Date(iso + 'T12:00:00');
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  return `${days[d.getDay()]}, ${months[d.getMonth()]} ${d.getDate()}`;
+}
+
+// ═══════ LOAD SCHEDULE ═══════
+async function loadSchedule() {
+  document.getElementById('headerDate').textContent = formatDate(selectedDate);
+
+  try {
+    const res = await fetch(`/api/appointments?date=${selectedDate}`);
+    const data = await res.json();
+    
+    appointments = data.appointments || data.fallback || [];
+    const mode = data.mode || 'demo';
+
+    document.getElementById('modeIndicator').textContent = mode === 'live' ? 'Live' : 'Demo Mode';
+    document.getElementById('schedBadge').innerHTML = mode === 'live'
+      ? '● ACUITY LIVE'
+      : '○ DEMO MODE';
+
+    renderSchedule();
+    updateStats();
+  } catch (err) {
+    // Use fallback schedule
+    appointments = getFallbackSchedule();
+    document.getElementById('modeIndicator').textContent = 'Offline';
+    renderSchedule();
+    updateStats();
+  }
+}
+
+// ═══════ RENDER ═══════
+function renderSchedule() {
+  const grid = document.getElementById('scheduleGrid');
+  
+  if (!appointments.length) {
+    grid.innerHTML = '<div class="text-center py-12 text-white/30">No appointments scheduled for this day.</div>';
+    return;
+  }
+
+  // Build timeline from 9 AM to 6 PM
+  const hours = Array.from({length: 10}, (_, i) => i + 9);
+  let html = '';
+
+  // Map appointments to their time slots
+  const slotMap = {};
+  appointments.forEach(apt => {
+    const d = new Date(apt.datetime);
+    const key = `${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`;
+    slotMap[key] = apt;
+  });
+
+  hours.forEach((h, idx) => {
+    const key30 = `${h}:00`;
+    const key45 = `${h}:30`;
+    
+    // Check for appointment at this hour
+    const apt = slotMap[key30] || slotMap[`${h}:00`];
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    const displayH = h > 12 ? h - 12 : h;
+
+    if (apt) {
+      const isVIP = apt.labels?.some(l => l.name === 'VIP');
+      const isAI = apt.notes?.includes('AI') || apt.source?.includes('AI');
+      const slotClass = isAI ? 'slot-ai' : isVIP ? 'slot-vip' : 'slot-booked';
+      const badgeClass = apt.paid === 'yes' ? 'badge-paid' : isVIP ? 'badge-vip' : 'badge-unpaid';
+      const badgeText = apt.paid === 'yes' ? 'PAID' : isVIP ? 'VIP' : 'UNPAID';
+
+      html += `<div class="time-row fade-in" style="animation-delay: ${idx * 0.06}s">
+        <div class="time-label">${displayH}:00 ${ampm}</div>
+        <div class="slot-card ${slotClass}">
+          <div class="flex justify-between items-start">
+            <div>
+              <div class="text-sm font-semibold text-white">${apt.firstName} ${apt.lastName?.charAt(0) || ''}.
+                <span class="badge ${badgeClass}">${badgeText}</span>
+              </div>
+              <div class="text-xs text-white/40 mt-1">${apt.type || 'Service'}${apt.notes ? ' · <span class="text-brand-gold">' + apt.notes + '</span>' : ''}</div>
+            </div>
+            <div class="text-xs text-white/30 font-mono">${formatTime(apt.datetime)}</div>
+          </div>
+        </div>
+      </div>`;
+    } else {
+      html += `<div class="time-row fade-in" style="animation-delay: ${idx * 0.06}s">
+        <div class="time-label">${displayH}:00 ${ampm}</div>
+        <div class="slot-card slot-open">
+          <span class="text-xs text-white/20 uppercase tracking-widest">Open</span>
+        </div>
+      </div>`;
+    }
+  });
+
+  grid.innerHTML = html;
+
+  // Show CTA if there are open slots
+  const openCount = hours.length - Object.keys(slotMap).length;
+  document.getElementById('openSlotsCTA').style.display = openCount > 0 ? 'block' : 'none';
+}
+
+// ═══════ STATS ═══════
+function updateStats() {
+  const booked = appointments.length;
+  const revenue = appointments.reduce((sum, a) => sum + parseFloat(a.price || 0), 0);
+  const aiCount = appointments.filter(a => a.notes?.includes('AI') || a.source?.includes('AI')).length;
+  const openSlots = Math.max(0, 10 - booked);
+
+  document.getElementById('statBooked').textContent = booked;
+  document.getElementById('statRevenue').textContent = `$${revenue.toFixed(0)}`;
+  document.getElementById('statAI').textContent = aiCount;
+  document.getElementById('statOpen').textContent = openSlots;
+}
+
+// ═══════ FALLBACK ═══════
+function getFallbackSchedule() {
+  return [
+    { id: 1, firstName: "Marcus", lastName: "Thompson", datetime: `${selectedDate}T10:00:00-0600`, type: "Hair Unit Install", price: "150.00", paid: "yes", labels: [{name:"VIP"}], notes: "Recurring weekly" },
+    { id: 2, firstName: "DeAndre", lastName: "Williams", datetime: `${selectedDate}T11:00:00-0600`, type: "Beard Shape & Line Up", price: "45.00", paid: "yes", labels: [], notes: "Found us on IG" },
+    { id: 3, firstName: "Jaylen", lastName: "Carter", datetime: `${selectedDate}T13:00:00-0600`, type: "Hair Unit Maintenance", price: "75.00", paid: "no", labels: [{name:"VIP"}], notes: "Monthly VIP" },
+    { id: 4, firstName: "Chris", lastName: "Reynolds", datetime: `${selectedDate}T15:00:00-0600`, type: "Unit Install + Beard", price: "200.00", paid: "yes", labels: [], notes: "IG DM → AI Booked" },
+    { id: 5, firstName: "Kevin", lastName: "Davis", datetime: `${selectedDate}T17:00:00-0600`, type: "Consultation", price: "0.00", paid: "no", labels: [], notes: "AI Booked from DM" },
+  ];
+}
+
+// ═══════ INIT ═══════
+buildDayNav();
+loadSchedule();
+
+// Auto-refresh every 60 seconds
+setInterval(loadSchedule, 60000);
+</script>
+</body>
+</html>

@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.3.0] — Phase 3: AI Feature Suite
+### Added
+- `schedule.html` — Smart Schedule page with live Acuity API integration, 7-day nav, stats strip, auto-refresh
+- `dm.html` — DM Auto-Responder with 4 scenario demos (Book, Reschedule, Pricing, Walk-in), cognitive stream panel, custom message input
+- `push.html` — Push Notification Engine with compose panel, iOS-style live preview, audience segmentation, channel selection, automation toggles, blast queue, performance analytics
+- All three pages share consistent nav, footer, and The Coil brand system (Newsreader + Inter, black/gold/crimson)
+- Fallback demo mode for all API-dependent pages when Acuity keys aren't configured
+
 All notable changes to The Coil AI Barbershop System.
 
 ## [0.2.0] — 2026-02-18
