@@ -2,7 +2,16 @@
   "permissions": {
     "allow": [
       "WebFetch(domain:127.0.0.1)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(gh repo edit:*)",
+      "Bash(cat:*)",
+      "Bash(git commit:*)",
+      "Bash(git merge:*)",
+      "Bash(npm install:*)",
+      "Bash(vercel --version:*)",
+      "Bash(vercel login:*)",
+      "Bash(vercel link:*)",
+      "Bash(vercel:*)"
     ],
     "deny": [],
     "ask": []

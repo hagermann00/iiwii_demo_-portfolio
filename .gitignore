@@ -17,3 +17,4 @@ backend/tmp/
 
 # Go tool cache (don't commit, auto-generated)
 backend/vendor/
+.vercel
