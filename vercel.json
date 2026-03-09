@@ -1,0 +1,10 @@
+{
+  "buildCommand": "echo 'Static site'",
+  "outputDirectory": ".",
+  "rewrites": [
+    {
+      "source": "/:path*",
+      "destination": "/index.html"
+    }
+  ]
+}
