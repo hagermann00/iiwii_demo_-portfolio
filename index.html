@@ -2,130 +2,353 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#FAF7F2">
-    <title>The Coil — Conversion Infrastructure for Grooming</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIZ-IT | Autonomous Business AI Employee Service</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap" rel="stylesheet">
     <style>
-        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-        
         :root {
-            --cream: #FAF7F2;
-            --ink: #1A1A1A;
-            --red: #C23616;
-            --gold: #D4AF37;
-            --gray: #8C8577;
-            --rule: #E8E3DB;
-            --paper: #F2EDE5;
-            
-            --fd: 'Playfair Display', Georgia, serif;
-            --fm: 'Space Mono', monospace;
-            --fb: 'DM Sans', sans-serif;
+            --bg: #08080d;
+            --primary: #2DD4BF;
+            --primary-dark: #06B6D4;
+            --glass: rgba(255, 255, 255, 0.02);
+            --glass-border: rgba(255, 255, 255, 0.05);
+            --sans: 'Plus Jakarta Sans', sans-serif;
+            --serif: 'Playfair Display', serif;
         }
 
-        body { font-family: var(--fb); background: var(--cream); color: var(--ink); -webkit-font-smoothing: antialiased; }
-        
-        /* Noise Texture */
-        body::before {
-            content:''; position:fixed; inset:0; z-index:9998; pointer-events:none;
-            background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-            opacity:.04;
+        body {
+            background-color: var(--bg);
+            color: #f0f0f4;
+            font-family: var(--sans);
+            overflow-x: hidden;
         }
 
-        /* Front Door Specific Styles */
-        .header { padding: 40px 24px; display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; width: 100%; border-bottom: 1px solid var(--rule); }
-        .logo { font-family: var(--fd); font-weight: 900; letter-spacing: 2px; font-size: 20px; text-transform:uppercase; }
-        .status-indicator { display: flex; align-items: center; gap: 8px; font-family: var(--fm); font-size: 10px; letter-spacing: 2px; color: var(--gray); text-transform: uppercase; }
-        .ping { width: 6px; height: 6px; border-radius: 50%; background: #27c93f; animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(39, 201, 63, 0.4); } 70% { box-shadow: 0 0 0 6px rgba(39, 201, 63, 0); } 100% { box-shadow: 0 0 0 0 rgba(39, 201, 63, 0); } }
-
-        .main-content { max-width: 1200px; margin: 0 auto; padding: 80px 24px; width: 100%; min-height: 80vh; }
-        
-        .hero { text-align: center; max-width: 800px; margin: 0 auto 80px; }
-        .kicker { font-family: var(--fm); font-size: 11px; letter-spacing: 4px; color: var(--red); text-transform: uppercase; margin-bottom: 24px; display: block; font-weight: 700; }
-        .title { font-family: var(--fd); font-size: clamp(40px, 8vw, 64px); font-weight: 900; line-height: 1.1; margin-bottom: 24px; letter-spacing: -1px; }
-        .title em { font-style: italic; color: var(--red); }
-        .copy { font-size: 18px; line-height: 1.6; color: var(--gray); }
-
-        .routing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 32px; }
-
-        .route-card {
-            background: #fff; border: 1px solid var(--rule); border-radius: 4px; padding: 40px 32px;
-            text-decoration: none; color: inherit; transition: all 0.3s ease;
-            display: flex; flex-direction: column; justify-content: space-between;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.02); position:relative; z-index:10;
+        .glow {
+            position: fixed;
+            width: 1000px;
+            height: 1000px;
+            background: radial-gradient(circle, rgba(45, 212, 191, 0.05) 0%, transparent 70%);
+            z-index: 0;
+            pointer-events: none;
         }
-        .route-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); border-color: #ddd; }
-        
-        .route-badge {
-            font-family: var(--fm); font-size: 9px; padding: 6px 12px; border-radius: 4px; border: 1px solid rgba(194,54,22,.2);
-            background: rgba(194,54,22,.08); color: var(--red); letter-spacing: 2px; font-weight: 700;
-            display: inline-block; width: max-content; margin-bottom: 24px;
+
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border: 1px solid var(--glass-border);
+            transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
-        
-        .route-title { font-family: var(--fd); font-size: 28px; font-weight: 900; margin-bottom: 16px; line-height: 1.2; }
-        .route-desc { font-size: 15px; color: var(--gray); line-height: 1.6; margin-bottom: 32px; flex: 1; }
-        
-        .route-action { font-family: var(--fm); font-size: 11px; font-weight: 700; letter-spacing: 2px; color: var(--ink); text-transform: uppercase; border-top: 1px solid var(--rule); padding-top: 24px; display: flex; align-items: center; justify-content: space-between; transition: color 0.3s;}
-        .route-card:hover .route-action { color: var(--red); }
-        
+
+        .glass-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-12px);
+            box-shadow: 0 40px 100px rgba(0,0,0,0.5);
+        }
+
+        .text-gradient-primary {
+            background: linear-gradient(to bottom, #2DD4BF 0%, #06B6D4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn-primary {
+            background: linear-gradient(to right, var(--primary), var(--primary-dark));
+            color: black;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 30px rgba(45, 212, 191, 0.3);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 0 50px rgba(45, 212, 191, 0.5);
+            transform: scale(1.02);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.95);
+        }
+
+        input, select, textarea {
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: rgba(45, 212, 191, 0.5) !important;
+            box-shadow: 0 0 20px rgba(45, 212, 191, 0.2) !important;
+        }
     </style>
 </head>
-<body>
+<body class="antialiased selection:bg-[var(--primary)] selection:text-black">
 
-<header class="header">
-    <div class="logo">THE COIL</div>
-    <div class="status-indicator">
-        <div class="ping"></div>
-        SYSTEMS ONLINE
-    </div>
-</header>
+<div class="fixed inset-0 z-0">
+    <div class="glow top-[-300px] left-[-200px]"></div>
+    <div class="glow bottom-[-300px] right-[-200px]" style="background: radial-gradient(circle, rgba(6, 182, 212, 0.03) 0%, transparent 70%);"></div>
+</div>
 
-<main class="main-content">
-    <div class="hero">
-        <span class="kicker">The Conversion Infrastructure</span>
-        <h1 class="title">Stop Building a Window.<br><em>Start Building a Business.</em></h1>
-        <p class="copy">
-            The "Instagram Dream" is only a nightmare if you don't have a floor beneath you. We build repeatable, automated revenue infrastructure for the premium grooming industry. Choose your path.
-        </p>
-    </div>
+<main class="relative z-10">
+    <!-- Header -->
+    <header class="border-b border-white/5 backdrop-blur-md bg-black/20 sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-6 flex justify-between items-center">
+            <h1 class="text-2xl font-black tracking-tighter text-white">
+                <span class="text-[var(--primary)]">BIZ</span>-IT
+            </h1>
+            <a href="./biz-it/pricing.html" class="btn-primary px-6 py-2 rounded-lg text-sm">
+                View Pricing
+            </a>
+        </div>
+    </header>
 
-    <div class="routing-grid">
-        
-        <!-- PATH A: THE THEORY -->
-        <a href="pitch/mirage.html" class="route-card">
-            <span class="route-badge">THE THEORY</span>
-            <h3 class="route-title">The Instagram Mirage</h3>
-            <p class="route-desc">The 47-business audit revealing why vanity metrics are bankrupting the industry. Read the full manifesto and the $67k vs $2.4k case study.</p>
-            <div class="route-action">Read the Manifesto &rarr;</div>
-        </a>
+    <!-- Hero Section -->
+    <section class="container mx-auto px-6 py-24 text-center">
+        <div class="max-w-3xl mx-auto mb-12">
+            <div class="inline-block mb-6 px-4 py-2 rounded-full border border-[var(--primary)]/30 bg-[var(--primary)]/5">
+                <span class="text-[var(--primary)] text-xs font-bold uppercase tracking-[0.2em]">Autonomous Operations</span>
+            </div>
+            <h1 class="text-6xl lg:text-7xl font-black tracking-tighter mb-6 leading-[1.1]">
+                Your <span class="text-gradient-primary">AI Employee</span><br>Runs Your Business
+            </h1>
+            <p class="text-xl text-white/50 leading-relaxed mb-8">
+                Stop managing people. BIZ-IT is a complete managed AI infrastructure that handles customer engagement, scheduling, triage, reporting, and decision-making. Built on live production demos from The Coil grooming studio. Works for any service business.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="./biz-it/pricing.html" class="btn-primary px-8 py-4 rounded-xl text-base text-center">See Pricing & Start Free Trial</a>
+                <a href="./thecoil-os.html" class="px-8 py-4 rounded-xl border border-white/20 text-white font-bold uppercase tracking-widest text-sm hover:bg-white/5 transition-colors text-center">
+                    View Live Demo
+                </a>
+            </div>
+        </div>
+    </section>
 
-        <!-- PATH B: THE PRODUCT -->
-        <a href="blueprint.html" class="route-card">
-            <span class="route-badge" style="background:rgba(212,175,55,0.1); color:var(--gold); border-color:rgba(212,175,55,0.3);">THE PRODUCT</span>
-            <h3 class="route-title">The Master Blueprint</h3>
-            <p class="route-desc">We mapped the 7-step conversion infrastructure directly to live, functional applications. See exactly what we build and how it works.</p>
-            <div class="route-action">View the Infrastructure &rarr;</div>
-        </a>
+    <!-- Features Grid -->
+    <section class="container mx-auto px-6 py-24">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl lg:text-5xl font-black tracking-tighter mb-4">
+                Complete <span class="text-gradient-primary">Operations Suite</span>
+            </h2>
+            <p class="text-xl text-white/40 max-w-2xl mx-auto">
+                Seven integrated modules working together as a single autonomous agent
+            </p>
+        </div>
 
-        <!-- PATH C: THE DEMO -->
-        <a href="demo.html" class="route-card">
-            <span class="route-badge" style="background:rgba(59,130,246,0.1); color:#3b82f6; border-color:rgba(59,130,246,0.3);">THE DEMO</span>
-            <h3 class="route-title">Interactive AI Simulator</h3>
-            <p class="route-desc">The ultimate proof of concept. Test the live DM response bot that reads intent, parses schedules, and closes revenue natively.</p>
-            <div class="route-action">Run the Simulation &rarr;</div>
-        </a>
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Feature: Customer Triage -->
+            <a href="./biz-it/features/triage.html" class="glass-card p-8 rounded-2xl group cursor-pointer hover:bg-[var(--primary)]/5">
+                <div class="text-4xl mb-4">🎯</div>
+                <h3 class="text-xl font-bold text-white mb-3 group-hover:text-[var(--primary)] transition-colors">
+                    Smart Triage
+                </h3>
+                <p class="text-sm text-white/40 leading-relaxed mb-4">
+                    AI reads incoming inquiries, categorizes urgency, and routes automatically. No customer falls through cracks.
+                </p>
+                <div class="text-xs text-[var(--primary)] font-bold uppercase tracking-wider">Learn More →</div>
+            </a>
 
-    </div>
+            <!-- Feature: Auto-Scheduling -->
+            <a href="./biz-it/features/scheduling.html" class="glass-card p-8 rounded-2xl group cursor-pointer hover:bg-[var(--primary)]/5">
+                <div class="text-4xl mb-4">📅</div>
+                <h3 class="text-xl font-bold text-white mb-3 group-hover:text-[var(--primary)] transition-colors">
+                    Auto-Scheduling
+                </h3>
+                <p class="text-sm text-white/40 leading-relaxed mb-4">
+                    Real-time calendar management. Books your customers, sends confirmations, manages reschedules autonomously.
+                </p>
+                <div class="text-xs text-[var(--primary)] font-bold uppercase tracking-wider">Learn More →</div>
+            </a>
+
+            <!-- Feature: Multi-Channel Engagement -->
+            <a href="./biz-it/features/engagement.html" class="glass-card p-8 rounded-2xl group cursor-pointer hover:bg-[var(--primary)]/5">
+                <div class="text-4xl mb-4">💬</div>
+                <h3 class="text-xl font-bold text-white mb-3 group-hover:text-[var(--primary)] transition-colors">
+                    Multi-Channel Engagement
+                </h3>
+                <p class="text-sm text-white/40 leading-relaxed mb-4">
+                    SMS, email, push notifications, chat. One unified conversation thread with each customer.
+                </p>
+                <div class="text-xs text-[var(--primary)] font-bold uppercase tracking-wider">Learn More →</div>
+            </a>
+
+            <!-- Feature: Analytics -->
+            <a href="./biz-it/features/analytics.html" class="glass-card p-8 rounded-2xl group cursor-pointer hover:bg-[var(--primary)]/5">
+                <div class="text-4xl mb-4">📊</div>
+                <h3 class="text-xl font-bold text-white mb-3 group-hover:text-[var(--primary)] transition-colors">
+                    Real-Time Analytics
+                </h3>
+                <p class="text-sm text-white/40 leading-relaxed mb-4">
+                    Live revenue tracking, churn prediction, customer health metrics. AI-powered business insights.
+                </p>
+                <div class="text-xs text-[var(--primary)] font-bold uppercase tracking-wider">Learn More →</div>
+            </a>
+
+            <!-- Feature: Payments -->
+            <a href="./biz-it/features/payments.html" class="glass-card p-8 rounded-2xl group cursor-pointer hover:bg-[var(--primary)]/5">
+                <div class="text-4xl mb-4">💳</div>
+                <h3 class="text-xl font-bold text-white mb-3 group-hover:text-[var(--primary)] transition-colors">
+                    Payment Integration
+                </h3>
+                <p class="text-sm text-white/40 leading-relaxed mb-4">
+                    Automated invoicing, deposit collection, payment reminders. PCI-compliant and secure.
+                </p>
+                <div class="text-xs text-[var(--primary)] font-bold uppercase tracking-wider">Learn More →</div>
+            </a>
+
+            <!-- Feature: Customer Portal -->
+            <a href="./biz-it/features/portal.html" class="glass-card p-8 rounded-2xl group cursor-pointer hover:bg-[var(--primary)]/5">
+                <div class="text-4xl mb-4">🔐</div>
+                <h3 class="text-xl font-bold text-white mb-3 group-hover:text-[var(--primary)] transition-colors">
+                    Customer Portal
+                </h3>
+                <p class="text-sm text-white/40 leading-relaxed mb-4">
+                    White-label self-service booking, account management, and payment portal. Your branding, our infrastructure.
+                </p>
+                <div class="text-xs text-[var(--primary)] font-bold uppercase tracking-wider">Learn More →</div>
+            </a>
+
+            <!-- Feature: Automation Workflows -->
+            <a href="./biz-it/features/workflows.html" class="glass-card p-8 rounded-2xl group cursor-pointer hover:bg-[var(--primary)]/5">
+                <div class="text-4xl mb-4">⚙️</div>
+                <h3 class="text-xl font-bold text-white mb-3 group-hover:text-[var(--primary)] transition-colors">
+                    Custom Workflows
+                </h3>
+                <p class="text-sm text-white/40 leading-relaxed mb-4">
+                    No-code workflow builder. Create complex business logic without technical knowledge.
+                </p>
+                <div class="text-xs text-[var(--primary)] font-bold uppercase tracking-wider">Learn More →</div>
+            </a>
+
+            <!-- Feature: Team Collaboration -->
+            <a href="./biz-it/features/collaboration.html" class="glass-card p-8 rounded-2xl group cursor-pointer hover:bg-[var(--primary)]/5">
+                <div class="text-4xl mb-4">👥</div>
+                <h3 class="text-xl font-bold text-white mb-3 group-hover:text-[var(--primary)] transition-colors">
+                    Team Collaboration
+                </h3>
+                <p class="text-sm text-white/40 leading-relaxed mb-4">
+                    Multi-user management, role-based permissions, and shared workspace. Works for teams of any size.
+                </p>
+                <div class="text-xs text-[var(--primary)] font-bold uppercase tracking-wider">Learn More →</div>
+            </a>
+        </div>
+    </section>
+
+    <!-- The Coil Proof Point -->
+    <section class="container mx-auto px-6 py-24 border-t border-white/5">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+            <div>
+                <h2 class="text-4xl lg:text-5xl font-black tracking-tighter mb-6">
+                    Built From <span class="text-gradient-primary">Live Production</span>
+                </h2>
+                <p class="text-lg text-white/50 leading-relaxed mb-6">
+                    BIZ-IT isn't theoretical. It's extracted from The Coil, a premium barbershop studio in Chicago running a $100k+ annual AI-driven revenue system since 2024.
+                </p>
+                <p class="text-lg text-white/50 leading-relaxed mb-8">
+                    Every module has been tested in real conditions, handling real customers, processing real payments, and generating real revenue. You're not buying a prototype—you're getting proven infrastructure.
+                </p>
+                <a href="./thecoil-os.html" class="btn-primary inline-block px-8 py-4 rounded-lg text-sm">
+                    View The Coil Live Demo →
+                </a>
+            </div>
+            <div class="rounded-2xl overflow-hidden border border-white/10 h-96 bg-white/5">
+                <div class="w-full h-full flex items-center justify-center text-white/40">
+                    [The Coil Studio Image]
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lead Capture Section -->
+    <section class="container mx-auto px-6 py-24 border-t border-white/5">
+        <div class="max-w-2xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl lg:text-5xl font-black tracking-tighter mb-4">
+                    Ready to <span class="text-gradient-primary">Automate</span>?
+                </h2>
+                <p class="text-xl text-white/40">
+                    Tell us about your business. We'll send you a personalized demo and pricing breakdown.
+                </p>
+            </div>
+
+            <form class="glass-card p-12 rounded-3xl border-[var(--primary)]/20 space-y-6">
+                <!-- Business Name -->
+                <div>
+                    <label class="block text-sm font-semibold text-white mb-3">Business Name</label>
+                    <input type="text" placeholder="Your business name" required class="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-white/30 focus:outline-none transition-colors">
+                </div>
+
+                <!-- Email -->
+                <div>
+                    <label class="block text-sm font-semibold text-white mb-3">Email Address</label>
+                    <input type="email" placeholder="you@business.com" required class="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-white/30 focus:outline-none transition-colors">
+                </div>
+
+                <!-- Phone Number -->
+                <div>
+                    <label class="block text-sm font-semibold text-white mb-3">Phone Number</label>
+                    <input type="tel" placeholder="+1 (555) 123-4567" required class="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-white/30 focus:outline-none transition-colors">
+                </div>
+
+                <!-- Service Type -->
+                <div>
+                    <label class="block text-sm font-semibold text-white mb-3">Type of Service Business</label>
+                    <select required class="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white focus:outline-none transition-colors">
+                        <option value="" class="bg-[var(--bg)] text-white">Select your service type...</option>
+                        <option value="salon" class="bg-[var(--bg)] text-white">Barbershop / Hair Salon</option>
+                        <option value="spa" class="bg-[var(--bg)] text-white">Spa / Wellness</option>
+                        <option value="dental" class="bg-[var(--bg)] text-white">Dental / Medical</option>
+                        <option value="fitness" class="bg-[var(--bg)] text-white">Fitness / Coaching</option>
+                        <option value="professional" class="bg-[var(--bg)] text-white">Professional Services</option>
+                        <option value="retail" class="bg-[var(--bg)] text-white">Retail / E-commerce</option>
+                        <option value="other" class="bg-[var(--bg)] text-white">Other</option>
+                    </select>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="w-full btn-primary py-4 rounded-lg text-lg font-bold uppercase tracking-widest mt-8">
+                    Get Your Demo →
+                </button>
+
+                <p class="text-xs text-white/30 text-center">
+                    We'll follow up within 24 hours with your personalized demo and pricing.
+                </p>
+            </form>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="container mx-auto px-6 py-24 border-t border-white/5">
+        <div class="glass-card p-12 rounded-3xl border-[var(--primary)]/30 bg-[var(--primary)]/5 text-center">
+            <h2 class="text-4xl lg:text-5xl font-black tracking-tighter mb-6 text-white">
+                Stop Managing. Start Growing.
+            </h2>
+            <p class="text-xl text-white/60 mb-8 max-w-2xl mx-auto leading-relaxed">
+                30-day free trial. No credit card required. Full access to all features including the Professional tier. See why service businesses are switching to AI-powered operations.
+            </p>
+            <a href="./biz-it/pricing.html" class="btn-primary px-8 py-4 rounded-xl text-lg inline-block">
+                Start Your Free Trial Today
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/5 py-12 mt-24">
+        <div class="container mx-auto px-6 text-center text-white/30 text-sm">
+            <p class="mb-4">BIZ-IT | Autonomous Business AI Infrastructure</p>
+            <p class="font-mono text-xs">© 2026 Autonomous Business Systems. All rights reserved.</p>
+        </div>
+    </footer>
 </main>
 
-<footer style="text-align:center; padding: 40px; font-family:var(--fm); font-size:10px; color:var(--gray); letter-spacing:2px; border-top:1px solid var(--rule);">
-    &copy; 2026 THE COIL. SYSTEMS ARCHITECTURE FOR GROOMING.
-</footer>
+<script>
+    function scrollTo(selector) {
+        const element = document.querySelector(selector);
+        if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+        }
+    }
+</script>
 
 </body>
 </html>
