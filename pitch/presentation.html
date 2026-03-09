@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+    <title>The Conversion Infrastructure — The Coil Presentation</title>
+    
+    <!-- Fonts: combining the Premium/Editorial and the Product/Digital sets -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Cinzel:wght@400;600;700&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            /* Editorial Palette */
+            --cream: #FAF7F2;
+            --ink: #1A1A1A;
+            --editorial-red: #C23616;
+            --editorial-red-dim: rgba(194,54,22,0.1);
+            --editorial-gray: #8C8577;
+            --editorial-rule: #E8E3DB;
+
+            /* Product Palette */
+            --void: #030303;
+            --surface: #0a0a0a;
+            --coil-gold: #D4AF37;
+            --coil-gold-dim: rgba(212,175,55,0.15);
+            --product-gray: #A1A1AA;
+            --product-rule: rgba(255,255,255,0.1);
+
+            /* Typography */
+            --font-editorial-head: 'Playfair Display', Georgia, serif;
+            --font-product-head: 'Cinzel', serif;
+            --font-body: 'DM Sans', sans-serif;
+            --font-mono: 'Space Mono', monospace;
+        }
+
+        html { scroll-snap-type: y mandatory; scroll-behavior: smooth; overflow-x: hidden; }
+        body { background: var(--cream); -webkit-font-smoothing: antialiased; }
+
+        /* The Slide Framework */
+        .slide {
+            scroll-snap-align: center; /* Snaps perfectly into frame */
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 40px 24px;
+            position: relative;
+            transition: background 0.6s ease, color 0.6s ease;
+        }
+        
+        .slide-inner {
+            max-width: 640px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* -------------------------------------
+           THEME: EDITORIAL (The Problem/Manifesto)
+           ------------------------------------- */
+        .theme-editorial {
+            background: var(--cream);
+            color: var(--ink);
+            font-family: var(--font-body);
+        }
+        
+        .theme-editorial .kicker {
+            font-family: var(--font-mono); font-size: 11px; letter-spacing: 4px;
+            color: var(--editorial-red); text-transform: uppercase; margin-bottom: 24px;
+            display: block; opacity:0; transform:translateY(10px); animation: fadeUp .6s forwards;
+        }
+        .theme-editorial h2.title {
+            font-family: var(--font-editorial-head); font-size: clamp(36px, 8vw, 56px);
+            font-weight: 900; line-height: 1.1; margin-bottom: 32px; letter-spacing: -1px;
+            opacity:0; transform:translateY(10px); animation: fadeUp .6s .1s forwards;
+        }
+        .theme-editorial h2.title em { font-style: italic; color: var(--editorial-red); }
+        .theme-editorial .copy {
+            font-size: 18px; line-height: 1.7; color: var(--ink); margin-bottom: 24px;
+            opacity:0; transform:translateY(10px); animation: fadeUp .6s .2s forwards;
+        }
+        .theme-editorial .highlight { font-weight: 700; }
+        .theme-editorial .pullquote {
+            font-family: var(--font-editorial-head); font-size: 28px; line-height: 1.4;
+            font-style: italic; color: var(--editorial-red); border-left: 3px solid var(--editorial-red);
+            padding-left: 24px; margin: 40px 0;
+            opacity:0; transform:translateY(10px); animation: fadeUp .6s .3s forwards;
+        }
+
+        /* -------------------------------------
+           THEME: PRODUCT (The Solution/The Coil)
+           ------------------------------------- */
+        .theme-product {
+            background: var(--void);
+            color: #fff;
+            font-family: var(--font-body);
+        }
+        
+        .theme-product::after {
+            content: ''; position: absolute; inset: 0; pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            opacity: 0.03; z-index: 10;
+        }
+
+        .theme-product .kicker {
+            font-family: var(--font-mono); font-size: 11px; letter-spacing: 4px;
+            color: var(--coil-gold); text-transform: uppercase; margin-bottom: 24px;
+            display: block; opacity:0; transform:translateY(10px); animation: fadeUp .6s forwards;
+        }
+        .theme-product h2.title {
+            font-family: var(--font-product-head); font-size: clamp(32px, 7vw, 48px);
+            font-weight: 600; line-height: 1.2; margin-bottom: 32px;
+            opacity:0; transform:translateY(10px); animation: fadeUp .6s .1s forwards;
+        }
+        .theme-product h2.title em { color: var(--coil-gold); font-style: normal; }
+        .theme-product .copy {
+            font-size: 16px; line-height: 1.8; color: var(--product-gray); margin-bottom: 24px;
+            opacity:0; transform:translateY(10px); animation: fadeUp .6s .2s forwards;
+        }
+        .theme-product .highlight { color: #fff; font-weight: 600; }
+
+        /* Product Interactive / UI Elements */
+        .ui-card {
+            background: var(--surface);
+            border: 1px solid var(--product-rule);
+            border-radius: 8px;
+            padding: 24px;
+            margin: 32px 0;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            opacity:0; transform:translateY(10px); animation: fadeUp .6s .4s forwards;
+        }
+        .ui-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--product-rule);
+        }
+        .ui-header h3 { font-family: var(--font-product-head); font-size: 14px; letter-spacing: 1px; color: var(--coil-gold); }
+        .ui-badge { font-family: var(--font-mono); font-size: 9px; padding: 4px 8px; border-radius: 4px; background: rgba(59,130,246,0.1); color: #3b82f6; border: 1px solid rgba(59,130,246,0.3); }
+
+        /* Blueprint Engine UI */
+        .engine-step {
+            display: flex; gap: 16px; align-items: flex-start; margin-bottom: 20px;
+        }
+        .engine-num {
+            font-family: var(--font-mono); font-size: 10px; color: var(--coil-gold);
+            border: 1px solid var(--coil-gold-dim); padding: 4px 8px; border-radius: 4px; background: rgba(212,175,55,0.05);
+        }
+        .engine-detail h4 { font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 4px; }
+        .engine-detail p { font-size: 13px; color: var(--product-gray); line-height: 1.5; }
+
+        /* Animations */
+        @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+
+        /* Slide Tracker / Scroller */
+        .tracker {
+            position: fixed; right: 24px; top: 50%; transform: translateY(-50%);
+            display: flex; flex-direction: column; gap: 12px; z-index: 9999;
+        }
+        .dot {
+            width: 8px; height: 8px; border-radius: 50%; background: var(--editorial-rule);
+            transition: all 0.3s ease; cursor: pointer;
+        }
+        .dot.active { transform: scale(1.5); }
+        .theme-product ~ .tracker .dot { background: var(--product-rule); }
+        
+        /* The scroll indicator */
+        .scroll-down {
+            position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
+            font-family: var(--font-mono); font-size: 10px; letter-spacing: 2px;
+            animation: pulse 2s infinite; text-transform: uppercase;
+        }
+        .theme-editorial .scroll-down { color: var(--editorial-gray); }
+        .theme-product .scroll-down { color: var(--product-gray); }
+        @keyframes pulse { 0%,100% { opacity: 0.3; } 50% { opacity: 1; } }
+
+        /* CTA Buttons */
+        .btn-editorial {
+            display: inline-block; padding: 16px 32px; background: var(--ink); color: var(--cream);
+            font-family: var(--font-mono); font-size: 11px; letter-spacing: 2px; text-decoration: none;
+            border-radius: 4px; margin-top: 24px; text-transform: uppercase;
+        }
+        .btn-product {
+            display: inline-block; padding: 16px 32px; background: var(--coil-gold); color: var(--ink);
+            font-family: var(--font-mono); font-size: 11px; letter-spacing: 2px; text-decoration: none;
+            border-radius: 4px; margin-top: 24px; font-weight: 700; text-transform: uppercase;
+            box-shadow: 0 4px 20px rgba(212,175,55,0.2); transition: transform 0.2s;
+        }
+        .btn-product:active { transform: scale(0.98); }
+    </style>
+</head>
+<body>
+
+<!-- Slide 1: Editorial Hook -->
+<div class="slide theme-editorial" id="s1">
+    <div class="slide-inner">
+        <span class="kicker">The Instagram Mirage</span>
+        <h2 class="title">Watched 47 Businesses Chase Fame While Their Bank Accounts Stayed Empty.</h2>
+        <div class="copy">
+            I spent the last six months digging into a numbers problem that didn't make sense. Businesses with 50,000 Instagram followers going broke. Accounts with 100k+ engaged fans shutting down operations.
+        </div>
+        <div class="copy">
+            Meanwhile, a guy I know runs a <span class="highlight">"boring" email list of 3,200 people and clears $40K monthly</span> like clockwork. The math wasn't mathing. So I investigated what actually separates the brands that survive from the ones that just look good online. 
+        </div>
+    </div>
+    <div class="scroll-down">Scroll</div>
+</div>
+
+<!-- Slide 2: Editorial Problem -->
+<div class="slide theme-editorial" id="s2">
+    <div class="slide-inner">
+        <span class="kicker">The 47-Business Audit</span>
+        <h2 class="title">We aren't failing at social media; we’re failing at <em>infrastructure.</em></h2>
+        <div class="copy">
+            You already know follower counts don't pay bills. Everyone knows this. But here's what I found when I looked closer: businesses aren't just ignoring this truth. They're actively building their entire strategy around the wrong numbers.
+        </div>
+        <div class="pullquote">
+            "One founder told me she hit 25,000 followers and threw a launch party. Two months later, she couldn't make payroll."
+        </div>
+        <div class="copy">
+            <span class="highlight">The followers didn't convert. The engagement didn't translate.</span> This isn't about social media being useless. This is about understanding what you're actually building. You don't make money from people looking in the window. You make money when they walk through the door.
+        </div>
+    </div>
+    <div class="scroll-down">Scroll</div>
+</div>
+
+<!-- Slide 3: Product Paradigm Shift -->
+<div class="slide theme-product" id="s3">
+    <div class="slide-inner">
+        <span class="kicker">The Paradigm Shift</span>
+        <h2 class="title">The Wisdom of the <em>"Invisible Store"</em></h2>
+        <div class="copy">
+            Instagram is your storefront window. It’s beautiful, it’s inviting, and it gets people to stop and look. <span class="highlight">But most businesses have a world-class window and a completely empty store.</span>
+        </div>
+        <div class="copy">
+            The "Infrastructure-First" approach is the only way to move from looking successful to being profitable. It’s about building a system where attention is the fuel, not the destination.
+        </div>
+        <div class="ui-card">
+            <div class="ui-header">
+                <h3>System Architecture Shift</h3>
+                <span class="ui-badge">VANITY -> REVENUE</span>
+            </div>
+            <div class="engine-step">
+                <div class="engine-num">01</div>
+                <div class="engine-detail">
+                    <h4>From "Vibes" to Intention</h4>
+                    <p>Content designed with a job to do: building trust and answering objections.</p>
+                </div>
+            </div>
+            <div class="engine-step" style="margin-bottom:0">
+                <div class="engine-num">02</div>
+                <div class="engine-detail">
+                    <h4>From Rented Land to Owned Assets</h4>
+                    <p>Moving audiences off the algorithmic feed and into direct SMS/email channels.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="scroll-down">Scroll</div>
+</div>
+
+<!-- Slide 3.5: The Case Study (New Data) -->
+<div class="slide theme-editorial" id="s3-5">
+    <div class="slide-inner">
+        <span class="kicker">The Cost of Aesthetics</span>
+        <h2 class="title">The $67,000 Difference.</h2>
+        <div class="copy">
+            Same starting point. Same time investment of six months. Wildly different outcomes.
+        </div>
+        
+        <div style="display:flex; gap:24px; margin-top:32px;">
+            <!-- Business A -->
+            <div style="flex:1; background:var(--paper); padding:24px; border-radius:4px;">
+                <h4 style="font-family:var(--fm); font-size:10px; color:var(--gray); letter-spacing:2px; margin-bottom:8px;">BUSINESS A (FOLLOWER FOCUSED)</h4>
+                <div style="font-family:var(--fd); font-size:32px; font-weight:900; margin-bottom:16px;">+$2,400</div>
+                <div style="font-size:13px; font-family:var(--fm); color:var(--ink); border-bottom:1px solid var(--rule); padding-bottom:8px; margin-bottom:8px;">Growth: 5k &rarr; 35,000</div>
+                <div style="font-size:14px; line-height:1.5; color:var(--gray);">Posted 3x daily. Engaged community. Ran growth campaigns.</div>
+            </div>
+            <!-- Business B -->
+            <div style="flex:1; background:var(--paper); padding:24px; border-radius:4px; border-top:3px solid var(--editorial-red);">
+                <h4 style="font-family:var(--fm); font-size:10px; color:var(--gray); letter-spacing:2px; margin-bottom:8px;">BUSINESS B (INFRASTRUCTURE)</h4>
+                <div style="font-family:var(--fd); font-size:32px; font-weight:900; color:var(--editorial-red); margin-bottom:16px;">+$67,000</div>
+                <div style="font-size:13px; font-family:var(--fm); color:var(--ink); border-bottom:1px solid var(--rule); padding-bottom:8px; margin-bottom:8px;">Growth: 5k &rarr; 7,200</div>
+                <div style="font-size:14px; line-height:1.5; color:var(--gray);">Posted 2x weekly. Built email funnel. Optimized checkout flow.</div>
+            </div>
+        </div>
+
+        <div class="copy" style="margin-top:40px;">
+            <span class="highlight">The cost isn't just money. It's opportunity.</span> Every hour you spend optimizing your Instagram aesthetic is an hour you're not spending optimizing your conversion funnel.
+        </div>
+    </div>
+    <div class="scroll-down">Scroll</div>
+</div>
+
+<!-- Slide 4: Product The Coil Execution -->
+<div class="slide theme-product" id="s4">
+    <div class="slide-inner">
+        <span class="kicker">The Engine in Action</span>
+        <h2 class="title">The <em>Blueprint:</em> Repeatable Revenue.</h2>
+        <div class="copy">
+            If you’re tired of the "Vanity Metric Trap", you need a Conversion Infrastructure. We don't just study these systems—we build them. Here is the exact architecture we deploy via the The Coil OS.
+        </div>
+        
+        <div class="ui-card" style="padding:20px 24px;">
+            <div class="ui-header" style="margin-bottom:12px; padding-bottom:12px;">
+                <h3>The 7-Step Conversion Infrastructure</h3>
+                <span class="ui-badge">BLUEPRINT</span>
+            </div>
+            <div style="font-size:14px; line-height:1.6; color:var(--product-gray);">
+                <div style="margin-bottom:8px;"><strong style="color:var(--coil-gold);">01.</strong> Clear path from discovery to purchase.</div>
+                <div style="margin-bottom:8px;"><strong style="color:var(--coil-gold);">02.</strong> Content designed to move people forward.</div>
+                <div style="margin-bottom:8px;"><strong style="color:var(--coil-gold);">03.</strong> Multiple conversion points at varying levels.</div>
+                <div style="margin-bottom:8px;"><strong style="color:var(--coil-gold);">04.</strong> Owned systems that capture and nurture leads.</div>
+                <div style="margin-bottom:8px;"><strong style="color:var(--coil-gold);">05.</strong> Optimized landing pages that actually convert.</div>
+                <div style="margin-bottom:8px;"><strong style="color:var(--coil-gold);">06.</strong> Analytics tracking actual business outcomes.</div>
+                <div style="margin-bottom:0;"><strong style="color:var(--coil-gold);">07.</strong> A feedback loop that improves conversion.</div>
+            </div>
+        </div>
+    </div>
+    <div class="scroll-down">Scroll</div>
+</div>
+
+<!-- Slide 5: Editorial Conclusion -->
+<div class="slide theme-editorial" id="s5">
+    <div class="slide-inner" style="text-align:center">
+        <h2 class="title" style="margin-bottom:20px">Stop Building a Window.<br><em>Start Building a Business.</em></h2>
+        <div class="copy" style="max-width:480px; margin:0 auto">
+            You don't need to delete Instagram. You need to stop treating follower count as a success metric. They know that a simple funnel that converts at 3% beats a beautiful Instagram grid that converts at 0.1%.
+        </div>
+        <div class="copy" style="font-weight:700; margin-top:24px">
+            Infrastructure is invisible, but it’s the only thing that lasts.
+        </div>
+        
+        <a href="https://app.acuityscheduling.com/schedule.php?owner=ACUITY_ID" target="_blank" class="btn-editorial">Book Your Audit</a>
+    </div>
+</div>
+
+<script>
+    // Just a simple script to trigger the reveal animations if we were using an IntersectionObserver
+    // But since they fade up on load based on index, we'll let CSS handle the initial load.
+    // For a real presentation, we'd add logic to trigger the animations when a slide snaps into view.
+    
+    const slides = document.querySelectorAll('.slide');
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // Restart animations by cloning and replacing nodes
+                const animatedElements = entry.target.querySelectorAll('.kicker, .title, .copy, .pullquote, .ui-card');
+                animatedElements.forEach(el => {
+                    el.style.animation = 'none';
+                    el.offsetHeight; /* trigger reflow */
+                    el.style.animation = null; 
+                });
+            }
+        });
+    }, { threshold: 0.5 });
+    
+    slides.forEach(slide => observer.observe(slide));
+</script>
+
+</body>
+</html>

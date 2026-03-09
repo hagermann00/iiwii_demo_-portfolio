@@ -5,3 +5,15 @@ node_modules/
 *.log
 dist/
 .cache/
+_archive/
+
+# Go build artifacts
+backend/bin/
+backend/server
+backend/*.exe
+backend/tmp/
+*.test
+*.out
+
+# Go tool cache (don't commit, auto-generated)
+backend/vendor/

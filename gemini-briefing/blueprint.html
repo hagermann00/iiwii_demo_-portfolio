@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#FAF7F2">
+    <title>The Conversion Infrastructure — Master Demo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --cream: #FAF7F2;
+            --ink: #1A1A1A;
+            --red: #C23616;
+            --gold: #D4AF37;
+            --gray: #8C8577;
+            --rule: #E8E3DB;
+            --paper: #F2EDE5;
+            --void: #030303;
+            
+            --fd: 'Playfair Display', Georgia, serif;
+            --fm: 'Space Mono', monospace;
+            --fb: 'DM Sans', sans-serif;
+        }
+
+        body { font-family: var(--fb); background: var(--cream); color: var(--ink); -webkit-font-smoothing: antialiased; }
+        
+        /* Noise Texture */
+        body::before {
+            content:''; position:fixed; inset:0; z-index:9998; pointer-events:none;
+            background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            opacity:.04;
+        }
+
+        /* HEADER */
+        .header {
+            padding: 40px 24px; text-align: center; border-bottom: 1px solid var(--rule);
+            background: var(--paper);
+        }
+        .eyebrow { font-family: var(--fm); font-size: 11px; letter-spacing: 4px; color: var(--red); text-transform: uppercase; margin-bottom: 16px; display: block; }
+        h1.main-title { font-family: var(--fd); font-size: clamp(32px, 6vw, 48px); font-weight: 900; line-height: 1.1; margin-bottom: 24px; max-width: 800px; margin-inline: auto; }
+        h1.main-title em { font-style: italic; color: var(--red); }
+        .intro-copy { font-size: 16px; line-height: 1.6; color: var(--gray); max-width: 600px; margin: 0 auto; }
+        .intro-copy strong { color: var(--ink); font-weight: 700; }
+
+        /* GRID LAYOUT */
+        .container { max-width: 1440px; margin: 0 auto; padding: 64px 24px; display: flex; flex-direction: column; gap: 80px; }
+
+        /* ROW: Text + Demo */
+        .row {
+            display: grid; grid-template-columns: 1fr; gap: 40px; align-items: stretch;
+            opacity: 0; transform: translateY(20px); transition: all 0.8s ease;
+        }
+        @media (min-width: 960px) {
+            .row { grid-template-columns: 0.8fr 1.2fr; gap: 60px; }
+            .row.flip { grid-template-columns: 1.2fr 0.8fr; }
+            .row.flip .demo-col { grid-row: 1; }
+            .row.flip .text-col { grid-row: 1; grid-column: 2; }
+        }
+        
+        .row.vis { opacity: 1; transform: translateY(0); }
+
+        /* TEXT COLUMN */
+        .text-col { display: flex; flex-direction: column; justify-content: center; }
+        .step-num { font-family: var(--fm); font-size: 10px; padding: 6px 12px; border: 1px solid var(--rule); border-radius: 4px; display: inline-block; width: max-content; margin-bottom: 20px; color: var(--gray); letter-spacing: 2px; }
+        .step-num.pending { background: rgba(194,54,22,.08); color: var(--red); border-color: rgba(194,54,22,.2); font-weight:700;}
+        .step-title { font-family: var(--fd); font-size: 32px; font-weight: 900; margin-bottom: 20px; line-height: 1.1; }
+        .step-desc { font-size: 16px; color: var(--ink); line-height: 1.6; margin-bottom: 24px; }
+        .step-quote { font-family: var(--fd); font-size: 18px; font-style: italic; color: var(--gray); border-left: 3px solid var(--red); padding-left: 16px; margin: 24px 0; }
+        
+        .feature-list { list-style: none; margin-top: 16px; }
+        .feature-list li { font-size: 14px; color: var(--gray); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+        .feature-list li::before { content: '→'; color: var(--red); font-weight: bold;}
+
+        .btn-link { display: inline-block; padding: 12px 24px; background: var(--ink); color: #fff; font-family: var(--fm); font-size: 11px; letter-spacing: 2px; text-decoration: none; border-radius: 4px; width: max-content; margin-top: 16px; }
+        .btn-link:active { opacity: 0.8; }
+
+        /* DEMO COLUMN */
+        .demo-col {
+            background: var(--void); border-radius: 8px; overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15); display: flex; flex-direction: column;
+            border: 1px solid var(--rule); min-height: 500px;
+        }
+        .demo-col.light-frame { background: #fff; }
+        
+        .demo-header {
+            padding: 12px 16px; display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05);
+        }
+        .demo-col.light-frame .demo-header { border-bottom: 1px solid var(--rule); background: var(--paper); }
+        
+        .browser-dots { display: flex; gap: 6px; }
+        .browser-dots span { width: 10px; height: 10px; border-radius: 50%; background: #444; }
+        .demo-col.light-frame .browser-dots span { background: #E8E3DB; }
+        .browser-dots span:nth-child(1) { background: #ff5f56; }
+        .browser-dots span:nth-child(2) { background: #ffbd2e; }
+        .browser-dots span:nth-child(3) { background: #27c93f; }
+        
+        .demo-url { font-family: var(--fm); font-size: 10px; color: var(--gray); letter-spacing: 1px; }
+        
+        .demo-frame { width: 100%; height: 100%; min-height: 500px; border: none; background: #fff; }
+
+        /* PENDING STATE */
+        .demo-pending {
+            flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            background: var(--paper); padding: 40px; text-align: center; border: 1px dashed var(--gray);
+            margin: 20px; border-radius: 4px;
+        }
+        .demo-pending svg { width: 48px; height: 48px; fill: var(--gray); margin-bottom: 16px; }
+        .demo-pending h4 { font-family: var(--fd); font-size: 20px; color: var(--ink); margin-bottom: 8px; }
+        .demo-pending p { font-size: 14px; color: var(--gray); line-height: 1.5; }
+
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <span class="eyebrow">The Proof of Concept</span>
+    <h1 class="main-title">Stop Building a Window.<br><em>Start Building a Business.</em></h1>
+    <p class="intro-copy">
+        The "Instagram Dream" is only a nightmare if you don't have a floor beneath you. 
+        <strong>This isn't theory.</strong> Below is the exact 7-step conversion infrastructure from the <em>Instagram Mirage</em> manifesto, mapped 1-to-1 with the functional prototypes we've built, and outlining exactly what we need to build next.
+    </p>
+</header>
+
+<div class="container">
+
+    <!-- COMPONENT 01 -->
+    <div class="row">
+        <div class="text-col">
+            <div class="step-num">COMPONENT 01</div>
+            <h2 class="step-title">The Frictionless Front Door</h2>
+            <div class="step-desc">
+                Stop building Linktrees. Stop alienating 45% of your Android clients with native iOS apps. The flagship conversion page proves value, highlights the actual craft, and integrates instantly with Acuity scheduling.
+            </div>
+            <ul class="feature-list">
+                <li>Immediate conversion architecture vs passive information.</li>
+                <li>Direct integration with POS checkout flows.</li>
+            </ul>
+            <a href="willis.html" target="_blank" class="btn-link">VIEW FLAGSHIP LANDING PAGE</a>
+        </div>
+        <div class="demo-col">
+            <div class="demo-header">
+                <div class="browser-dots"><span></span><span></span><span></span></div>
+                <div class="demo-url">thecoil.ai/willis.html</div>
+            </div>
+            <iframe class="demo-frame" src="willis.html"></iframe>
+        </div>
+    </div>
+
+    <!-- COMPONENT 02 -->
+    <div class="row flip">
+        <div class="text-col">
+            <div class="step-num">COMPONENT 02</div>
+            <h2 class="step-title">The B2B Lead Magnet</h2>
+            <div class="step-desc">
+                You can't ask for marriage on the first date. To capture high-value leads (like independent barbers for the software), you must trade valuable data for contact information.
+            </div>
+            <ul class="feature-list">
+                <li>Aggressive, dark-mode styling aligned with the prestige aesthetic.</li>
+                <li>Seamless client-side redirects from opt-in to the master demo.</li>
+            </ul>
+            <a href="lead-magnet.html" target="_blank" class="btn-link">VIEW B2B CAPTURE FLOW</a>
+        </div>
+        <div class="demo-col light-frame">
+            <div class="demo-header">
+                <div class="browser-dots"><span></span><span></span><span></span></div>
+                <div class="demo-url">thecoil.ai/lead-magnet.html</div>
+            </div>
+            <iframe class="demo-frame" src="lead-magnet.html"></iframe>
+        </div>
+    </div>
+
+    <!-- COMPONENT 03 -->
+    <div class="row">
+        <div class="text-col">
+            <div class="step-num">COMPONENT 03</div>
+            <h2 class="step-title">Interactive IG-to-Booking Simulator</h2>
+            <div class="step-desc">
+                The ultimate proof. A live, playable simulation demonstrating a frictionless jump from an Instagram post straight into an AI Chatbot that handles service selection, scheduling, and mock Apple Pay capture.
+            </div>
+            <ul class="feature-list">
+                <li>Eliminates DM chasing. Closes the loop instantly.</li>
+                <li>Triggers immediate, dual-sided mock push confirmations (Client SMS & Barber OS).</li>
+            </ul>
+            <a href="ig-booking-simulator.html" target="_blank" class="btn-link">PLAY THE LIVE SIMULATOR</a>
+        </div>
+        <div class="demo-col">
+            <div class="demo-header">
+                <div class="browser-dots"><span></span><span></span><span></span></div>
+                <div class="demo-url">thecoil.ai/ig-booking-simulator.html</div>
+            </div>
+            <iframe class="demo-frame" src="ig-booking-simulator.html"></iframe>
+        </div>
+    </div>
+
+    <!-- COMPONENT 04 -->
+    <div class="row flip">
+        <div class="text-col">
+            <div class="step-num">COMPONENT 04</div>
+            <h2 class="step-title">The Push Blast Engine</h2>
+            <div class="step-desc">
+                You don't own your Instagram following, Meta does. You must extract that data to owned communication channels. The OS Push Engine monetizes cancellations by blasting segmented lists to fill chairs in 90 seconds.
+            </div>
+            <ul class="feature-list">
+                <li>Target VIPs, New Clients, or Dormant segments instantly.</li>
+                <li>Auto-track filled gap-revenue directly in the dashboard.</li>
+            </ul>
+            <a href="thecoil-os.html" target="_blank" class="btn-link">OPEN THE PUSH ENGINE</a>
+        </div>
+        <div class="demo-col light-frame">
+            <div class="demo-header">
+                <div class="browser-dots"><span></span><span></span><span></span></div>
+                <div class="demo-url">thecoil.ai/thecoil-os.html</div>
+            </div>
+            <iframe class="demo-frame" src="thecoil-os.html"></iframe>
+        </div>
+    </div>
+
+    <!-- COMPONENT 05 -->
+    <div class="row">
+        <div class="text-col">
+            <div class="step-num">COMPONENT 05</div>
+            <h2 class="step-title">Revenue & Lifecycle Analytics</h2>
+            <div class="step-desc">
+                Struggling founders check follower counts. Profitable founders check revenue per follower. Stop optimizing for vanity metrics and start measuring actual financial outcomes and client retention lifecycles.
+            </div>
+            <ul class="feature-list">
+                <li>Real-time visualization of "Recovered Revenue" from no-shows.</li>
+                <li>Actionable insights on which service tiers drive the most LTV.</li>
+            </ul>
+            <a href="thecoil-os.html" target="_blank" class="btn-link">VIEW REVENUE ANALYTICS</a>
+        </div>
+        <div class="demo-col">
+            <div class="demo-header">
+                <div class="browser-dots"><span></span><span></span><span></span></div>
+                <div class="demo-url">thecoil.ai/thecoil-os.html</div>
+            </div>
+            <iframe class="demo-frame" src="thecoil-os.html"></iframe>
+        </div>
+    </div>
+
+    <!-- FINAL PENDING: SEO / FASTAPI -->
+    <div class="row flip">
+        <div class="text-col">
+            <div class="step-num pending">FINAL INFRASTRUCTURE TARGETS</div>
+            <h2 class="step-title">The Central Brain:<br>HubSpot CRM & Go Routing</h2>
+            <div class="step-desc">
+                While the frontend conversion architecture is locked in, we have identified the final invisible elements required to elevate this from a robust prototype to a fully autonomous tech stack.
+            </div>
+            <ul class="feature-list">
+                <li><strong>HubSpot CRM Orchestration:</strong> The central nervous system for managing customer data, trigger events, and automated pipelines.</li>
+                <li><strong>SEO Architecture:</strong> We need to build organic search mapping into the templates (meta tags, schema formatting, performance tuning).</li>
+                <li><strong>The Go Execution Engine:</strong> The high-performance physical backend that will connect standard HTTP requests to real LLM inferences and live Acuity tokens.</li>
+                <li><strong>Voice Reflex:</strong> Integrating 11Labs/Twilio for audio reception.</li>
+            </ul>
+        </div>
+        <div class="demo-col light-frame" style="min-height:300px">
+            <div class="demo-header">
+                <div class="browser-dots"><span></span><span></span><span></span></div>
+                <div class="demo-url">thecoil.ai/backend-status</div>
+            </div>
+            <div class="demo-pending">
+                <svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M11,16.5L6.5,12L7.91,10.59L11,13.67L16.59,8.09L18,9.5L11,16.5Z" /></svg>
+                <h4>Awaiting Physical Backend Setup</h4>
+                <p>The HubSpot CRM Orchestration layer, Go backend router, and SEO optimization tasks are queued for implementation.</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const obs = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('vis');
+            }
+        });
+    }, { threshold: 0.1 });
+    
+    document.querySelectorAll('.row').forEach(row => obs.observe(row));
+</script>
+
+</body>
+</html>

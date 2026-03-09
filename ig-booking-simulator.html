@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>The Coil — Live IG-to-Booking Simulator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #050505;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: hidden;
+            background-image: radial-gradient(circle at 50% -20%, #1a1a1a 0%, #050505 50%);
+        }
+
+        /* Phone Container */
+        .phone {
+            width: 100%;
+            max-width: 400px;
+            height: 100vh;
+            max-height: 850px;
+            background: #000;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
+            display: flex;
+            flex-direction: column;
+        }
+
+        @media (min-width: 450px) {
+            .phone {
+                height: 800px;
+                border-radius: 40px;
+                border: 12px solid #222;
+                border-bottom-width: 24px;
+            }
+        }
+
+        /* Screens */
+        .screen {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+            background: #000;
+        }
+        .screen-hidden-right { transform: translateX(100%); opacity: 0; pointer-events: none; }
+        .screen-hidden-left { transform: translateX(-100%); opacity: 0; pointer-events: none; }
+        .screen-active { transform: translateX(0); opacity: 1; pointer-events: auto; }
+
+        /* --- IG Screen --- */
+        .ig-header {
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid #222;
+        }
+        .ig-avatar {
+            width: 32px; height: 32px; border-radius: 50%;
+            background: url('assets/images/shop-w-mural-2.jpg') center/cover;
+            border: 1px solid #D4AF37;
+        }
+        .ig-handle { font-weight: 600; font-size: 14px; }
+        .ig-post {
+            flex: 1;
+            background: url('assets/images/shop-w-mural-2.jpg') center/cover;
+            position: relative;
+        }
+        .ig-overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 60%);
+            display: flex; flex-direction: column; justify-content: flex-end;
+            padding: 20px;
+        }
+        .ig-caption { font-size: 14px; line-height: 1.5; margin-bottom: 16px; }
+        .ig-link {
+            background: #0095f6; color: white;
+            border: none; padding: 12px 16px; border-radius: 8px;
+            font-weight: 600; font-size: 14px; width: 100%; cursor: pointer;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        /* --- Chat Screen --- */
+        .chat-header {
+            padding: 20px 16px 16px; border-bottom: 1px solid #1a1a1a;
+            display: flex; align-items: center; gap: 12px;
+            background: #050505; z-index: 10;
+        }
+        .chat-bot-avatar {
+            width: 40px; height: 40px; border-radius: 50%;
+            background: linear-gradient(135deg, #111, #222);
+            border: 1px solid #D4AF37;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px;
+        }
+        .chat-bot-info-name { font-family: 'Newsreader', serif; font-size: 18px; color: #D4AF37; }
+        .chat-bot-info-status { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+        
+        .chat-log {
+            flex: 1; padding: 20px 16px; overflow-y: auto;
+            display: flex; flex-direction: column; gap: 16px;
+        }
+        .msg { max-width: 80%; padding: 12px 16px; border-radius: 16px; font-size: 14px; line-height: 1.5; animation: popIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; transform-origin: bottom left; opacity: 0; }
+        @keyframes popIn { 0% { opacity: 0; transform: translateY(10px) scale(0.95); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+        
+        .msg-bot { background: #1a1a1a; color: #fff; align-self: flex-start; border-bottom-left-radius: 4px; }
+        .msg-user { background: #D4AF37; color: #000; align-self: flex-end; border-bottom-right-radius: 4px; transform-origin: bottom right; }
+        
+        .typing-indicator {
+            display: flex; gap: 4px; padding: 12px 16px; background: #1a1a1a; border-radius: 16px; width: fit-content; border-bottom-left-radius: 4px; align-self: flex-start;
+        }
+        .dot { width: 6px; height: 6px; background: #888; border-radius: 50%; animation: blink 1.4s infinite both; }
+        .dot:nth-child(2) { animation-delay: 0.2s; }
+        .dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes blink { 0%, 100% { opacity: 0.2; } 20% { opacity: 1; } }
+
+        /* Chat Controls */
+        .chat-controls { padding: 16px; background: #050505; border-top: 1px solid #1a1a1a; }
+        .quick-replies { display: flex; flex-direction: column; gap: 8px; }
+        .qr-btn {
+            background: transparent; border: 1px solid #D4AF37; color: #D4AF37;
+            padding: 12px; border-radius: 8px; font-size: 14px; text-align: left; cursor: pointer;
+            transition: background 0.2s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .qr-btn:hover { background: rgba(212, 175, 55, 0.1); }
+        .qr-btn.pay-btn { background: #fff; color: #000; border-color: #fff; text-align: center; font-weight: bold; font-size: 16px; display: flex; justify-content: center; align-items: center; gap: 8px; }
+        .qr-btn.pay-btn:hover { background: #e0e0e0; }
+
+        .input-group { display: none; gap: 8px; }
+        .text-input { flex: 1; background: #1a1a1a; border: none; padding: 14px; border-radius: 8px; color: white; font-family: 'Inter', sans-serif; font-size: 14px; outline: none; }
+        .send-btn { background: #D4AF37; border: none; color: black; padding: 0 16px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+
+        /* Push Notifications */
+        .notification-tray {
+            position: absolute; top: 0; left: 0; right: 0; padding: 16px;
+            pointer-events: none; z-index: 100;
+            display: flex; flex-direction: column; gap: 8px;
+        }
+        .push {
+            background: rgba(20, 20, 20, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1);
+            padding: 16px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transform: translateY(-120%); transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex; gap: 12px;
+        }
+        .push-visible { transform: translateY(0); }
+        .push-icon { width: 36px; height: 36px; border-radius: 8px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+        .push-client .push-icon { background: #34C759; color: white; border-radius: 50%; width: 40px; height: 40px; }
+        .push-admin .push-icon { background: #111; color: #D4AF37; border: 1px solid #D4AF37; }
+        .push-content { flex: 1; }
+        .push-header { display: flex; justify-content: space-between; margin-bottom: 4px; }
+        .push-app { font-weight: 600; font-size: 13px; color: #fff;}
+        .push-time { font-size: 11px; color: #888; }
+        .push-title { font-weight: 600; font-size: 14px; margin-bottom: 2px; }
+        .push-text { font-size: 13px; color: #ccc; line-height: 1.4; }
+        
+        .reset-btn { position: absolute; top: -50px; right: 0; background: none; border: none; color: #888; text-decoration: underline; cursor: pointer; font-size: 12px; }
+    </style>
+</head>
+<body>
+
+    <button class="reset-btn" onclick="location.reload()">Reset Prototype</button>
+
+    <div class="phone">
+        <!-- SCREEN 1: INSTAGRAM POST -->
+        <div class="screen screen-active" id="s1-ig">
+            <div class="ig-header">
+                <div class="ig-avatar"></div>
+                <div class="ig-handle">barbergawd</div>
+                <div style="margin-left:auto; font-size:20px; font-weight:bold; letter-spacing:2px; padding-bottom:10px;">...</div>
+            </div>
+            <div class="ig-post">
+                <div class="ig-overlay">
+                    <p class="ig-caption">
+                        <strong>barbergawd</strong> No chasing DMs. No Linktree. Just pure, frictionless booking. Lock your slot directly below. 🚀💈<br><br><span style="color:#0095f6;">#chicagobarber #thecoil</span>
+                    </p>
+                    <button class="ig-link" onclick="startBooking()">
+                        <span>Book Now — thecoil.shop</span>
+                        <span>→</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN 2: CHATBOT FLOW -->
+        <div class="screen screen-hidden-right" id="s2-chat">
+            <div class="chat-header">
+                <div class="chat-bot-avatar">💈</div>
+                <div>
+                    <div class="chat-bot-info-name">Coil Concierge</div>
+                    <div class="chat-bot-info-status">BarberGawd Willis Online</div>
+                </div>
+            </div>
+            <div class="chat-log" id="chat-log">
+                <!-- Messages inject here -->
+            </div>
+            
+            <div class="chat-controls">
+                <div class="quick-replies" id="qr-container">
+                    <!-- Buttons inject here -->
+                </div>
+                <div class="input-group" id="input-container">
+                    <input type="text" class="text-input" id="user-input" placeholder="Type here..." autocomplete="off">
+                    <button class="send-btn" onclick="handleInputSend()">↑</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- PUSH NOTIFICATIONS TRAY -->
+        <div class="notification-tray">
+            <div class="push push-client" id="push-client">
+                <div class="push-icon">💬</div>
+                <div class="push-content">
+                    <div class="push-header"><span class="push-app">Messages</span><span class="push-time">Now</span></div>
+                    <div class="push-title">Antonio Willis</div>
+                    <div class="push-text">Confirmed! Haircut & Beard locked in for Tomorrow @ 2:30 PM. See you at the shop.</div>
+                </div>
+            </div>
+            <div class="push push-admin" id="push-admin">
+                <div class="push-icon">⚡</div>
+                <div class="push-content">
+                    <div class="push-header"><span class="push-app">The Coil OS</span><span class="push-time">Now</span></div>
+                    <div class="push-title">New Deposit Captured</div>
+                    <div class="push-text">John Doe booked Haircut & Beard at 2:30PM. $100 Stripe deposit secured.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const s1 = document.getElementById('s1-ig');
+        const s2 = document.getElementById('s2-chat');
+        const chatLog = document.getElementById('chat-log');
+        const qrContainer = document.getElementById('qr-container');
+        const inputContainer = document.getElementById('input-container');
+        const userInput = document.getElementById('user-input');
+
+        let step = 0;
+        let userData = { name: '', service: '', time: '' };
+
+        function startBooking() {
+            // Transition screens
+            s1.classList.remove('screen-active');
+            s1.classList.add('screen-hidden-left');
+            s2.classList.remove('screen-hidden-right');
+            s2.classList.add('screen-active');
+
+            // Start chat sequence
+            simulateBot("Pinging Acuity availability...", 500);
+            setTimeout(() => {
+                chatLog.innerHTML = ""; // Clear loader
+                addBotMsg("Hey! I'm the A.I. Concierge for BarberGawd Willis. Which service are you looking to lock in?");
+                showQuickReplies([
+                    "✂️ Haircut & Beard — $100",
+                    "📸 Photoshoot Ready — $150",
+                    "💧 Hair Unit Install — $350"
+                ], handleServiceSelection);
+            }, 1200);
+        }
+
+        function handleServiceSelection(btnText) {
+            qrContainer.innerHTML = '';
+            addUserMsg(btnText);
+            userData.service = btnText.split(' —')[0];
+            
+            simulateBot("Checking availability...", 600);
+            setTimeout(() => {
+                removeTyping();
+                addBotMsg("Got it. I have three slots left this week. When works best for you?");
+                showQuickReplies([
+                    "Tomorrow @ 1:00 PM",
+                    "Tomorrow @ 2:30 PM",
+                    "Friday @ 4:00 PM"
+                ], handleTimeSelection);
+            }, 2000);
+        }
+
+        function handleTimeSelection(btnText) {
+            qrContainer.innerHTML = '';
+            addUserMsg(btnText);
+            userData.time = btnText;
+
+            simulateBot("Holding slot...", 600);
+            setTimeout(() => {
+                removeTyping();
+                addBotMsg(`Perfect, I've put a temporary hold on ${userData.time}.`);
+                addBotMsg("To lock this in permanently, I just need your Name, Phone Number, and Email.");
+                
+                // Show text input instead of buttons
+                inputContainer.style.display = 'flex';
+                userInput.placeholder = "e.g., John Doe, 555-0199, john@email.com";
+                userInput.focus();
+                step = 1; // Waiting for info input
+            }, 1800);
+        }
+
+        function handleInputSend() {
+            const val = userInput.value.trim();
+            if(!val) return;
+            
+            addUserMsg(val);
+            userData.name = val.split(',')[0] || "John"; // Mock grab first name
+            
+            inputContainer.style.display = 'none';
+            userInput.value = '';
+
+            simulateBot("Generating invoice...", 600);
+            setTimeout(() => {
+                removeTyping();
+                addBotMsg(`Thanks ${userData.name}. The final step is locking in the $100 upfront deposit for your ${userData.service}.`);
+                showQuickReplies([
+                    `<span style="font-family:-apple-system,sans-serif;font-weight:900;"></span> Pay $100.00 Deposit`
+                ], triggerPaymentSuccess, true); // true = makes it look like a pay button
+            }, 2000);
+        }
+
+        // Allow Enter key
+        userInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') handleInputSend();
+        });
+
+        function triggerPaymentSuccess() {
+            qrContainer.innerHTML = '';
+            // Fake loading overlay inside chat
+            simulateBot("Processing secure payment...", 0);
+            
+            setTimeout(() => {
+                removeTyping();
+                addBotMsg("✅ Deposit captured successfully. Your appointment is locked in.");
+                addBotMsg(`You'll receive a confirmation text and email matching these details shortly. See you ${userData.time.toLowerCase()}!`);
+                
+                // Trigger the push notifications cascade
+                setTimeout(showPushNotifications, 1500);
+            }, 2500);
+        }
+
+        function showPushNotifications() {
+            const clientPush = document.getElementById('push-client');
+            const adminPush = document.getElementById('push-admin');
+
+            // Client receives text
+            clientPush.classList.add('push-visible');
+            const audio = new Audio('data:audio/mp3;base64,//OQAQAAAAAAAAAAAAB//OQAQAAAAAAAAAAAAB...'); // Silent audio context so it doesn't crash if sounds are tried
+            
+            // Barber receives admin OS notification 2 seconds later
+            setTimeout(() => {
+                adminPush.classList.add('push-visible');
+            }, 1800);
+        }
+
+        // --- UI Helpers ---
+        function addBotMsg(text) {
+            const div = document.createElement('div');
+            div.className = 'msg msg-bot';
+            div.innerHTML = text;
+            chatLog.appendChild(div);
+            scrollToBottom();
+        }
+
+        function addUserMsg(text) {
+            const div = document.createElement('div');
+            div.className = 'msg msg-user';
+            // Strip HTML if it was the apple pay button
+            div.textContent = text.replace(/<[^>]*>?/gm, ''); 
+            chatLog.appendChild(div);
+            scrollToBottom();
+        }
+
+        function simulateBot(indicatorText, delay) {
+            const div = document.createElement('div');
+            div.className = 'typing-indicator';
+            div.id = 'typing';
+            div.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
+            chatLog.appendChild(div);
+            scrollToBottom();
+        }
+
+        function removeTyping() {
+            const typing = document.getElementById('typing');
+            if(typing) typing.remove();
+        }
+
+        function showQuickReplies(options, callback, isPayBtn = false) {
+            qrContainer.innerHTML = '';
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = isPayBtn ? 'qr-btn pay-btn' : 'qr-btn';
+                btn.innerHTML = opt;
+                btn.onclick = () => callback(opt);
+                qrContainer.appendChild(btn);
+            });
+        }
+
+        function scrollToBottom() {
+            chatLog.scrollTop = chatLog.scrollHeight;
+        }
+
+    </script>
+</body>
+</html>

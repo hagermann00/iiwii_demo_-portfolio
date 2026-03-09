@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#050505">
+    <title>The Architecture — The Coil OS</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --color-obsidian: #050505;
+            --color-gold: #D4AF37;
+            --color-oxblood: #5A0A0A;
+            --color-crimson: #8B1A1A;
+            --color-glass: rgba(10, 10, 10, 0.75);
+            --color-white: #ffffff;
+            --color-white-dim: rgba(255, 255, 255, 0.6);
+            --color-black: #000000;
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: var(--color-obsidian); 
+            color: var(--color-white); 
+            -webkit-font-smoothing: antialiased; 
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Abstract Dark Presence */
+        .bg-presence {
+            position: fixed; inset: 0; z-index: -2;
+            background-image: url('assets/images/shop-w-mural-2.jpg');
+            background-size: cover; background-position: center 20%;
+            opacity: 0.1; mix-blend-mode: luminosity;
+            filter: contrast(140%) brightness(50%);
+        }
+        .bg-vignette {
+            position: fixed; inset: 0; z-index: -1;
+            background: radial-gradient(circle at center, transparent 30%, var(--color-obsidian) 100%);
+        }
+
+        .header {
+            padding: 24px; text-align: center; border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+            background: var(--color-glass); backdrop-filter: blur(10px);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .logo-font { font-family: 'Newsreader', serif; font-weight: 400; font-size: 20px; font-style: italic; color: var(--color-gold); }
+        .system-status { font-size: 10px; font-family: monospace; letter-spacing: 2px; color: #4ade80; text-transform: uppercase; display: flex; align-items: center; gap: 6px; }
+        .pulse { width: 6px; height: 6px; background: #4ade80; border-radius: 50%; box-shadow: 0 0 10px #4ade80; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+
+        .main-content {
+            flex: 1; display: flex; align-items: center; justify-content: center;
+            padding: 80px 24px; position: relative;
+        }
+
+        .squeeze-card {
+            background: var(--color-black); padding: 56px 48px; border-radius: 4px; 
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8), inset 0 0 30px rgba(139, 26, 26, 0.05); 
+            max-width: 600px; width: 100%; position: relative; z-index: 10;
+        }
+
+        .squeeze-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
+        }
+
+        .kicker { font-size: 10px; color: var(--color-crimson); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 24px; display: block; font-weight: 700; }
+        .title { font-family: 'Newsreader', serif; font-size: clamp(32px, 6vw, 42px); font-weight: 400; line-height: 1.1; margin-bottom: 24px; }
+        .title em { font-style: italic; color: var(--color-gold); }
+        
+        .copy { font-size: 16px; line-height: 1.7; color: var(--color-white-dim); margin-bottom: 32px; font-weight: 300; }
+        .copy strong { color: var(--color-white); font-weight: 500; }
+
+        .bullets { list-style: none; margin-bottom: 40px; }
+        .bullets li { font-size: 15px; color: var(--color-white-dim); margin-bottom: 16px; display: flex; align-items: flex-start; gap: 12px; }
+        .bullets li::before { content: '×'; color: var(--color-gold); font-weight: 700; font-size: 18px; line-height: 1; margin-top: 2px;}
+        .bullets li strong { color: var(--color-white); }
+
+        /* The Form */
+        .opt-in-form { display: flex; flex-direction: column; gap: 16px; margin-top: 10px; }
+        .input-group { position: relative; }
+        .form-input { 
+            width: 100%; padding: 18px 24px; border: 1px solid rgba(255,255,255,0.1); 
+            background: rgba(255,255,255,0.03); color: white;
+            font-family: 'Inter', sans-serif; font-size: 16px; border-radius: 4px; 
+            transition: border-color 0.2s, background 0.2s; outline: none;
+        }
+        .form-input:focus { border-color: var(--color-gold); background: rgba(0,0,0,0.5); }
+        .form-input::placeholder { color: rgba(255,255,255,0.3); }
+        
+        .submit-btn {
+            padding: 20px 32px; background: var(--color-white); color: var(--color-black); 
+            font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 700;
+            letter-spacing: 2px; text-transform: uppercase; border: none; border-radius: 4px; cursor: pointer;
+            transition: transform 0.2s, background 0.2s, box-shadow 0.2s; width: 100%;
+        }
+        .submit-btn:active { transform: scale(0.98); }
+        .submit-btn:hover { background: var(--color-gold); box-shadow: 0 0 20px rgba(212, 175, 55, 0.3); }
+
+        .privacy-note { font-family: monospace; font-size: 10px; color: var(--color-white-dim); text-align: center; margin-top: 24px; letter-spacing: 1px; text-transform: uppercase; }
+
+        @media (max-width: 600px) {
+            .squeeze-card { padding: 40px 24px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="bg-presence"></div>
+<div class="bg-vignette"></div>
+
+<header class="header">
+    <div class="logo-font">The Coil</div>
+    <div class="system-status"><span class="pulse"></span> Live</div>
+</header>
+
+<main class="main-content">
+    <article class="squeeze-card">
+        <span class="kicker">Architectural Breakdown</span>
+        <h1 class="title">Steal the architecture generating <em>$67k in frictionless revenue.</em></h1>
+        
+        <p class="copy">
+            We audited 47 different grooming businesses. We watched accounts with 100,000+ followers burn out chasing DMs, while aggressive independents using this exact conversion infrastructure cleared <strong>$40,000 monthly</strong> on autopilot.
+        </p>
+
+        <ul class="bullets">
+            <li><strong>Stop building on rented land:</strong> Why native iOS booking apps alienate 45% of your Android clients.</li>
+            <li><strong>The Frictionless Funnel:</strong> The exact point-of-sale integration that locks in $100 deposits in 14 seconds.</li>
+            <li><strong>The 7-Step Interactive Blueprint:</strong> Enter your email below to instantly access the live, functional master demo used by top-tier studios to automate their entire workflow.</li>
+        </ul>
+
+        <!-- Redirecting straight to the presentation -->
+        <form class="opt-in-form" action="blueprint.html" method="GET">
+            <div class="input-group">
+                <input type="email" class="form-input" placeholder="Your best email address" required>
+            </div>
+            <button type="submit" class="submit-btn" onclick="sessionStorage.setItem('coil_lead_captured', 'true');">UNLOCK THE BLUEPRINT</button>
+        </form>
+        
+        <div class="privacy-note">Zero Spam. Just high-status conversion infrastructure.</div>
+    </article>
+</main>
+
+</body>
+</html>

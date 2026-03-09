@@ -1,0 +1,45 @@
+[
+  {
+    "id": "ai-web-dev",
+    "name": "Automated Web Presence",
+    "description": "AI-optimized web development and marketing infrastructure for rapid deployment.",
+    "basePrice": 850,
+    "unit": "project",
+    "multipliers": {
+      "conversion_optimization": 1.25,
+      "seo_saturation": 1.15
+    }
+  },
+  {
+    "id": "booking-infra",
+    "name": "Intelligent Booking System",
+    "description": "Automated scheduling and management infrastructure with AI-driven resource allocation.",
+    "basePrice": 450,
+    "unit": "module",
+    "multipliers": {
+      "multi_agent_sync": 1.3,
+      "custom_workflow": 1.2
+    }
+  },
+  {
+    "id": "biz-automation-agent",
+    "name": "Custom Automation Agent",
+    "description": "Specialized AI agent for automated business processing and data management.",
+    "basePrice": 300,
+    "unit": "agent",
+    "multipliers": {
+      "complexity_tier": 1.5,
+      "high_velocity_processing": 1.4
+    }
+  },
+  {
+    "id": "smb-starter-bundle",
+    "name": "SMB AI Starter Bundle",
+    "description": "Core Infrastructure: Web Presence + Booking System + 1 Automation Agent.",
+    "basePrice": 1250,
+    "unit": "bundle",
+    "multipliers": {
+      "priority_support": 1.2
+    }
+  }
+]

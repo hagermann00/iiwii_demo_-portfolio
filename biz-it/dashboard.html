@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIZ-IT | SMB AI Infrastructure</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="biz-it-container">
+        <header>
+            <h1>BIZ<span>-IT</span></h1>
+            <p class="tagline">Automated AI Infrastructure for Next-Gen Small Business</p>
+        </header>
+
+        <main class="main-grid">
+            <section class="product-list" id="productList">
+                <!-- Products will be injected here -->
+            </section>
+
+            <aside class="summary-panel" id="summaryPanel">
+                <h2 class="summary-title">Base Configuration</h2>
+                <div class="summary-items" id="summaryItems">
+                    <!-- Summary items will be injected here -->
+                    <p style="color:#666">Select an infrastructure module...</p>
+                </div>
+                <div class="total-section">
+                    <div class="total-label">Project Valuation</div>
+                    <div class="total-value" id="totalValue">$0</div>
+                </div>
+                <a href="#" class="cta-button" id="initiateButton">Build MVP</a>
+            </aside>
+        </main>
+
+        <footer class="branding-footer">
+            BIZ-IT CORE INFRASTRUCTURE &copy; 2026
+        </footer>
+    </div>
+
+    <script src="pricing-engine.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const response = await fetch('catalog.json');
+            const catalog = await response.json();
+            const engine = new PricingEngine(catalog);
+            
+            const productList = document.getElementById('productList');
+            const summaryItems = document.getElementById('summaryItems');
+            const totalValue = document.getElementById('totalValue');
+            
+            let selectedItems = new Map(); // Map<productId, Set<multipliers>>
+
+            function updateUI() {
+                // Update Summary
+                const selections = [];
+                selectedItems.forEach((multipliers, productId) => {
+                    const multObj = {};
+                    multipliers.forEach(m => multObj[m] = true);
+                    selections.push({ productId, multipliers: multObj });
+                });
+
+                const result = engine.calculateTotal(selections);
+                
+                summaryItems.innerHTML = result.items.length ? '' : '<p style="color:#666">Select a product to begin...</p>';
+                result.items.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'summary-item';
+                    div.innerHTML = `
+                        <span>${item.name} ${item.appliedMultipliers.length ? '(+)': ''}</span>
+                        <span>$${item.finalPrice}</span>
+                    `;
+                    summaryItems.appendChild(div);
+                });
+
+                totalValue.innerText = `$${result.total.toLocaleString()}`;
+            }
+
+            catalog.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.innerHTML = `
+                    <div class="product-top">
+                        <div class="product-name">${product.name}</div>
+                        <div class="product-price">$${product.basePrice}</div>
+                    </div>
+                    <div class="product-desc">${product.description}</div>
+                    <div class="multipliers-container">
+                        ${Object.keys(product.multipliers || {}).map(m => `
+                            <div class="multiplier-tag" data-product="${product.id}" data-multiplier="${m}">${m.replace('_', ' ')}</div>
+                        `).join('')}
+                    </div>
+                `;
+
+                card.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('multiplier-tag')) {
+                        const m = e.target.dataset.multiplier;
+                        const pId = e.target.dataset.product;
+                        
+                        if (!selectedItems.has(pId)) selectedItems.set(pId, new Set());
+                        const multipliers = selectedItems.get(pId);
+                        
+                        if (multipliers.has(m)) {
+                            multipliers.delete(m);
+                            e.target.classList.remove('active');
+                        } else {
+                            multipliers.add(m);
+                            e.target.classList.add('active');
+                        }
+                    } else {
+                        if (selectedItems.has(product.id)) {
+                            selectedItems.delete(product.id);
+                            card.classList.remove('selected');
+                            card.querySelectorAll('.multiplier-tag').forEach(t => t.classList.remove('active'));
+                        } else {
+                            selectedItems.set(product.id, new Set());
+                            card.classList.add('selected');
+                        }
+                    }
+                    updateUI();
+                });
+
+                productList.appendChild(card);
+            });
+        });
+    </script>
+</body>
+</html>

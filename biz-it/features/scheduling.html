@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto-Scheduling | BIZ-IT Feature</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #08080d;
+            --primary: #2DD4BF;
+            --glass: rgba(255, 255, 255, 0.02);
+        }
+
+        body {
+            background-color: var(--bg);
+            color: #f0f0f4;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(40px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+<body>
+
+<header class="border-b border-white/5 backdrop-blur-md bg-black/20">
+    <div class="container mx-auto px-6 py-6 flex items-center gap-4">
+        <a href="../landing.html" class="text-white/40 hover:text-white/70 text-sm uppercase tracking-widest">← Back</a>
+        <span class="text-white/20">|</span>
+        <h1 class="text-2xl font-black"><span class="text-[var(--primary)]">Auto-Scheduling</span> Feature</h1>
+    </div>
+</header>
+
+<main class="container mx-auto px-6 py-24">
+    <div class="max-w-3xl">
+        <div class="mb-12">
+            <h2 class="text-5xl font-black mb-6 leading-tight">
+                Your Calendar Runs<br>Without You.
+            </h2>
+            <p class="text-xl text-white/50 leading-relaxed">
+                No more back-and-forth about availability. No more double-bookings. No reminders that go unsent. BIZ-IT manages your schedule in real-time, syncs across all channels, and handles the entire booking workflow automatically.
+            </p>
+        </div>
+
+        <!-- Key Features -->
+        <div class="space-y-6 mb-12">
+            <div class="glass-card p-8 rounded-2xl">
+                <h4 class="text-xl font-bold text-[var(--primary)] mb-3">Real-Time Availability</h4>
+                <p class="text-white/50">AI sees your calendar, knows buffer times, handles service durations automatically. When a customer asks "do you have time Friday?", it knows instantly.</p>
+            </div>
+            <div class="glass-card p-8 rounded-2xl">
+                <h4 class="text-xl font-bold text-[var(--primary)] mb-3">Multi-Channel Booking</h4>
+                <p class="text-white/50">SMS, phone, Facebook, website—all routes feed into one calendar. No conflicting bookings. No chaos.</p>
+            </div>
+            <div class="glass-card p-8 rounded-2xl">
+                <h4 class="text-xl font-bold text-[var(--primary)] mb-3">Automatic Reminders</h4>
+                <p class="text-white/50">Send confirmation, day-before reminders, and hour-before alerts. Reduce no-shows by 40%+.</p>
+            </div>
+            <div class="glass-card p-8 rounded-2xl">
+                <h4 class="text-xl font-bold text-[var(--primary)] mb-3">Rescheduling & Cancellations</h4>
+                <p class="text-white/50">Customers reschedule through text or portal. AI finds alternatives automatically. Payment handling is automatic.</p>
+            </div>
+        </div>
+
+        <!-- Real Example -->
+        <div class="border-l-4 border-[var(--primary)] pl-6 py-4 mb-12 glass-card p-6 rounded-r-xl">
+            <h4 class="text-sm font-bold uppercase tracking-widest text-[var(--primary)] mb-4">THE COIL LIVE EXAMPLE</h4>
+            <p class="text-white/50 text-sm mb-4">Customer texts: "Can I get in tomorrow? I'm free 1-4pm"</p>
+            <p class="text-white font-bold mb-2">What Happens Automatically:</p>
+            <ul class="text-sm text-white/70 space-y-1 list-disc list-inside">
+                <li>AI checks calendar across both barbers</li>
+                <li>Finds available slots (2:00 PM opens up)</li>
+                <li>Reserves slot, deducts $75 deposit from card on file</li>
+                <li>Sends confirmation SMS with address, preparation instructions</li>
+                <li>Schedules reminder text for tomorrow at 1:45 PM</li>
+                <li>Flags any VIP status or service notes for your team</li>
+            </ul>
+        </div>
+
+        <!-- CTA -->
+        <a href="../pricing.html" class="inline-block bg-gradient-to-r from-[var(--primary)] to-[#06B6D4] text-black font-bold uppercase tracking-widest py-4 px-8 rounded-lg">
+            See Full Pricing & Features →
+        </a>
+    </div>
+</main>
+
+</body>
+</html>

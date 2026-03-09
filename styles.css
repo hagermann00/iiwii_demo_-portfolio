@@ -1,0 +1,455 @@
+/* ============================================================
+   THE COIL — styles.css
+   Modern CSS Stack: OKLCH · @property · Scroll-Driven Animations
+   View Transitions API v2 · Container Queries · Anchor Positioning
+   ============================================================ */
+
+/* ── @property declarations (enables smooth CSS custom-property transitions) ── */
+@property --gold-l {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0.72;
+}
+@property --gold-c {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0.16;
+}
+@property --gold-opacity {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 1;
+}
+@property --shimmer-pos {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: -100%;
+}
+@property --reveal-y {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 48px;
+}
+@property --reveal-opacity {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0;
+}
+
+/* ── OKLCH Design Tokens ── */
+:root {
+  /* Base palette in OKLCH */
+  --color-black:       oklch(0.07 0.004 265);
+  --color-surface:     oklch(0.10 0.004 265);
+  --color-surface-2:   oklch(0.13 0.005 265);
+  --color-gold:        oklch(var(--gold-l) var(--gold-c) 80);
+  --color-gold-light:  oklch(0.82 0.18 80);
+  --color-gold-dim:    oklch(0.60 0.12 80);
+  --color-crimson:     oklch(0.38 0.14 22);
+  --color-crimson-2:   oklch(0.30 0.11 22);
+  --color-text:        oklch(0.96 0.004 265);
+  --color-text-muted:  oklch(0.60 0.004 265);
+  --color-text-faint:  oklch(0.40 0.004 265);
+  --color-border:      oklch(1 0 0 / 0.06);
+  --color-border-gold: oklch(var(--gold-l) var(--gold-c) 80 / 0.18);
+
+  /* Timing */
+  --ease-smooth:       cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring:       cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-in-expo:      cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-out-expo:     cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* View Transition */
+  view-transition-name: root;
+}
+
+/* ── View Transitions API v2 ── */
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-old(root) {
+  animation: vt-fade-out 0.25s var(--ease-in-expo) forwards;
+}
+::view-transition-new(root) {
+  animation: vt-reveal 0.45s var(--ease-out-expo) forwards;
+}
+
+@keyframes vt-fade-out {
+  to { opacity: 0; transform: scale(0.98); }
+}
+@keyframes vt-reveal {
+  from { opacity: 0; transform: scale(1.02) translateY(8px); }
+}
+
+/* Named transition for nav bar */
+nav { view-transition-name: site-nav; }
+::view-transition-old(site-nav),
+::view-transition-new(site-nav) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* ── Scroll-Driven Animation: Fade+Rise on scroll ── */
+@keyframes fade-rise {
+  from {
+    opacity: var(--reveal-opacity);
+    translate: 0 var(--reveal-y);
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+.scroll-reveal {
+  animation: fade-rise linear both;
+  animation-timeline: view();
+  animation-range: entry 0% entry 40%;
+}
+.scroll-reveal-late {
+  animation: fade-rise linear both;
+  animation-timeline: view();
+  animation-range: entry 10% entry 55%;
+}
+
+/* Stagger children */
+.scroll-stagger > * {
+  animation: fade-rise linear both;
+  animation-timeline: view();
+  animation-range: entry 0% entry 45%;
+}
+.scroll-stagger > *:nth-child(1) { animation-delay: 0ms; }
+.scroll-stagger > *:nth-child(2) { animation-delay: 60ms; }
+.scroll-stagger > *:nth-child(3) { animation-delay: 120ms; }
+.scroll-stagger > *:nth-child(4) { animation-delay: 180ms; }
+.scroll-stagger > *:nth-child(5) { animation-delay: 240ms; }
+.scroll-stagger > *:nth-child(6) { animation-delay: 300ms; }
+
+/* ── Scroll-Driven: Section header pinned progress line ── */
+@keyframes progress-line {
+  from { scaleX(0); }
+  to { scaleX(1); }
+}
+
+.scroll-progress-bar {
+  position: fixed;
+  top: 80px; /* below nav */
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--color-gold);
+  transform-origin: left;
+  animation: scaleX linear forwards;
+  animation-timeline: scroll(root);
+  animation-range: 0% 100%;
+  z-index: 49;
+  transform: scaleX(0);
+}
+
+@keyframes scaleX {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+/* ── Scroll-Driven: Parallax effect for hero images ── */
+.parallax-img {
+  animation: parallax-up linear both;
+  animation-timeline: view();
+  animation-range: contain 0% exit 100%;
+}
+
+@keyframes parallax-up {
+  from { object-position: 50% 60%; }
+  to   { object-position: 50% 40%; }
+}
+
+/* ── Gold shimmer utility (uses @property for smooth animation) ── */
+@keyframes shimmer-sweep {
+  from { --shimmer-pos: -120%; }
+  to   { --shimmer-pos: 220%; }
+}
+
+.shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    oklch(0.85 0.18 80 / 0.15) var(--shimmer-pos),
+    transparent 60%
+  );
+  animation: shimmer-sweep 2.4s var(--ease-smooth) infinite;
+  pointer-events: none;
+}
+.shimmer:hover::after {
+  animation-duration: 1.2s;
+}
+
+/* ── Gold glow pulse ── */
+@keyframes gold-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 oklch(0.72 0.16 80 / 0); }
+  50%       { box-shadow: 0 0 0 8px oklch(0.72 0.16 80 / 0.12); }
+}
+
+.gold-pulse {
+  animation: gold-pulse 3s var(--ease-smooth) infinite;
+}
+
+/* ── @property gold hover — smooth OKLCH color transition ── */
+.gold-hover {
+  --gold-l: 0.72;
+  --gold-c: 0.16;
+  color: oklch(var(--gold-l) var(--gold-c) 80);
+  transition: --gold-l 0.3s, --gold-c 0.3s;
+}
+.gold-hover:hover {
+  --gold-l: 0.86;
+  --gold-c: 0.20;
+}
+
+/* ── Btn-gold upgraded with OKLCH + shimmer ── */
+.btn-gold-v2 {
+  background: var(--color-gold);
+  color: var(--color-black);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.3s var(--ease-smooth), transform 0.2s var(--ease-spring), box-shadow 0.3s;
+}
+.btn-gold-v2::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 35%,
+    oklch(0.96 0.02 80 / 0.30) var(--shimmer-pos),
+    transparent 65%
+  );
+  animation: shimmer-sweep 2.8s var(--ease-smooth) infinite;
+  animation-play-state: paused;
+  pointer-events: none;
+}
+.btn-gold-v2:hover {
+  background: var(--color-gold-light);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 28px oklch(0.72 0.16 80 / 0.35);
+}
+.btn-gold-v2:hover::after {
+  animation-play-state: running;
+}
+.btn-gold-v2:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* ── Service / Craft cards with OKLCH border glow ── */
+.card-glow {
+  border: 1px solid var(--color-border-gold);
+  transition: border-color 0.4s var(--ease-smooth), box-shadow 0.4s;
+  position: relative;
+}
+.card-glow::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  background: conic-gradient(
+    from 180deg,
+    oklch(0.72 0.16 80 / 0),
+    oklch(0.72 0.16 80 / 0.08),
+    oklch(0.72 0.16 80 / 0)
+  );
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.4s;
+  pointer-events: none;
+  z-index: -1;
+}
+.card-glow:hover {
+  border-color: oklch(0.72 0.16 80 / 0.50);
+  box-shadow: 0 4px 32px oklch(0.72 0.16 80 / 0.10);
+}
+.card-glow:hover::before {
+  opacity: 1;
+}
+
+/* ── Nav link underline (OKLCH-native) ── */
+.nav-link-v2 {
+  position: relative;
+  color: oklch(0.96 0.004 265 / 0.65);
+  transition: color 0.25s;
+}
+.nav-link-v2::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--color-gold);
+  transition: width 0.3s var(--ease-smooth);
+}
+.nav-link-v2:hover {
+  color: oklch(0.96 0.004 265);
+}
+.nav-link-v2:hover::after { width: 100%; }
+.nav-link-v2.active {
+  color: oklch(0.96 0.004 265);
+}
+.nav-link-v2.active::after {
+  width: 100%;
+}
+
+/* ── Gold divider (enhanced) ── */
+.gold-rule {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-gold) 30%,
+    var(--color-gold) 70%,
+    transparent
+  );
+  animation: fade-rise linear both;
+  animation-timeline: view();
+  animation-range: entry 0% entry 30%;
+}
+
+/* ── Stats counter number highlight ── */
+.stat-number {
+  color: var(--color-gold);
+  font-variant-numeric: tabular-nums;
+  transition: --gold-l 0.4s;
+}
+.stat-number:hover {
+  --gold-l: 0.88;
+  color: oklch(var(--gold-l) 0.19 80);
+}
+
+/* ── Scroll-driven section label ── */
+.section-label {
+  color: var(--color-gold);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  font-weight: 500;
+  animation: fade-rise linear both;
+  animation-timeline: view();
+  animation-range: entry 0% entry 25%;
+}
+
+/* ── Section heading reveal ── */
+.section-heading {
+  animation: fade-rise linear both;
+  animation-timeline: view();
+  animation-range: entry 5% entry 40%;
+}
+
+/* ── Watermark parallax ── */
+.w-watermark-v2 {
+  position: absolute;
+  font-family: 'Newsreader', serif;
+  font-size: 40vw;
+  font-weight: 800;
+  color: oklch(0.72 0.16 80 / 0.025);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+  line-height: 1;
+  animation: watermark-drift linear both;
+  animation-timeline: view();
+  animation-range: entry 0% exit 100%;
+}
+
+@keyframes watermark-drift {
+  from { transform: translate(-50%, -45%) scale(1.02); }
+  to   { transform: translate(-50%, -55%) scale(0.98); }
+}
+
+/* ── Hero text cascade ── */
+.hero-headline {
+  animation: hero-in 0.9s var(--ease-out-expo) both;
+}
+.hero-subtext {
+  animation: hero-in 0.9s var(--ease-out-expo) 0.15s both;
+}
+.hero-cta {
+  animation: hero-in 0.9s var(--ease-out-expo) 0.3s both;
+}
+
+@keyframes hero-in {
+  from {
+    opacity: 0;
+    translate: 0 32px;
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+    filter: blur(0);
+  }
+}
+
+/* ── Image hover zoom (hardware-accelerated) ── */
+.img-zoom {
+  overflow: hidden;
+}
+.img-zoom img {
+  transition: transform 0.6s var(--ease-smooth);
+  will-change: transform;
+}
+.img-zoom:hover img {
+  transform: scale(1.05);
+}
+
+/* ── VIP banner gradient (OKLCH) ── */
+.vip-banner-v2 {
+  background: linear-gradient(
+    135deg,
+    var(--color-crimson) 0%,
+    var(--color-crimson-2) 100%
+  );
+  border: 1px solid oklch(0.72 0.16 80 / 0.22);
+}
+
+/* ── Container query: responsive service cards ── */
+.service-container {
+  container-type: inline-size;
+  container-name: services;
+}
+@container services (min-width: 600px) {
+  .service-card-cq {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0 1.5rem;
+    align-items: start;
+  }
+}
+
+/* ── Reduced motion fallback ── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .scroll-reveal,
+  .scroll-reveal-late,
+  .scroll-stagger > * {
+    animation: none;
+    opacity: 1;
+    translate: 0 0;
+  }
+}

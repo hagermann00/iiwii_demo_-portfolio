@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Triage | BIZ-IT Feature</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #08080d;
+            --primary: #2DD4BF;
+            --glass: rgba(255, 255, 255, 0.02);
+        }
+
+        body {
+            background-color: var(--bg);
+            color: #f0f0f4;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(40px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+<body>
+
+<header class="border-b border-white/5 backdrop-blur-md bg-black/20">
+    <div class="container mx-auto px-6 py-6 flex items-center gap-4">
+        <a href="../landing.html" class="text-white/40 hover:text-white/70 text-sm uppercase tracking-widest">← Back</a>
+        <span class="text-white/20">|</span>
+        <h1 class="text-2xl font-black"><span class="text-[var(--primary)]">Smart Triage</span> Feature</h1>
+    </div>
+</header>
+
+<main class="container mx-auto px-6 py-24">
+    <div class="max-w-3xl">
+        <div class="mb-12">
+            <h2 class="text-5xl font-black mb-6 leading-tight">
+                AI Reads Every Message.<br>Routes Perfectly.
+            </h2>
+            <p class="text-xl text-white/50 leading-relaxed">
+                Customers contact you through text, email, chat, calls. Without Smart Triage, messages get buried. With it, your AI instantly understands intent, urgency, and context—then routes to the right person or action automatically.
+            </p>
+        </div>
+
+        <!-- How It Works -->
+        <div class="glass-card p-8 rounded-2xl mb-12">
+            <h3 class="text-2xl font-bold text-white mb-6">How It Works</h3>
+            <div class="space-y-6">
+                <div class="flex gap-4">
+                    <div class="text-3xl font-black text-[var(--primary)] w-10 h-10 flex items-center justify-center rounded-lg bg-[var(--primary)]/10">1</div>
+                    <div>
+                        <h4 class="font-bold text-white mb-1">Incoming Message</h4>
+                        <p class="text-white/50">Customer sends SMS, email, or Facebook message asking about availability, pricing, or a problem.</p>
+                    </div>
+                </div>
+                <div class="flex gap-4">
+                    <div class="text-3xl font-black text-[var(--primary)] w-10 h-10 flex items-center justify-center rounded-lg bg-[var(--primary)]/10">2</div>
+                    <div>
+                        <h4 class="font-bold text-white mb-1">AI Analysis</h4>
+                        <p class="text-white/50">BIZ-IT reads the message, identifies intent (booking, complaint, question), urgency level, and sentiment.</p>
+                    </div>
+                </div>
+                <div class="flex gap-4">
+                    <div class="text-3xl font-black text-[var(--primary)] w-10 h-10 flex items-center justify-center rounded-lg bg-[var(--primary)]/10">3</div>
+                    <div>
+                        <h4 class="font-bold text-white mb-1">Automatic Routing</h4>
+                        <p class="text-white/50">High-priority issues → you immediately. Routine bookings → auto-scheduled. FAQ questions → instant answer.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Real Example from The Coil -->
+        <div class="border-l-4 border-[var(--primary)] pl-6 py-4 mb-12 glass-card p-6 rounded-r-xl">
+            <h4 class="text-sm font-bold uppercase tracking-widest text-[var(--primary)] mb-2">LIVE EXAMPLE FROM THE COIL</h4>
+            <div class="space-y-4">
+                <div>
+                    <p class="text-xs text-white/40 uppercase tracking-widest mb-1">Customer Message</p>
+                    <p class="text-white italic">"Hey, my unit is feeling dry. Can I come in tomorrow at like 2 or 3?"</p>
+                </div>
+                <div>
+                    <p class="text-xs text-white/40 uppercase tracking-widest mb-1">What AI Triage Detected</p>
+                    <p class="text-white"><span class="text-[var(--primary)] font-bold">Intent:</span> Service Request + Booking Request</p>
+                    <p class="text-white"><span class="text-[var(--primary)] font-bold">Urgency:</span> Medium (customer indicates timeline)</p>
+                    <p class="text-white"><span class="text-[var(--primary)] font-bold">Sentiment:</span> Friendly/Routine</p>
+                </div>
+                <div>
+                    <p class="text-xs text-white/40 uppercase tracking-widest mb-1">Automatic Action</p>
+                    <p class="text-white">AI scheduled 2:00 PM slot (customer's preferred time), sent confirmation SMS with price, and flagged for service type (maintenance moisturizing).</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Benefits -->
+        <div class="mb-12">
+            <h3 class="text-2xl font-bold text-white mb-6">Why It Matters</h3>
+            <div class="grid md:grid-cols-2 gap-4">
+                <div class="glass-card p-6 rounded-xl">
+                    <h4 class="text-white font-bold mb-2">🚀 Speed</h4>
+                    <p class="text-sm text-white/50">Respond to customers in seconds, not hours. Urgent issues never wait.</p>
+                </div>
+                <div class="glass-card p-6 rounded-xl">
+                    <h4 class="text-white font-bold mb-2">💯 Accuracy</h4>
+                    <p class="text-sm text-white/50">No more miscategorized messages or misunderstood requests. AI reads context perfectly.</p>
+                </div>
+                <div class="glass-card p-6 rounded-xl">
+                    <h4 class="text-white font-bold mb-2">⏰ Time</h4>
+                    <p class="text-sm text-white/50">Save 10+ hours/week reading, sorting, and manually routing messages.</p>
+                </div>
+                <div class="glass-card p-6 rounded-xl">
+                    <h4 class="text-white font-bold mb-2">📈 Revenue</h4>
+                    <p class="text-sm text-white/50">Faster response = more bookings captured. Never lose a customer to slow replies.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA -->
+        <a href="../pricing.html" class="inline-block bg-gradient-to-r from-[var(--primary)] to-[#06B6D4] text-black font-bold uppercase tracking-widest py-4 px-8 rounded-lg">
+            See Full Pricing & Features →
+        </a>
+    </div>
+</main>
+
+</body>
+</html>
